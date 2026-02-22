@@ -271,9 +271,11 @@ h1 {
 }
 
 .btn-icon img {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   display: block;
+  flex: 0 0 12px;
+  object-fit: contain;
 }
 
 .btn-primary {
@@ -375,9 +377,11 @@ em {
 }
 
 .contact-label img {
-  width: 15px;
-  height: 15px;
+  width: 11px;
+  height: 11px;
   display: block;
+  flex: 0 0 11px;
+  object-fit: contain;
 }
 
 footer {
