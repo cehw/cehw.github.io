@@ -204,9 +204,15 @@ async function renderGallery() {
 
         const groupsHtml = yearBucket.sortedGroups
           .map((groupBucket) => {
-            const groupTitle = escapeHtml(groupBucket.key);
+            const groupKey = String(groupBucket.key || "").trim();
+            const groupTitle = escapeHtml(groupKey);
             const groupCount = groupBucket.items.length;
             const groupCountLabel = `${groupCount} photo${groupCount > 1 ? "s" : ""}`;
+            const groupNote =
+              groupKey === "Hong Kong Basel Art Fair" ? "Credit: Yijia's ticket." : "";
+            const groupNoteHtml = groupNote
+              ? `<p class="gallery-group-note">${escapeHtml(groupNote)}</p>`
+              : "";
             const descValues = [
               ...new Set(
                 groupBucket.items
@@ -264,6 +270,7 @@ async function renderGallery() {
                   <h3 class="gallery-group-title">${groupTitle}</h3>
                   <span class="gallery-group-count">${groupCountLabel}</span>
                 </header>
+                ${groupNoteHtml}
                 ${sharedMetaHtml}
                 <div class="gallery-grid">
                   ${cards}
