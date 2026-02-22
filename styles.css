@@ -12,8 +12,8 @@
   --planet-ocean-light: rgba(146, 201, 214, 0.82);
   --planet-ocean-mid: rgba(74, 132, 151, 0.78);
   --planet-ocean-deep: rgba(34, 79, 98, 0.88);
-  --planet-land-a: rgba(190, 214, 173, 0.48);
-  --planet-land-b: rgba(147, 186, 150, 0.42);
+  --planet-land-a: rgba(190, 214, 173, 0.62);
+  --planet-land-b: rgba(147, 186, 150, 0.56);
   --planet-atmosphere: rgba(169, 226, 238, 0.34);
   --planet-contour: rgba(203, 241, 246, 0.22);
   --planet-grid: rgba(225, 247, 251, 0.12);
@@ -73,8 +73,8 @@ body {
   position: fixed;
   width: min(42vw, 560px);
   aspect-ratio: 1 / 1;
-  right: -150px;
-  bottom: -230px;
+  right: -118px;
+  bottom: -205px;
   z-index: -1;
   border-radius: 50%;
   pointer-events: none;
@@ -109,14 +109,13 @@ body {
   inset: 0;
   border-radius: 50%;
   background:
-    radial-gradient(31% 22% at 28% 42%, var(--planet-land-a) 0 55%, transparent 62%),
-    radial-gradient(26% 19% at 58% 36%, var(--planet-land-b) 0 58%, transparent 66%),
-    radial-gradient(18% 14% at 71% 57%, var(--planet-land-a) 0 60%, transparent 68%),
-    radial-gradient(21% 14% at 40% 69%, var(--planet-land-b) 0 58%, transparent 66%),
+    radial-gradient(34% 25% at 22% 30%, var(--planet-land-a) 0 55%, transparent 62%),
+    radial-gradient(28% 20% at 40% 46%, var(--planet-land-b) 0 58%, transparent 66%),
+    radial-gradient(22% 16% at 54% 30%, var(--planet-land-a) 0 60%, transparent 68%),
+    radial-gradient(18% 12% at 32% 60%, var(--planet-land-b) 0 58%, transparent 66%),
     repeating-radial-gradient(circle at 48% 52%, transparent 0 13px, var(--planet-contour) 13px 14px),
     repeating-conic-gradient(from 6deg at 50% 50%, transparent 0 16deg, var(--planet-grid) 16deg 17deg);
-  mix-blend-mode: screen;
-  opacity: 0.62;
+  opacity: 0.72;
 }
 
 .bg-orb {
@@ -881,8 +880,8 @@ html[data-theme="dark"] {
   --planet-ocean-light: rgba(100, 176, 206, 0.82);
   --planet-ocean-mid: rgba(42, 114, 150, 0.82);
   --planet-ocean-deep: rgba(12, 44, 78, 0.9);
-  --planet-land-a: rgba(119, 171, 132, 0.42);
-  --planet-land-b: rgba(90, 147, 115, 0.4);
+  --planet-land-a: rgba(119, 171, 132, 0.54);
+  --planet-land-b: rgba(90, 147, 115, 0.5);
   --planet-atmosphere: rgba(141, 214, 239, 0.36);
   --planet-contour: rgba(165, 224, 240, 0.24);
   --planet-grid: rgba(206, 241, 250, 0.12);
