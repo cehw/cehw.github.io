@@ -288,7 +288,7 @@
     "date": "2024-03"
   },
   {
-    "group": "Hong Kong",
+    "group": "HKUST Campus",
     "group_order": 30,
     "thumb": "2025_showcase/IMG_9355.jpeg",
     "full": "2025_showcase/IMG_9355.jpeg",
@@ -693,12 +693,12 @@
     "date": "2025-10"
   },
   {
-    "group": "New Uploads",
-    "group_order": 999,
+    "group": "HKUST Campus",
+    "group_order": 30,
     "thumb": "2025_showcase/IMG_9401.jpeg",
     "full": "2025_showcase/IMG_9401.jpeg",
-    "title": "New Upload · IMG 9401",
-    "description": "",
+    "title": "Sunset at HKUST · IMG 9401",
+    "description": "Sunset at HKUST.",
     "date": "2023-12"
   }
 ]
