@@ -213,22 +213,20 @@ async function renderGallery() {
             const groupNoteHtml = groupNote
               ? `<p class="gallery-group-note">${escapeHtml(groupNote)}</p>`
               : "";
-            const descValues = [
-              ...new Set(
-                groupBucket.items
-                  .map((item) => String(item.description || "").trim())
-                  .filter((value) => value)
-              ),
-            ];
-            const dateValues = [
-              ...new Set(
-                groupBucket.items
-                  .map((item) => String(item.date || "").trim())
-                  .filter((value) => value)
-              ),
-            ];
-            const sharedDesc = groupCount > 1 && descValues.length === 1 ? descValues[0] : "";
-            const sharedDate = groupCount > 1 && dateValues.length === 1 ? dateValues[0] : "";
+            const rawDescs = groupBucket.items.map((item) => String(item.description || "").trim());
+            const descValues = [...new Set(rawDescs.filter((value) => value))];
+            const nonEmptyDescCount = rawDescs.filter((value) => value).length;
+            const rawDates = groupBucket.items.map((item) => String(item.date || "").trim());
+            const dateValues = [...new Set(rawDates.filter((value) => value))];
+            const nonEmptyDateCount = rawDates.filter((value) => value).length;
+            const sharedDesc =
+              groupCount > 1 && nonEmptyDescCount === groupCount && descValues.length === 1
+                ? descValues[0]
+                : "";
+            const sharedDate =
+              groupCount > 1 && nonEmptyDateCount === groupCount && dateValues.length === 1
+                ? dateValues[0]
+                : "";
             const sharedMetaHtml = sharedDesc || sharedDate
               ? `
                 <div class="gallery-group-shared">
