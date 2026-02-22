@@ -1,6 +1,10 @@
 const THEME_STORAGE_KEY = "site-theme";
 const themeButtons = [...document.querySelectorAll(".theme-toggle")];
 const prefersDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+const SUN_ICON =
+  '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.2 2.2M7.5 16.5l-2.2 2.2M18.7 18.7l-2.2-2.2M7.5 7.5 5.3 5.3"></path></svg>';
+const MOON_ICON =
+  '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.2A8.8 8.8 0 1 1 9.8 4a7.2 7.2 0 1 0 10.2 10.2Z"></path></svg>';
 const storedTheme = (() => {
   try {
     return localStorage.getItem(THEME_STORAGE_KEY);
@@ -14,7 +18,7 @@ let activeTheme = hasStoredTheme ? storedTheme : prefersDarkQuery.matches ? "dar
 function renderThemeButtons(theme) {
   const nextThemeLabel = theme === "dark" ? "Light" : "Dark";
   themeButtons.forEach((button) => {
-    button.textContent = nextThemeLabel;
+    button.innerHTML = theme === "dark" ? SUN_ICON : MOON_ICON;
     button.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
     button.setAttribute("aria-label", `Switch to ${nextThemeLabel.toLowerCase()} mode`);
     button.setAttribute("title", `Switch to ${nextThemeLabel.toLowerCase()} mode`);
