@@ -264,6 +264,18 @@ h1 {
   transform: translateY(-2px);
 }
 
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon img {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
 .btn-primary {
   color: #0a131a;
   background: linear-gradient(120deg, #f0d090, #dfb76f);
@@ -354,6 +366,18 @@ em {
 
 .contact-list a {
   color: #b8dce2;
+}
+
+.contact-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.contact-label img {
+  width: 15px;
+  height: 15px;
+  display: block;
 }
 
 footer {
