@@ -216,7 +216,7 @@ h3 {
 }
 
 h1 {
-  font-size: clamp(2.4rem, 5.2vw, 4.5rem);
+  font-size: clamp(2.2rem, 4.8vw, 4.15rem);
   line-height: 1.04;
 }
 
@@ -271,10 +271,10 @@ h1 {
 }
 
 .btn-icon img {
-  width: 19px !important;
-  height: 19px !important;
+  width: 17px !important;
+  height: 17px !important;
   display: block;
-  flex: 0 0 19px !important;
+  flex: 0 0 17px !important;
   object-fit: contain;
   opacity: 0.9;
 }
@@ -402,10 +402,10 @@ em {
 }
 
 .contact-label img {
-  width: 17px !important;
-  height: 17px !important;
+  width: 15px !important;
+  height: 15px !important;
   display: block;
-  flex: 0 0 17px !important;
+  flex: 0 0 15px !important;
   object-fit: contain;
   opacity: 0.9;
 }
