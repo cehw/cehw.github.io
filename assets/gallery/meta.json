@@ -119,15 +119,6 @@
   {
     "group": "Sydney Visit",
     "group_order": 21,
-    "thumb": "2025_showcase/portrait_01.jpg",
-    "full": "full/portrait_01.JPG",
-    "title": "Sydney Visit · Photo 01",
-    "description": "Photos taken in Sydney, Australia.",
-    "date": "2023-08"
-  },
-  {
-    "group": "Sydney Visit",
-    "group_order": 21,
     "thumb": "2025_showcase/portrait_02.jpg",
     "full": "full/portrait_02.JPG",
     "title": "Sydney Visit · Photo 02",
@@ -356,7 +347,7 @@
     "thumb": "2025_showcase/DSC04030-Enhanced-NR.jpg",
     "full": "2025_showcase/DSC04030-Enhanced-NR.jpg",
     "title": "Austria · Dsc04030 Enhanced Nr",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-05"
   },
   {
@@ -365,7 +356,7 @@
     "thumb": "2025_showcase/DSC04035.jpg",
     "full": "2025_showcase/DSC04035.jpg",
     "title": "Austria · DSC04035",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-05"
   },
   {
@@ -374,7 +365,7 @@
     "thumb": "2025_showcase/DSC04151.jpg",
     "full": "2025_showcase/DSC04151.jpg",
     "title": "Austria · DSC04151",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-05"
   },
   {
@@ -383,7 +374,7 @@
     "thumb": "2025_showcase/DSC04231.jpg",
     "full": "2025_showcase/DSC04231.jpg",
     "title": "Austria · DSC04231",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-05"
   },
   {
@@ -392,7 +383,7 @@
     "thumb": "2025_showcase/DSC04240.jpg",
     "full": "2025_showcase/DSC04240.jpg",
     "title": "Austria · DSC04240",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-05"
   },
   {
@@ -401,7 +392,7 @@
     "thumb": "2025_showcase/DSC04274-2.jpg",
     "full": "2025_showcase/DSC04274-2.jpg",
     "title": "Austria · Dsc04274 2",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-05"
   },
   {
@@ -410,7 +401,7 @@
     "thumb": "2025_showcase/DSC04445-Pano-Enhanced-NR.jpg",
     "full": "2025_showcase/DSC04445-Pano-Enhanced-NR.jpg",
     "title": "Austria · Dsc04445 Pano Enhanced Nr",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-05"
   },
   {
@@ -419,7 +410,7 @@
     "thumb": "2025_showcase/IMG_5283.JPG",
     "full": "2025_showcase/IMG_5283.JPG",
     "title": "Austria · IMG 5283",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-05"
   },
   {
@@ -428,7 +419,7 @@
     "thumb": "2025_showcase/IMG_5030.JPG",
     "full": "2025_showcase/IMG_5030.JPG",
     "title": "Austria · IMG 5030",
-    "description": "Field and conference travel moments in Austria.",
+    "description": "",
     "date": "2025-04"
   },
   {
