@@ -335,6 +335,30 @@ h3 {
   color: var(--muted);
 }
 
+.about-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 2px 0 14px;
+}
+
+.about-badges span {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(144, 192, 192, 0.32);
+  background: rgba(32, 96, 128, 0.18);
+  color: #cfe3e7;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.about-badges strong {
+  color: #e6f2f5;
+  margin-right: 4px;
+}
+
 .grid {
   margin-top: 12px;
   display: grid;
