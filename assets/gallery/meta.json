@@ -1,36 +1,42 @@
 [
   {
-    "file": "2025_showcase/austria_01.jpg",
+    "thumb": "2025_showcase/austria_01.jpg",
+    "full": "full/austria_01.jpg",
     "title": "Austria Field Photo I",
     "description": "Field and conference travel moments.",
     "date": "2025-05"
   },
   {
-    "file": "2025_showcase/austria_02.jpg",
+    "thumb": "2025_showcase/austria_02.jpg",
+    "full": "full/austria_02.jpg",
     "title": "Austria Field Photo II",
     "description": "Field and conference travel moments.",
     "date": "2025-05"
   },
   {
-    "file": "2025_showcase/portrait_01.jpg",
+    "thumb": "2025_showcase/portrait_01.jpg",
+    "full": "full/portrait_01.JPG",
     "title": "Research Portrait I",
     "description": "Personal gallery selection.",
     "date": "2025"
   },
   {
-    "file": "2025_showcase/portrait_02.jpg",
+    "thumb": "2025_showcase/portrait_02.jpg",
+    "full": "full/portrait_02.JPG",
     "title": "Research Portrait II",
     "description": "Personal gallery selection.",
     "date": "2025"
   },
   {
-    "file": "2025_showcase/portrait_03.jpg",
+    "thumb": "2025_showcase/portrait_03.jpg",
+    "full": "full/portrait_03.JPG",
     "title": "Research Portrait III",
     "description": "Personal gallery selection.",
     "date": "2025"
   },
   {
-    "file": "2025_showcase/portrait_04.jpg",
+    "thumb": "2025_showcase/portrait_04.jpg",
+    "full": "full/portrait_04.JPG",
     "title": "Research Portrait IV",
     "description": "Personal gallery selection.",
     "date": "2025"

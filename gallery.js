@@ -30,14 +30,15 @@ async function renderGallery() {
 
     const html = items
       .map((item) => {
-        const file = escapeHtml(item.file || "");
+        const thumb = escapeHtml(item.thumb || item.file || "");
+        const full = escapeHtml(item.full || item.file || "");
         const title = escapeHtml(item.title || "Untitled");
         const desc = escapeHtml(item.description || "");
         const date = escapeHtml(item.date || "");
         return `
           <article class="gallery-card">
-            <a href="./assets/gallery/${file}" target="_blank" rel="noreferrer">
-              <img src="./assets/gallery/${file}" alt="${title}" loading="lazy" />
+            <a href="./assets/gallery/${full}" target="_blank" rel="noreferrer">
+              <img src="./assets/gallery/${thumb}" alt="${title}" loading="lazy" />
             </a>
             <div class="gallery-meta">
               <h3>${title}</h3>
