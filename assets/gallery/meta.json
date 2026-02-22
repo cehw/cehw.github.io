@@ -1,8 +1,38 @@
 [
   {
-    "file": "gh_photo.png",
-    "title": "Profile Illustration",
-    "description": "Visual style reference for homepage identity.",
-    "date": "2026-02"
+    "file": "2025_showcase/austria_01.jpg",
+    "title": "Austria Field Photo I",
+    "description": "Field and conference travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "file": "2025_showcase/austria_02.jpg",
+    "title": "Austria Field Photo II",
+    "description": "Field and conference travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "file": "2025_showcase/portrait_01.jpg",
+    "title": "Research Portrait I",
+    "description": "Personal gallery selection.",
+    "date": "2025"
+  },
+  {
+    "file": "2025_showcase/portrait_02.jpg",
+    "title": "Research Portrait II",
+    "description": "Personal gallery selection.",
+    "date": "2025"
+  },
+  {
+    "file": "2025_showcase/portrait_03.jpg",
+    "title": "Research Portrait III",
+    "description": "Personal gallery selection.",
+    "date": "2025"
+  },
+  {
+    "file": "2025_showcase/portrait_04.jpg",
+    "title": "Research Portrait IV",
+    "description": "Personal gallery selection.",
+    "date": "2025"
   }
 ]
