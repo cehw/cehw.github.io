@@ -126,15 +126,6 @@
     "date": "2023-08"
   },
   {
-    "group": "Sydney Visit",
-    "group_order": 21,
-    "thumb": "2025_showcase/portrait_04.jpg",
-    "full": "full/portrait_04.JPG",
-    "title": "Sydney Visit · Photo 04",
-    "description": "Photos taken in Sydney, Australia.",
-    "date": "2023-08"
-  },
-  {
     "group": "Cairns Great Barrier Reef Diving",
     "group_order": 22,
     "thumb": "2025_showcase/IMG_1498.jpeg",
@@ -522,11 +513,11 @@
     "date": "2023-05"
   },
   {
-    "group": "Macau Visit after PQE",
-    "group_order": 27,
+    "group": "PQE",
+    "group_order": 33,
     "thumb": "2025_showcase/IMG_5304.jpeg",
     "full": "2025_showcase/IMG_5304.jpeg",
-    "title": "Macau Visit after PQE · IMG 5304",
+    "title": "PQE · IMG 5304",
     "description": "Macau visit after PQE.",
     "date": "2023-04"
   },
@@ -630,11 +621,11 @@
     "date": "2022-12"
   },
   {
-    "group": "PQE Preparation",
+    "group": "PQE",
     "group_order": 33,
     "thumb": "2025_showcase/IMG_5145.JPG",
     "full": "2025_showcase/IMG_5145.JPG",
-    "title": "PQE Preparation · IMG 5145",
+    "title": "PQE · IMG 5145",
     "description": "PQE preparation.",
     "date": "2023-03"
   },
