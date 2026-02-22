@@ -9,15 +9,6 @@
   --accent-2: #f0d090;
   --accent-3: #4f8f84;
   --shadow: 0 14px 28px rgba(43, 54, 56, 0.14);
-  --planet-ocean-light: rgba(146, 201, 214, 0.82);
-  --planet-ocean-mid: rgba(74, 132, 151, 0.78);
-  --planet-ocean-deep: rgba(34, 79, 98, 0.88);
-  --planet-land-a: rgba(190, 214, 173, 0.62);
-  --planet-land-b: rgba(147, 186, 150, 0.56);
-  --planet-atmosphere: rgba(169, 226, 238, 0.34);
-  --planet-contour: rgba(203, 241, 246, 0.22);
-  --planet-grid: rgba(225, 247, 251, 0.12);
-  --planet-glow: rgba(102, 157, 176, 0.26);
 }
 
 * {
@@ -73,49 +64,43 @@ body {
   position: fixed;
   width: min(42vw, 560px);
   aspect-ratio: 1 / 1;
-  right: -118px;
-  bottom: -205px;
+  right: -150px;
+  bottom: -230px;
   z-index: -1;
   border-radius: 50%;
   pointer-events: none;
-  overflow: hidden;
-  transform: rotate(-8deg);
   background:
-    radial-gradient(circle at 34% 24%, rgba(255, 255, 255, 0.45), transparent 18%),
-    radial-gradient(circle at 72% 70%, rgba(214, 245, 251, 0.2), transparent 28%),
-    radial-gradient(126% 126% at 34% 24%, var(--planet-ocean-light) 0%, var(--planet-ocean-mid) 44%, var(--planet-ocean-deep) 80%, rgba(20, 48, 61, 0.92) 100%);
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.55), transparent 22%),
+    radial-gradient(circle at 60% 42%, rgba(153, 191, 199, 0.42), transparent 42%),
+    radial-gradient(circle at 50% 50%, rgba(97, 146, 158, 0.28), rgba(52, 88, 98, 0.26) 64%, rgba(42, 70, 77, 0.22) 100%);
   box-shadow:
     0 0 0 1px rgba(62, 82, 86, 0.2),
-    0 0 36px var(--planet-glow),
-    0 0 120px rgba(95, 130, 139, 0.18);
-  filter: saturate(1.06) contrast(1.05);
+    0 0 36px rgba(62, 82, 86, 0.17),
+    0 0 120px rgba(95, 130, 139, 0.14);
+  filter: saturate(0.96) contrast(1.02);
 }
 
 .bg-planet::before {
   content: "";
   position: absolute;
-  inset: -18%;
+  inset: -14%;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 52% 52%, transparent 58%, var(--planet-atmosphere) 62%, transparent 68%),
-    radial-gradient(circle at 54% 54%, transparent 69%, rgba(200, 238, 247, 0.22) 72%, transparent 79%),
-    radial-gradient(circle at 48% 48%, transparent 74%, rgba(240, 208, 144, 0.14) 76%, transparent 82%);
-  filter: blur(0.2px);
+    radial-gradient(circle at 54% 52%, transparent 56%, rgba(140, 200, 210, 0.24) 57%, transparent 60%),
+    radial-gradient(circle at 58% 52%, transparent 66%, rgba(140, 200, 210, 0.2) 67%, transparent 71%),
+    radial-gradient(circle at 62% 50%, transparent 74%, rgba(240, 208, 144, 0.16) 75%, transparent 80%);
 }
 
 .bg-planet::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 10%;
   border-radius: 50%;
   background:
-    radial-gradient(34% 25% at 22% 30%, var(--planet-land-a) 0 55%, transparent 62%),
-    radial-gradient(28% 20% at 40% 46%, var(--planet-land-b) 0 58%, transparent 66%),
-    radial-gradient(22% 16% at 54% 30%, var(--planet-land-a) 0 60%, transparent 68%),
-    radial-gradient(18% 12% at 32% 60%, var(--planet-land-b) 0 58%, transparent 66%),
-    repeating-radial-gradient(circle at 48% 52%, transparent 0 13px, var(--planet-contour) 13px 14px),
-    repeating-conic-gradient(from 6deg at 50% 50%, transparent 0 16deg, var(--planet-grid) 16deg 17deg);
-  opacity: 0.72;
+    repeating-radial-gradient(circle at 48% 52%, rgba(144, 192, 192, 0.14) 0 1px, transparent 1px 14px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.25));
+  mix-blend-mode: screen;
+  opacity: 0.42;
 }
 
 .bg-orb {
@@ -877,15 +862,6 @@ html[data-theme="dark"] {
   --accent-2: #d4bc8c;
   --accent-3: #3b7281;
   --shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
-  --planet-ocean-light: rgba(100, 176, 206, 0.82);
-  --planet-ocean-mid: rgba(42, 114, 150, 0.82);
-  --planet-ocean-deep: rgba(12, 44, 78, 0.9);
-  --planet-land-a: rgba(119, 171, 132, 0.54);
-  --planet-land-b: rgba(90, 147, 115, 0.5);
-  --planet-atmosphere: rgba(141, 214, 239, 0.36);
-  --planet-contour: rgba(165, 224, 240, 0.24);
-  --planet-grid: rgba(206, 241, 250, 0.12);
-  --planet-glow: rgba(64, 130, 171, 0.35);
 }
 
 html[data-theme="dark"] body {
@@ -910,13 +886,9 @@ html[data-theme="dark"] .bg-flow {
 
 html[data-theme="dark"] .bg-planet {
   background:
-    radial-gradient(circle at 32% 22%, rgba(208, 239, 248, 0.52), transparent 18%),
-    radial-gradient(circle at 74% 68%, rgba(162, 213, 232, 0.24), transparent 26%),
-    radial-gradient(126% 126% at 34% 24%, var(--planet-ocean-light) 0%, var(--planet-ocean-mid) 43%, var(--planet-ocean-deep) 80%, rgba(6, 22, 36, 0.98) 100%);
-  box-shadow:
-    0 0 0 1px rgba(123, 176, 194, 0.28),
-    0 0 44px var(--planet-glow),
-    0 0 120px rgba(52, 117, 148, 0.28);
+    radial-gradient(circle at 24% 22%, rgba(196, 232, 234, 0.64), transparent 20%),
+    radial-gradient(circle at 60% 40%, rgba(108, 172, 179, 0.54), transparent 36%),
+    radial-gradient(circle at 50% 50%, rgba(56, 115, 144, 0.64), rgba(20, 44, 61, 0.9) 62%, rgba(9, 20, 29, 0.95) 100%);
 }
 
 html[data-theme="dark"] .site-header {
