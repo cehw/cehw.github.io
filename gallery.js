@@ -7,7 +7,7 @@ const indexContainer = document.getElementById("gallery-index");
 const groupsContainer = document.getElementById("gallery-groups");
 const empty = document.getElementById("gallery-empty");
 const groupsWithoutSmallTitles = new Set(["Easter Painted Egg at UG Hall · 1"]);
-const isFileProtocol = window.location.protocol === "file:";
+const GALLERY_META_PATH = "./assets/gallery/meta.json";
 
 function replaceAllCompat(text, search, replacement) {
   return String(text).split(search).join(replacement);
@@ -108,11 +108,7 @@ function assetUrl(relPath) {
 }
 
 async function loadGalleryItems() {
-  if (Array.isArray(window.GALLERY_ITEMS) && window.GALLERY_ITEMS.length) {
-    return window.GALLERY_ITEMS;
-  }
-
-  const response = await fetch("./assets/gallery/meta.json", { cache: "no-cache" });
+  const response = await fetch(GALLERY_META_PATH, { cache: "no-cache" });
   if (!response.ok) {
     throw new Error(`meta fetch failed: ${response.status}`);
   }
@@ -206,13 +202,8 @@ async function renderGallery() {
           return `<a class="gallery-index-chip" href="#${yearId}">${escapeHtml(label)}</a>`;
         })
         .join("");
-      if (chips) {
-        indexContainer.innerHTML = chips;
-        indexContainer.hidden = false;
-      } else {
-        const hasStaticChips = indexContainer.querySelector(".gallery-index-chip");
-        indexContainer.hidden = !hasStaticChips;
-      }
+      indexContainer.innerHTML = chips;
+      indexContainer.hidden = !chips;
     }
 
     const html = sortedYears
@@ -319,18 +310,9 @@ async function renderGallery() {
     groupsContainer.innerHTML = html;
   } catch (err) {
     console.error("Gallery render failed:", err);
-    if (indexContainer) {
-      const hasStaticChips = indexContainer.querySelector(".gallery-index-chip");
-      indexContainer.hidden = !hasStaticChips;
-    }
+    if (indexContainer) indexContainer.hidden = true;
     empty.hidden = false;
-    if (isFileProtocol) {
-      empty.textContent =
-        "Gallery data failed to load. If this is local preview, ensure assets/gallery/meta.js exists.";
-      return;
-    }
-    empty.textContent =
-      "Gallery failed to load. Please hard refresh and try again. If the issue persists, deployment may still be syncing.";
+    empty.textContent = `Gallery failed to load from ${GALLERY_META_PATH}. Please refresh and try again.`;
   }
 }
 
