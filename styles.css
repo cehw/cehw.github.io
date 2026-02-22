@@ -147,7 +147,7 @@ body {
   font-family: "Spectral", Georgia, serif;
   text-decoration: none;
   color: var(--accent-2);
-  font-size: 1.2rem;
+  font-size: 1.08rem;
   font-weight: 700;
   letter-spacing: 0.06em;
 }
@@ -216,7 +216,7 @@ h3 {
 }
 
 h1 {
-  font-size: clamp(2.2rem, 4.8vw, 4.15rem);
+  font-size: clamp(2rem, 4.2vw, 3.75rem);
   line-height: 1.04;
 }
 
@@ -271,10 +271,10 @@ h1 {
 }
 
 .btn-icon img {
-  width: 17px !important;
-  height: 17px !important;
+  width: 15px !important;
+  height: 15px !important;
   display: block;
-  flex: 0 0 17px !important;
+  flex: 0 0 15px !important;
   object-fit: contain;
   opacity: 0.9;
 }
@@ -402,10 +402,10 @@ em {
 }
 
 .contact-label img {
-  width: 15px !important;
-  height: 15px !important;
+  width: 13px !important;
+  height: 13px !important;
   display: block;
-  flex: 0 0 15px !important;
+  flex: 0 0 13px !important;
   object-fit: contain;
   opacity: 0.9;
 }
