@@ -96,6 +96,11 @@ function compactCardTitle(rawTitle, groupTitle) {
   return compacted || title || "Untitled";
 }
 
+function assetUrl(relPath) {
+  const safe = String(relPath || "").trim();
+  return `./assets/gallery/${encodeURI(safe).replaceAll("#", "%23").replaceAll("?", "%3F")}`;
+}
+
 async function renderGallery() {
   try {
     const response = await fetch("./assets/gallery/meta.json", { cache: "no-cache" });
@@ -229,8 +234,10 @@ async function renderGallery() {
 
             const cards = groupBucket.items
               .map((item) => {
-                const thumb = escapeHtml(item.thumb || item.file || "");
-                const full = escapeHtml(item.full || item.file || "");
+                const thumbRaw = item.thumb || item.file || "";
+                const fullRaw = item.full || item.file || "";
+                const thumbUrl = escapeHtml(assetUrl(thumbRaw));
+                const fullUrl = escapeHtml(assetUrl(fullRaw));
                 const displayTitle = escapeHtml(compactCardTitle(item.title || "Untitled", groupBucket.key));
                 const rawDesc = String(item.description || "").trim();
                 const rawDate = String(item.date || "").trim();
@@ -238,8 +245,8 @@ async function renderGallery() {
                 const date = !sharedDate && rawDate ? escapeHtml(rawDate) : "";
                 return `
                   <article class="gallery-card">
-                    <a href="./assets/gallery/${full}" target="_blank" rel="noreferrer">
-                      <img src="./assets/gallery/${thumb}" alt="${displayTitle}" loading="lazy" />
+                    <a href="${fullUrl}" target="_blank" rel="noreferrer">
+                      <img src="${thumbUrl}" alt="${displayTitle}" loading="lazy" />
                     </a>
                     <div class="gallery-meta">
                       <h3>${displayTitle}</h3>

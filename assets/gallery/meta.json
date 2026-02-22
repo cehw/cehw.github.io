@@ -18,42 +18,6 @@
     "date": "2025-05"
   },
   {
-    "group": "Sydney Visit",
-    "group_order": 21,
-    "thumb": "2025_showcase/portrait_01.jpg",
-    "full": "full/portrait_01.JPG",
-    "title": "Sydney Visit · Photo 01",
-    "description": "Photos taken in Sydney, Australia.",
-    "date": "2023-08"
-  },
-  {
-    "group": "Sydney Visit",
-    "group_order": 21,
-    "thumb": "2025_showcase/portrait_02.jpg",
-    "full": "full/portrait_02.JPG",
-    "title": "Sydney Visit · Photo 02",
-    "description": "Photos taken in Sydney, Australia.",
-    "date": "2023-08"
-  },
-  {
-    "group": "Cairns Great Barrier Reef Diving",
-    "group_order": 22,
-    "thumb": "2025_showcase/portrait_03.jpg",
-    "full": "full/portrait_03.JPG",
-    "title": "Cairns Great Barrier Reef Diving · Photo from Diving Boat",
-    "description": "Diving and field travel in Cairns and the Great Barrier Reef, Australia.",
-    "date": "2023-08"
-  },
-  {
-    "group": "Sydney Visit",
-    "group_order": 21,
-    "thumb": "2025_showcase/portrait_04.jpg",
-    "full": "full/portrait_04.JPG",
-    "title": "Sydney Visit · Photo 04",
-    "description": "Photos taken in Sydney, Australia.",
-    "date": "2023-08"
-  },
-  {
     "group": "Travelling and Study in Wales",
     "group_order": 18,
     "thumb": "2025_showcase/IMG_1465.PNG",
@@ -61,6 +25,15 @@
     "title": "Travelling and Study in Wales · IMG 1465",
     "description": "Travelling and study experiences in Wales.",
     "date": "2018-07"
+  },
+  {
+    "group": "Travelling and Study in Wales",
+    "group_order": 18,
+    "thumb": "2025_showcase/IMG_0861.jpeg",
+    "full": "2025_showcase/IMG_0861.jpeg",
+    "title": "Travelling and Study in Wales · IMG 0861",
+    "description": "Travelling and study experiences in Wales.",
+    "date": "2018-06"
   },
   {
     "group": "Travelling and Study in Wales",
@@ -79,87 +52,6 @@
     "title": "Travelling and Study in Wales · IMG 0962",
     "description": "Travelling and study experiences in Wales.",
     "date": "2018-06"
-  },
-  {
-    "group": "Dubai Visit",
-    "group_order": 24,
-    "thumb": "2025_showcase/IMG_0013.JPG",
-    "full": "2025_showcase/IMG_0013.JPG",
-    "title": "Dubai Visit · IMG 0013",
-    "description": "Visit Dubai.",
-    "date": "2024-12"
-  },
-  {
-    "group": "Dubai Visit",
-    "group_order": 24,
-    "thumb": "2025_showcase/IMG_2929.JPG",
-    "full": "2025_showcase/IMG_2929.JPG",
-    "title": "Dubai Visit · IMG 2929",
-    "description": "Visit Dubai.",
-    "date": "2024-12"
-  },
-  {
-    "group": "Dubai Visit",
-    "group_order": 24,
-    "thumb": "2025_showcase/IMG_2964.JPG",
-    "full": "2025_showcase/IMG_2964.JPG",
-    "title": "Dubai Visit · IMG 2964",
-    "description": "Visit Dubai.",
-    "date": "2024-12"
-  },
-  {
-    "group": "Field & Travel 2024",
-    "group_order": 276,
-    "thumb": "2025_showcase/IMG_3371.JPG",
-    "full": "2025_showcase/IMG_3371.JPG",
-    "title": "Field & Travel 2024 · IMG 3371",
-    "description": "Field and research travel moments.",
-    "date": "2024-12"
-  },
-  {
-    "group": "Field & Travel 2024",
-    "group_order": 276,
-    "thumb": "2025_showcase/IMG_3464.JPG",
-    "full": "2025_showcase/IMG_3464.JPG",
-    "title": "Field & Travel 2024 · IMG 3464",
-    "description": "Field and research travel moments.",
-    "date": "2024-12"
-  },
-  {
-    "group": "Pyeongchang, Korea Visit",
-    "group_order": 26,
-    "thumb": "2025_showcase/DSC03109.JPG",
-    "full": "2025_showcase/DSC03109.JPG",
-    "title": "Pyeongchang, Korea Visit · DSC03109",
-    "description": "Visit Pyeongchang, Korea.",
-    "date": "2024-06"
-  },
-  {
-    "group": "Pyeongchang, Korea Visit",
-    "group_order": 26,
-    "thumb": "2025_showcase/IMG_0715.JPG",
-    "full": "2025_showcase/IMG_0715.JPG",
-    "title": "Pyeongchang, Korea Visit · IMG 0715",
-    "description": "Visit Pyeongchang, Korea.",
-    "date": "2024-06"
-  },
-  {
-    "group": "Hong Kong Basel Art Fair",
-    "group_order": 30,
-    "thumb": "2025_showcase/IMG_9907.JPG",
-    "full": "2025_showcase/IMG_9907.JPG",
-    "title": "Hong Kong Basel Art Fair · IMG 9907",
-    "description": "Art Basel in Hong Kong. A painting I really liked. Credit: Yijia's ticket.",
-    "date": "2024-03"
-  },
-  {
-    "group": "Hong Kong",
-    "group_order": 30,
-    "thumb": "2025_showcase/IMG_9355.jpeg",
-    "full": "2025_showcase/IMG_9355.jpeg",
-    "title": "Sunset at HKUST · IMG 9355",
-    "description": "Sunset at HKUST.",
-    "date": "2023-12"
   },
   {
     "group": "Sydney Visit",
@@ -221,6 +113,33 @@
     "thumb": "2025_showcase/DSC01927.JPG",
     "full": "2025_showcase/DSC01927.JPG",
     "title": "Sydney Visit · DSC01927",
+    "description": "Photos taken in Sydney, Australia.",
+    "date": "2023-08"
+  },
+  {
+    "group": "Sydney Visit",
+    "group_order": 21,
+    "thumb": "2025_showcase/portrait_01.jpg",
+    "full": "full/portrait_01.JPG",
+    "title": "Sydney Visit · Photo 01",
+    "description": "Photos taken in Sydney, Australia.",
+    "date": "2023-08"
+  },
+  {
+    "group": "Sydney Visit",
+    "group_order": 21,
+    "thumb": "2025_showcase/portrait_02.jpg",
+    "full": "full/portrait_02.JPG",
+    "title": "Sydney Visit · Photo 02",
+    "description": "Photos taken in Sydney, Australia.",
+    "date": "2023-08"
+  },
+  {
+    "group": "Sydney Visit",
+    "group_order": 21,
+    "thumb": "2025_showcase/portrait_04.jpg",
+    "full": "full/portrait_04.JPG",
+    "title": "Sydney Visit · Photo 04",
     "description": "Photos taken in Sydney, Australia.",
     "date": "2023-08"
   },
@@ -315,6 +234,78 @@
     "date": "2023-08"
   },
   {
+    "group": "Cairns Great Barrier Reef Diving",
+    "group_order": 22,
+    "thumb": "2025_showcase/portrait_03.jpg",
+    "full": "full/portrait_03.JPG",
+    "title": "Cairns Great Barrier Reef Diving · Photo from Diving Boat",
+    "description": "Diving and field travel in Cairns and the Great Barrier Reef, Australia.",
+    "date": "2023-08"
+  },
+  {
+    "group": "Dubai Visit",
+    "group_order": 24,
+    "thumb": "2025_showcase/IMG_0013.JPG",
+    "full": "2025_showcase/IMG_0013.JPG",
+    "title": "Dubai Visit · IMG 0013",
+    "description": "Visit Dubai.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Dubai Visit",
+    "group_order": 24,
+    "thumb": "2025_showcase/IMG_2929.JPG",
+    "full": "2025_showcase/IMG_2929.JPG",
+    "title": "Dubai Visit · IMG 2929",
+    "description": "Visit Dubai.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Dubai Visit",
+    "group_order": 24,
+    "thumb": "2025_showcase/IMG_2964.JPG",
+    "full": "2025_showcase/IMG_2964.JPG",
+    "title": "Dubai Visit · IMG 2964",
+    "description": "Visit Dubai.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Pyeongchang, Korea Visit",
+    "group_order": 26,
+    "thumb": "2025_showcase/DSC03109.JPG",
+    "full": "2025_showcase/DSC03109.JPG",
+    "title": "Pyeongchang, Korea Visit · DSC03109",
+    "description": "Visit Pyeongchang, Korea.",
+    "date": "2024-06"
+  },
+  {
+    "group": "Pyeongchang, Korea Visit",
+    "group_order": 26,
+    "thumb": "2025_showcase/IMG_0715.JPG",
+    "full": "2025_showcase/IMG_0715.JPG",
+    "title": "Pyeongchang, Korea Visit · IMG 0715",
+    "description": "Visit Pyeongchang, Korea.",
+    "date": "2024-06"
+  },
+  {
+    "group": "Hong Kong Basel Art Fair",
+    "group_order": 30,
+    "thumb": "2025_showcase/IMG_9907.JPG",
+    "full": "2025_showcase/IMG_9907.JPG",
+    "title": "Hong Kong Basel Art Fair · IMG 9907",
+    "description": "Art Basel in Hong Kong. A painting I really liked. Credit: Yijia's ticket.",
+    "date": "2024-03"
+  },
+  {
+    "group": "Hong Kong",
+    "group_order": 30,
+    "thumb": "2025_showcase/IMG_9355.jpeg",
+    "full": "2025_showcase/IMG_9355.jpeg",
+    "title": "Sunset at HKUST · IMG 9355",
+    "description": "Sunset at HKUST.",
+    "date": "2023-12"
+  },
+  {
     "group": "Hiking in Hong Kong (Lai Chi Wo / 荔枝莊)",
     "group_order": 31,
     "thumb": "2025_showcase/dji_fly_20230625_174422_371_1687704450892_photo.jpg",
@@ -322,24 +313,6 @@
     "title": "Hiking in Hong Kong (Lai Chi Wo) · DJI Fly Photo",
     "description": "Hiking in Hong Kong (Lai Chi Wo / 荔枝莊).",
     "date": "2023-06"
-  },
-  {
-    "group": "Urban Heat Measurement Study",
-    "group_order": 35,
-    "thumb": "2025_showcase/IMG_3900.jpeg",
-    "full": "2025_showcase/IMG_3900.jpeg",
-    "title": "Urban Heat Measurement Study · IMG 3900",
-    "description": "We use mobile sensors to measure temperature contrasts in dense urban, seafront, and blue-green spaces across Hong Kong.",
-    "date": "2022"
-  },
-  {
-    "group": "Urban Heat Measurement Study",
-    "group_order": 35,
-    "thumb": "2025_showcase/IMG_3716.jpeg",
-    "full": "2025_showcase/IMG_3716.jpeg",
-    "title": "Urban Heat Measurement Study · IMG 3716",
-    "description": "We use mobile sensors to measure temperature contrasts in dense urban, seafront, and blue-green spaces across Hong Kong.",
-    "date": "2022"
   },
   {
     "group": "Urban Heat Measurement Study",
@@ -360,12 +333,237 @@
     "date": "2022"
   },
   {
-    "group": "Travelling and Study in Wales",
-    "group_order": 18,
-    "thumb": "2025_showcase/IMG_0861.jpeg",
-    "full": "2025_showcase/IMG_0861.jpeg",
-    "title": "Travelling and Study in Wales · IMG 0861",
-    "description": "Travelling and study experiences in Wales.",
-    "date": "2018-06"
+    "group": "Urban Heat Measurement Study",
+    "group_order": 35,
+    "thumb": "2025_showcase/IMG_3716.jpeg",
+    "full": "2025_showcase/IMG_3716.jpeg",
+    "title": "Urban Heat Measurement Study · IMG 3716",
+    "description": "We use mobile sensors to measure temperature contrasts in dense urban, seafront, and blue-green spaces across Hong Kong.",
+    "date": "2022"
+  },
+  {
+    "group": "Urban Heat Measurement Study",
+    "group_order": 35,
+    "thumb": "2025_showcase/IMG_3900.jpeg",
+    "full": "2025_showcase/IMG_3900.jpeg",
+    "title": "Urban Heat Measurement Study · IMG 3900",
+    "description": "We use mobile sensors to measure temperature contrasts in dense urban, seafront, and blue-green spaces across Hong Kong.",
+    "date": "2022"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/DSC04030-Enhanced-NR.jpg",
+    "full": "2025_showcase/DSC04030-Enhanced-NR.jpg",
+    "title": "Dsc04030 Enhanced Nr",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/DSC04035.jpg",
+    "full": "2025_showcase/DSC04035.jpg",
+    "title": "Field & Travel 2025 · DSC04035",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/DSC04151.jpg",
+    "full": "2025_showcase/DSC04151.jpg",
+    "title": "Field & Travel 2025 · DSC04151",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/DSC04231.jpg",
+    "full": "2025_showcase/DSC04231.jpg",
+    "title": "Field & Travel 2025 · DSC04231",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/DSC04240.jpg",
+    "full": "2025_showcase/DSC04240.jpg",
+    "title": "Field & Travel 2025 · DSC04240",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/DSC04274-2.jpg",
+    "full": "2025_showcase/DSC04274-2.jpg",
+    "title": "Dsc04274 2",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/DSC04445-Pano-Enhanced-NR 2.jpg",
+    "full": "2025_showcase/DSC04445-Pano-Enhanced-NR 2.jpg",
+    "title": "Dsc04445 Pano Enhanced Nr 2",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/DSC04445-Pano-Enhanced-NR.jpg",
+    "full": "2025_showcase/DSC04445-Pano-Enhanced-NR.jpg",
+    "title": "Dsc04445 Pano Enhanced Nr",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/IMG_5283.JPG",
+    "full": "2025_showcase/IMG_5283.JPG",
+    "title": "Field & Travel 2025 · IMG 5283",
+    "description": "Field and research travel moments.",
+    "date": "2025-05"
+  },
+  {
+    "group": "Field & Travel 2025",
+    "group_order": 275,
+    "thumb": "2025_showcase/IMG_5030.JPG",
+    "full": "2025_showcase/IMG_5030.JPG",
+    "title": "Field & Travel 2025 · IMG 5030",
+    "description": "Field and research travel moments.",
+    "date": "2025-04"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_3197.JPG",
+    "full": "2025_showcase/IMG_3197.JPG",
+    "title": "Field & Travel 2024 · IMG 3197",
+    "description": "Field and research travel moments.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_3371 2.JPG",
+    "full": "2025_showcase/IMG_3371 2.JPG",
+    "title": "Img 3371 2",
+    "description": "Field and research travel moments.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_3371.JPG",
+    "full": "2025_showcase/IMG_3371.JPG",
+    "title": "Field & Travel 2024 · IMG 3371",
+    "description": "Field and research travel moments.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_3455.JPG",
+    "full": "2025_showcase/IMG_3455.JPG",
+    "title": "Field & Travel 2024 · IMG 3455",
+    "description": "Field and research travel moments.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_3464 2.JPG",
+    "full": "2025_showcase/IMG_3464 2.JPG",
+    "title": "Img 3464 2",
+    "description": "Field and research travel moments.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_3464.JPG",
+    "full": "2025_showcase/IMG_3464.JPG",
+    "title": "Field & Travel 2024 · IMG 3464",
+    "description": "Field and research travel moments.",
+    "date": "2024-12"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/40713a53-ff11-4be3-8273-78277226058b.jpg",
+    "full": "2025_showcase/40713a53-ff11-4be3-8273-78277226058b.jpg",
+    "title": "40713A53 Ff11 4Be3 8273 78277226058B",
+    "description": "Field and research travel moments.",
+    "date": "2024-03"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_9890.jpeg",
+    "full": "2025_showcase/IMG_9890.jpeg",
+    "title": "Field & Travel 2024 · IMG 9890",
+    "description": "Field and research travel moments.",
+    "date": "2024-03"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_9905.JPG",
+    "full": "2025_showcase/IMG_9905.JPG",
+    "title": "Field & Travel 2024 · IMG 9905",
+    "description": "Field and research travel moments.",
+    "date": "2024-03"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_9910.JPG",
+    "full": "2025_showcase/IMG_9910.JPG",
+    "title": "Field & Travel 2024 · IMG 9910",
+    "description": "Field and research travel moments.",
+    "date": "2024-03"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_9912.JPG",
+    "full": "2025_showcase/IMG_9912.JPG",
+    "title": "Field & Travel 2024 · IMG 9912",
+    "description": "Field and research travel moments.",
+    "date": "2024-03"
+  },
+  {
+    "group": "Field & Travel 2024",
+    "group_order": 276,
+    "thumb": "2025_showcase/IMG_9930.JPG",
+    "full": "2025_showcase/IMG_9930.JPG",
+    "title": "Field & Travel 2024 · IMG 9930",
+    "description": "Field and research travel moments.",
+    "date": "2024-03"
+  },
+  {
+    "group": "Field & Travel 2023",
+    "group_order": 277,
+    "thumb": "2025_showcase/F0B826B8-A381-4707-B665-FF3D59C6B71C-10364-00000266C906E5EA.JPG",
+    "full": "2025_showcase/F0B826B8-A381-4707-B665-FF3D59C6B71C-10364-00000266C906E5EA.JPG",
+    "title": "F0B826B8 A381 4707 B665 Ff3D59C6B71C 10364 00000266C906E5Ea",
+    "description": "Field and research travel moments.",
+    "date": "2023-05"
+  },
+  {
+    "group": "Field & Travel 2023",
+    "group_order": 277,
+    "thumb": "2025_showcase/IMG_5304.jpeg",
+    "full": "2025_showcase/IMG_5304.jpeg",
+    "title": "Field & Travel 2023 · IMG 5304",
+    "description": "Field and research travel moments.",
+    "date": "2023-04"
   }
 ]
