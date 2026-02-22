@@ -132,12 +132,13 @@ body {
   top: 0;
   z-index: 50;
   width: min(1080px, 92vw);
-  margin: 10px auto 0;
-  padding: 10px 16px 11px;
-  border-radius: 14px;
-  border: 1px solid var(--line);
-  background: rgba(8, 18, 25, 0.72);
-  backdrop-filter: blur(10px);
+  margin: 8px auto 6px;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
 .header-top {
@@ -504,7 +505,7 @@ footer {
 @media (max-width: 560px) {
   .site-header {
     margin-top: 8px;
-    padding: 9px 12px 10px;
+    padding: 0;
   }
 
   .site-nav {
@@ -736,24 +737,24 @@ footer {
 
 /* Nature Journal theme */
 :root {
-  --bg: #f6f2e9;
-  --bg-2: #ece6d7;
+  --bg: #d4e1e6;
+  --bg-2: #bccfd7;
   --ink: #1f2b2f;
   --muted: #5d6a6d;
-  --panel: rgba(255, 255, 250, 0.88);
-  --line: rgba(62, 82, 86, 0.24);
-  --accent: #2e5963;
+  --panel: rgba(215, 230, 236, 0.66);
+  --line: rgba(62, 82, 86, 0.26);
+  --accent: #24535f;
   --accent-2: #856234;
   --accent-3: #4f8f84;
-  --shadow: 0 14px 28px rgba(43, 54, 56, 0.12);
+  --shadow: 0 14px 28px rgba(43, 54, 56, 0.14);
 }
 
 body {
   font-family: "Source Sans 3", "Avenir Next", "Helvetica Neue", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at 18% 14%, rgba(79, 143, 132, 0.14), transparent 36%),
-    radial-gradient(circle at 86% 78%, rgba(133, 98, 52, 0.14), transparent 34%),
+    radial-gradient(circle at 18% 14%, rgba(79, 143, 132, 0.18), transparent 38%),
+    radial-gradient(circle at 86% 78%, rgba(133, 98, 52, 0.12), transparent 36%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
 }
 
@@ -811,12 +812,12 @@ h3 {
 }
 
 .site-header {
-  border-radius: 12px;
-  border: 1px solid rgba(62, 82, 86, 0.2);
-  background: rgba(246, 242, 233, 0.92);
-  box-shadow: 0 8px 20px rgba(53, 72, 78, 0.1);
+  border-radius: 0;
+  border: 0;
+  background: linear-gradient(180deg, rgba(188, 207, 215, 0.84), rgba(188, 207, 215, 0.62));
+  box-shadow: none;
   backdrop-filter: blur(8px);
-  padding: 8px 12px 8px;
+  padding: 0;
 }
 
 .log-title {
@@ -827,9 +828,11 @@ h3 {
 }
 
 .site-nav {
-  margin-top: 7px;
+  margin-top: 6px;
   padding-top: 0;
   border-top: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(62, 82, 86, 0.26);
 }
 
 .site-nav a {
@@ -941,7 +944,7 @@ h3,
 .btn-ghost {
   color: #27474f;
   border-color: rgba(62, 82, 86, 0.28);
-  background: rgba(255, 255, 255, 0.66);
+  background: rgba(203, 222, 230, 0.5);
 }
 
 .btn-ghost:hover,
@@ -953,7 +956,7 @@ h3,
 .gallery-index-chip {
   color: #35545b;
   border-color: rgba(62, 82, 86, 0.28);
-  background: rgba(255, 255, 255, 0.64);
+  background: rgba(203, 222, 230, 0.54);
 }
 
 .gallery-year-count,
@@ -1045,9 +1048,9 @@ html[data-theme="dark"] .bg-planet {
 }
 
 html[data-theme="dark"] .site-header {
-  background: rgba(11, 22, 30, 0.88);
-  border: 1px solid rgba(129, 171, 180, 0.24);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(180deg, rgba(11, 22, 30, 0.86), rgba(11, 22, 30, 0.64));
+  border: 0;
+  box-shadow: none;
   backdrop-filter: blur(8px);
 }
 
@@ -1065,6 +1068,7 @@ html[data-theme="dark"] .site-nav a:hover {
 
 html[data-theme="dark"] .site-nav {
   border-top: 0;
+  border-bottom: 1px solid rgba(129, 171, 180, 0.24);
 }
 
 html[data-theme="dark"] .hero-main,
