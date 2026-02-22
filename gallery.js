@@ -1,3 +1,4 @@
+(() => {
 const yearEl = document.getElementById("year");
 if (yearEl) {
   yearEl.textContent = new Date().getFullYear();
@@ -108,22 +109,15 @@ function assetUrl(relPath) {
 }
 
 async function loadGalleryItems() {
-  try {
-    const response = await fetch(GALLERY_META_PATH, { cache: "no-cache" });
-    if (!response.ok) {
-      throw new Error(`meta fetch failed: ${response.status}`);
-    }
-    const items = await response.json();
-    if (Array.isArray(items)) {
-      return items;
-    }
-    throw new Error("meta.json is not an array");
-  } catch (error) {
-    if (Array.isArray(window.GALLERY_ITEMS) && window.GALLERY_ITEMS.length) {
-      return window.GALLERY_ITEMS;
-    }
-    throw error;
+  const response = await fetch(GALLERY_META_PATH, { cache: "no-cache" });
+  if (!response.ok) {
+    throw new Error(`meta fetch failed: ${response.status}`);
   }
+  const items = await response.json();
+  if (Array.isArray(items)) {
+    return items;
+  }
+  throw new Error("meta.json is not an array");
 }
 
 async function renderGallery() {
@@ -324,3 +318,4 @@ async function renderGallery() {
 }
 
 renderGallery();
+})();
