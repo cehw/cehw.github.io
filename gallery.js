@@ -6,7 +6,7 @@ if (yearEl) {
 const indexContainer = document.getElementById("gallery-index");
 const groupsContainer = document.getElementById("gallery-groups");
 const empty = document.getElementById("gallery-empty");
-const groupsWithoutSmallTitles = new Set(["Halloween Painted Egg at UG Hall · 1"]);
+const groupsWithoutSmallTitles = new Set(["Easter Painted Egg at UG Hall · 1"]);
 
 function escapeHtml(text) {
   return String(text)
