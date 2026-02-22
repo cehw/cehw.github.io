@@ -77,6 +77,12 @@ function extractYears(dateText) {
   return [];
 }
 
+function extractPrimaryYear(dateText) {
+  const years = extractYears(dateText);
+  if (!years.length) return null;
+  return Math.max(...years);
+}
+
 async function renderGallery() {
   try {
     const response = await fetch("./assets/gallery/meta.json", { cache: "no-cache" });
@@ -90,50 +96,78 @@ async function renderGallery() {
       return;
     }
 
-    const grouped = new Map();
+    const yearsMap = new Map();
+
     items.forEach((item, index) => {
-      const key = inferGroup(item);
+      const groupKey = inferGroup(item);
+      const primaryYear = extractPrimaryYear(item.date);
+      const yearKey = primaryYear !== null ? String(primaryYear) : "Unknown";
+      const yearSort = primaryYear !== null ? primaryYear : -1;
       const candidateOrder = Number(item.group_order);
-      const order = Number.isFinite(candidateOrder) ? candidateOrder : 1000 + index;
-      if (!grouped.has(key)) {
-        grouped.set(key, { key, order, items: [] });
+      const groupOrder = Number.isFinite(candidateOrder) ? candidateOrder : 1000 + index;
+      const itemDate = parseDate(item.date);
+
+      if (!yearsMap.has(yearKey)) {
+        yearsMap.set(yearKey, {
+          key: yearKey,
+          sortYear: yearSort,
+          groups: new Map(),
+          totalCount: 0,
+          latestDate: Number.NEGATIVE_INFINITY,
+        });
       }
-      const group = grouped.get(key);
-      group.order = Math.min(group.order, order);
-      group.items.push(item);
+
+      const yearBucket = yearsMap.get(yearKey);
+      yearBucket.totalCount += 1;
+      yearBucket.latestDate = Math.max(yearBucket.latestDate, itemDate);
+
+      if (!yearBucket.groups.has(groupKey)) {
+        yearBucket.groups.set(groupKey, {
+          key: groupKey,
+          order: groupOrder,
+          items: [],
+          latestDate: Number.NEGATIVE_INFINITY,
+        });
+      }
+
+      const groupBucket = yearBucket.groups.get(groupKey);
+      groupBucket.order = Math.min(groupBucket.order, groupOrder);
+      groupBucket.latestDate = Math.max(groupBucket.latestDate, itemDate);
+      groupBucket.items.push(item);
     });
 
-    const groups = [...grouped.values()];
-    groups.forEach((group) => {
-      group.items.sort((a, b) => {
-        const dateDiff = parseDate(b.date) - parseDate(a.date);
-        if (dateDiff !== 0) return dateDiff;
-        const titleA = String(a.title || "").toLowerCase();
-        const titleB = String(b.title || "").toLowerCase();
-        return titleA.localeCompare(titleB);
+    const sortedYears = [...yearsMap.values()].sort((a, b) => {
+      if (a.sortYear !== b.sortYear) return b.sortYear - a.sortYear;
+      if (a.latestDate !== b.latestDate) return b.latestDate - a.latestDate;
+      return a.key.localeCompare(b.key);
+    });
+
+    sortedYears.forEach((yearBucket) => {
+      yearBucket.sortedGroups = [...yearBucket.groups.values()].sort((a, b) => {
+        if (a.order !== b.order) return a.order - b.order;
+        if (a.latestDate !== b.latestDate) return b.latestDate - a.latestDate;
+        return a.key.localeCompare(b.key);
       });
 
-      group.latestDate = Math.max(...group.items.map((item) => parseDate(item.date)));
-      const allYears = group.items.flatMap((item) => extractYears(item.date));
-      group.minYear = allYears.length ? Math.min(...allYears) : null;
-      group.maxYear = allYears.length ? Math.max(...allYears) : null;
-    });
-    const sortedGroups = groups.sort((a, b) => {
-      const dateDiff = b.latestDate - a.latestDate;
-      if (dateDiff !== 0) return dateDiff;
-      return a.order - b.order || a.key.localeCompare(b.key);
+      yearBucket.sortedGroups.forEach((groupBucket) => {
+        groupBucket.items.sort((a, b) => {
+          const dateDiff = parseDate(b.date) - parseDate(a.date);
+          if (dateDiff !== 0) return dateDiff;
+          const titleA = String(a.title || "").toLowerCase();
+          const titleB = String(b.title || "").toLowerCase();
+          return titleA.localeCompare(titleB);
+        });
+      });
     });
 
     if (indexContainer) {
-      if (sortedGroups.length > 1) {
-        const used = new Set();
-        const chips = sortedGroups
-          .map((group) => {
-            let id = slugify(group.key);
-            while (used.has(id)) id = `${id}-x`;
-            used.add(id);
-            group.anchorId = id;
-            return `<a class="gallery-index-chip" href="#group-${id}">${escapeHtml(group.key)}</a>`;
+      if (sortedYears.length > 1) {
+        const chips = sortedYears
+          .map((yearBucket) => {
+            const label = yearBucket.key;
+            const yearId = `year-${slugify(label)}`;
+            yearBucket.anchorId = yearId;
+            return `<a class="gallery-index-chip" href="#${yearId}">${escapeHtml(label)}</a>`;
           })
           .join("");
         indexContainer.innerHTML = chips;
@@ -143,48 +177,63 @@ async function renderGallery() {
       }
     }
 
-    const html = sortedGroups
-      .map((group) => {
-        const cards = group.items
-          .map((item) => {
-            const thumb = escapeHtml(item.thumb || item.file || "");
-            const full = escapeHtml(item.full || item.file || "");
-            const title = escapeHtml(item.title || "Untitled");
-            const desc = escapeHtml(item.description || "");
-            const date = escapeHtml(item.date || "");
+    const html = sortedYears
+      .map((yearBucket) => {
+        const yearLabel = escapeHtml(yearBucket.key);
+        const yearCount = yearBucket.totalCount;
+        const yearCountLabel = `${yearCount} photo${yearCount > 1 ? "s" : ""}`;
+        const yearAnchorId = escapeHtml(yearBucket.anchorId || `year-${slugify(yearBucket.key)}`);
+
+        const groupsHtml = yearBucket.sortedGroups
+          .map((groupBucket) => {
+            const groupTitle = escapeHtml(groupBucket.key);
+            const groupCount = groupBucket.items.length;
+            const groupCountLabel = `${groupCount} photo${groupCount > 1 ? "s" : ""}`;
+
+            const cards = groupBucket.items
+              .map((item) => {
+                const thumb = escapeHtml(item.thumb || item.file || "");
+                const full = escapeHtml(item.full || item.file || "");
+                const title = escapeHtml(item.title || "Untitled");
+                const desc = escapeHtml(item.description || "");
+                const date = escapeHtml(item.date || "");
+                return `
+                  <article class="gallery-card">
+                    <a href="./assets/gallery/${full}" target="_blank" rel="noreferrer">
+                      <img src="./assets/gallery/${thumb}" alt="${title}" loading="lazy" />
+                    </a>
+                    <div class="gallery-meta">
+                      <h3>${title}</h3>
+                      ${desc ? `<p>${desc}</p>` : ""}
+                      ${date ? `<time>${date}</time>` : ""}
+                    </div>
+                  </article>
+                `;
+              })
+              .join("");
+
             return `
-              <article class="gallery-card">
-                <a href="./assets/gallery/${full}" target="_blank" rel="noreferrer">
-                  <img src="./assets/gallery/${thumb}" alt="${title}" loading="lazy" />
-                </a>
-                <div class="gallery-meta">
-                  <h3>${title}</h3>
-                  ${desc ? `<p>${desc}</p>` : ""}
-                  ${date ? `<time>${date}</time>` : ""}
+              <section class="gallery-group">
+                <header class="gallery-group-head">
+                  <h3 class="gallery-group-title">${groupTitle}</h3>
+                  <span class="gallery-group-count">${groupCountLabel}</span>
+                </header>
+                <div class="gallery-grid">
+                  ${cards}
                 </div>
-              </article>
+              </section>
             `;
           })
           .join("");
 
-        const groupTitle = escapeHtml(group.key);
-        const count = group.items.length;
-        const yearLabel =
-          group.minYear !== null && group.maxYear !== null
-            ? group.minYear === group.maxYear
-              ? String(group.maxYear)
-              : `${group.minYear}-${group.maxYear}`
-            : "";
-        const countLabel = `${yearLabel ? `${yearLabel} · ` : ""}${count} photo${count > 1 ? "s" : ""}`;
-        const anchorId = escapeHtml(group.anchorId || slugify(group.key));
         return `
-          <section class="gallery-group" id="group-${anchorId}">
-            <header class="gallery-group-head">
-              <h2 class="gallery-group-title">${groupTitle}</h2>
-              <span class="gallery-group-count">${countLabel}</span>
+          <section class="gallery-year" id="${yearAnchorId}">
+            <header class="gallery-year-head">
+              <h2 class="gallery-year-title">${yearLabel}</h2>
+              <span class="gallery-year-count">${yearCountLabel}</span>
             </header>
-            <div class="gallery-grid">
-              ${cards}
+            <div class="gallery-year-groups">
+              ${groupsHtml}
             </div>
           </section>
         `;
