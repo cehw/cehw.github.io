@@ -404,7 +404,8 @@ ol li {
 }
 
 em {
-  color: #d8e8ec;
+  color: #2f4f56;
+  font-weight: 600;
 }
 
 .contact-list {
@@ -1084,6 +1085,11 @@ html[data-theme="dark"] .btn-ghost {
   color: #a8ced8;
   border-color: rgba(146, 188, 197, 0.32);
   background: rgba(10, 25, 35, 0.62);
+}
+
+html[data-theme="dark"] em {
+  color: #d8e8ec;
+  font-weight: 500;
 }
 
 html[data-theme="dark"] .theme-toggle {
