@@ -1,10 +1,10 @@
 :root {
-  --bg: #d4e1e6;
-  --bg-2: #bccfd7;
+  --bg: #f7f4ef;
+  --bg-2: #ece7df;
   --ink: #1f2b2f;
   --muted: #5d6a6d;
-  --panel: rgba(215, 230, 236, 0.66);
-  --line: rgba(62, 82, 86, 0.26);
+  --panel: rgba(255, 255, 255, 0.72);
+  --line: rgba(62, 82, 86, 0.2);
   --accent: #24535f;
   --accent-2: #f0d090;
   --accent-3: #4f8f84;
@@ -32,8 +32,8 @@ body {
   line-height: 1.64;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 18% 14%, rgba(79, 143, 132, 0.18), transparent 38%),
-    radial-gradient(circle at 86% 78%, rgba(133, 98, 52, 0.12), transparent 36%),
+    radial-gradient(circle at 18% 14%, rgba(93, 140, 147, 0.12), transparent 38%),
+    radial-gradient(circle at 86% 78%, rgba(133, 98, 52, 0.08), transparent 36%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
 }
 
@@ -43,8 +43,8 @@ body {
   z-index: -3;
   pointer-events: none;
   background-image:
-    linear-gradient(to right, rgba(61, 83, 87, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(61, 83, 87, 0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgba(61, 83, 87, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(61, 83, 87, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -54,9 +54,9 @@ body {
   z-index: -2;
   pointer-events: none;
   background:
-    repeating-radial-gradient(circle at 24% 18%, rgba(46, 89, 99, 0.08) 0 1px, transparent 1px 20px),
-    repeating-radial-gradient(circle at 82% 74%, rgba(133, 98, 52, 0.06) 0 1px, transparent 1px 22px);
-  opacity: 0.55;
+    repeating-radial-gradient(circle at 24% 18%, rgba(46, 89, 99, 0.05) 0 1px, transparent 1px 20px),
+    repeating-radial-gradient(circle at 82% 74%, rgba(133, 98, 52, 0.04) 0 1px, transparent 1px 22px);
+  opacity: 0.45;
 }
 
 .bg-planet {
@@ -136,8 +136,8 @@ body {
   padding: 0;
   border-radius: 0;
   border: 0;
-  background: linear-gradient(180deg, rgba(188, 207, 215, 0.84), rgba(188, 207, 215, 0.62));
-  backdrop-filter: blur(8px);
+  background: transparent;
+  backdrop-filter: none;
   box-shadow: none;
 }
 
@@ -870,10 +870,10 @@ html[data-theme="dark"] .bg-planet {
 }
 
 html[data-theme="dark"] .site-header {
-  background: linear-gradient(180deg, rgba(11, 22, 30, 0.86), rgba(11, 22, 30, 0.64));
+  background: transparent;
   border: 0;
   box-shadow: none;
-  backdrop-filter: blur(8px);
+  backdrop-filter: none;
 }
 
 html[data-theme="dark"] .log-title {
