@@ -83,6 +83,19 @@ function extractPrimaryYear(dateText) {
   return Math.max(...years);
 }
 
+function escapeRegExp(text) {
+  return String(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function compactCardTitle(rawTitle, groupTitle) {
+  const title = String(rawTitle || "Untitled").trim();
+  const group = String(groupTitle || "").trim();
+  if (!group) return title || "Untitled";
+  const prefixPattern = new RegExp(`^${escapeRegExp(group)}\\s*[·:|-]\\s*`, "i");
+  const compacted = title.replace(prefixPattern, "").trim();
+  return compacted || title || "Untitled";
+}
+
 async function renderGallery() {
   try {
     const response = await fetch("./assets/gallery/meta.json", { cache: "no-cache" });
@@ -189,21 +202,47 @@ async function renderGallery() {
             const groupTitle = escapeHtml(groupBucket.key);
             const groupCount = groupBucket.items.length;
             const groupCountLabel = `${groupCount} photo${groupCount > 1 ? "s" : ""}`;
+            const descValues = [
+              ...new Set(
+                groupBucket.items
+                  .map((item) => String(item.description || "").trim())
+                  .filter((value) => value)
+              ),
+            ];
+            const dateValues = [
+              ...new Set(
+                groupBucket.items
+                  .map((item) => String(item.date || "").trim())
+                  .filter((value) => value)
+              ),
+            ];
+            const sharedDesc = groupCount > 1 && descValues.length === 1 ? descValues[0] : "";
+            const sharedDate = groupCount > 1 && dateValues.length === 1 ? dateValues[0] : "";
+            const sharedMetaHtml = sharedDesc || sharedDate
+              ? `
+                <div class="gallery-group-shared">
+                  ${sharedDesc ? `<p class="gallery-group-desc">${escapeHtml(sharedDesc)}</p>` : ""}
+                  ${sharedDate ? `<time class="gallery-group-date">${escapeHtml(sharedDate)}</time>` : ""}
+                </div>
+              `
+              : "";
 
             const cards = groupBucket.items
               .map((item) => {
                 const thumb = escapeHtml(item.thumb || item.file || "");
                 const full = escapeHtml(item.full || item.file || "");
-                const title = escapeHtml(item.title || "Untitled");
-                const desc = escapeHtml(item.description || "");
-                const date = escapeHtml(item.date || "");
+                const displayTitle = escapeHtml(compactCardTitle(item.title || "Untitled", groupBucket.key));
+                const rawDesc = String(item.description || "").trim();
+                const rawDate = String(item.date || "").trim();
+                const desc = !sharedDesc && rawDesc ? escapeHtml(rawDesc) : "";
+                const date = !sharedDate && rawDate ? escapeHtml(rawDate) : "";
                 return `
                   <article class="gallery-card">
                     <a href="./assets/gallery/${full}" target="_blank" rel="noreferrer">
-                      <img src="./assets/gallery/${thumb}" alt="${title}" loading="lazy" />
+                      <img src="./assets/gallery/${thumb}" alt="${displayTitle}" loading="lazy" />
                     </a>
                     <div class="gallery-meta">
-                      <h3>${title}</h3>
+                      <h3>${displayTitle}</h3>
                       ${desc ? `<p>${desc}</p>` : ""}
                       ${date ? `<time>${date}</time>` : ""}
                     </div>
@@ -218,6 +257,7 @@ async function renderGallery() {
                   <h3 class="gallery-group-title">${groupTitle}</h3>
                   <span class="gallery-group-count">${groupCountLabel}</span>
                 </header>
+                ${sharedMetaHtml}
                 <div class="gallery-grid">
                   ${cards}
                 </div>

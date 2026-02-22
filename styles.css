@@ -579,6 +579,23 @@ footer {
   padding: 4px 8px;
 }
 
+.gallery-group-shared {
+  margin: -2px 0 10px;
+}
+
+.gallery-group-desc {
+  margin: 0;
+  color: #b6ced4;
+  font-size: 0.9rem;
+}
+
+.gallery-group-date {
+  display: inline-block;
+  margin-top: 3px;
+  color: #9bc1c7;
+  font-size: 0.82rem;
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -604,8 +621,8 @@ footer {
 }
 
 .gallery-meta h3 {
-  font-size: 1rem;
-  margin-bottom: 6px;
+  font-size: 0.98rem;
+  margin-bottom: 4px;
 }
 
 .gallery-meta p {
