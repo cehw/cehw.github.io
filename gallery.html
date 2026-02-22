@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Gallery of research-related images and visual materials by Han Wang."
+    />
+    <title>Han Wang | Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&family=Spectral:ital,wght@0,600;0,700;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-flow"></div>
+    <div class="bg-planet" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="./index.html">HW</a>
+      <nav>
+        <a href="./index.html#about">About</a>
+        <a href="./index.html#research">Research</a>
+        <a href="./index.html#publications">Publications</a>
+        <a class="is-active" href="./gallery.html">Gallery</a>
+        <a href="./index.html#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="gallery-main">
+      <section class="panel reveal gallery-hero">
+        <p class="eyebrow">Visual Archive</p>
+        <h1>Gallery</h1>
+        <p class="subtitle">
+          Research visuals, profile images, and scientific communication materials.
+        </p>
+      </section>
+
+      <section class="panel reveal">
+        <div class="gallery-grid" id="gallery-grid"></div>
+        <p class="gallery-empty" id="gallery-empty" hidden>
+          No gallery items yet. Add images to
+          <code>homepage_materials/gallery</code> and update
+          <code>meta.json</code>.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; <span id="year"></span> Han Wang</p>
+    </footer>
+
+    <script src="./gallery.js"></script>
+  </body>
+</html>

@@ -4,7 +4,8 @@ if (yearEl) {
 }
 
 const links = [...document.querySelectorAll("nav a")];
-const sections = links
+const sectionLinks = links.filter((link) => link.getAttribute("href")?.startsWith("#"));
+const sections = sectionLinks
   .map((link) => document.querySelector(link.getAttribute("href")))
   .filter(Boolean);
 
@@ -15,7 +16,7 @@ const io = new IntersectionObserver(
         return;
       }
       const id = `#${entry.target.id}`;
-      links.forEach((link) => {
+      sectionLinks.forEach((link) => {
         link.classList.toggle("is-active", link.getAttribute("href") === id);
       });
     });
