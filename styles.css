@@ -271,10 +271,10 @@ h1 {
 }
 
 .btn-icon img {
-  width: 9px;
-  height: 9px;
+  width: 13px;
+  height: 13px;
   display: block;
-  flex: 0 0 9px;
+  flex: 0 0 13px;
   object-fit: contain;
   opacity: 0.9;
 }
@@ -378,10 +378,10 @@ em {
 }
 
 .contact-label img {
-  width: 8px;
-  height: 8px;
+  width: 11px;
+  height: 11px;
   display: block;
-  flex: 0 0 8px;
+  flex: 0 0 11px;
   object-fit: contain;
   opacity: 0.9;
 }
