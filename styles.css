@@ -23,7 +23,7 @@ body {
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 92px;
+  scroll-padding-top: 16px;
 }
 
 body {
@@ -128,9 +128,9 @@ body {
 }
 
 .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
+  position: static;
+  top: auto;
+  z-index: 1;
   width: min(1080px, 92vw);
   margin: 8px auto 6px;
   padding: 0;
@@ -234,7 +234,7 @@ main {
 
 section[id],
 .gallery-year {
-  scroll-margin-top: 92px;
+  scroll-margin-top: 16px;
 }
 
 .hero {
