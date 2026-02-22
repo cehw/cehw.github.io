@@ -26,7 +26,7 @@ html {
 }
 
 body {
-  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  font-family: "Source Sans 3", "Avenir Next", "Helvetica Neue", sans-serif;
   color: var(--ink);
   line-height: 1.64;
   min-height: 100vh;
@@ -130,7 +130,7 @@ body {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 50;
   width: min(1080px, 92vw);
   margin: 10px auto 0;
   padding: 10px 16px 11px;
@@ -155,7 +155,7 @@ body {
 .log-title {
   text-decoration: none;
   color: #1f2b2f;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Source Sans 3", "Avenir Next", "Helvetica Neue", sans-serif;
   font-size: 24px;
   font-weight: 700;
   line-height: 1;
@@ -226,7 +226,7 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-family: "Spectral", Georgia, serif;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
 }
 
 h1 {
@@ -759,8 +759,7 @@ body {
 
 h1,
 h2,
-h3,
-.log-title {
+h3 {
   font-family: "Cormorant Garamond", "Times New Roman", serif;
   font-weight: 600;
   letter-spacing: 0.015em;
@@ -813,15 +812,15 @@ h3,
 
 .site-header {
   border-radius: 12px;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-  padding: 8px 0 8px;
+  border: 1px solid rgba(62, 82, 86, 0.2);
+  background: rgba(246, 242, 233, 0.92);
+  box-shadow: 0 8px 20px rgba(53, 72, 78, 0.1);
+  backdrop-filter: blur(8px);
+  padding: 8px 12px 8px;
 }
 
 .log-title {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Source Sans 3", "Avenir Next", "Helvetica Neue", sans-serif;
   color: #1f2b2f;
   font-size: 24px;
   letter-spacing: 0;
@@ -1046,8 +1045,10 @@ html[data-theme="dark"] .bg-planet {
 }
 
 html[data-theme="dark"] .site-header {
-  background: transparent;
-  box-shadow: none;
+  background: rgba(11, 22, 30, 0.88);
+  border: 1px solid rgba(129, 171, 180, 0.24);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
 }
 
 html[data-theme="dark"] .log-title {
