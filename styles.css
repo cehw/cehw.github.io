@@ -347,6 +347,7 @@ h1 {
   display: block;
   flex: 0 0 15px !important;
   object-fit: contain;
+  filter: none;
   opacity: 1;
 }
 
@@ -492,6 +493,7 @@ em {
   display: block;
   flex: 0 0 13px !important;
   object-fit: contain;
+  filter: none;
   opacity: 1;
 }
 
@@ -943,6 +945,11 @@ html[data-theme="dark"] .btn-ghost {
   color: #a8ced8;
   border-color: rgba(146, 188, 197, 0.32);
   background: rgba(10, 25, 35, 0.62);
+}
+
+html[data-theme="dark"] .btn-icon img,
+html[data-theme="dark"] .contact-label img {
+  filter: invert(0.9) brightness(1.15);
 }
 
 html[data-theme="dark"] em {

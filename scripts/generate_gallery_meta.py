@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Auto-generate materials/gallery/meta.json from local images."""
+"""Auto-generate assets/gallery/meta.json from local images."""
 
 from __future__ import annotations
 
@@ -117,7 +117,14 @@ def parse_date_for_sort(value: str) -> float:
 
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
-    gallery_dir = root / "materials" / "gallery"
+    assets_gallery = root / "assets" / "gallery"
+    legacy_gallery = root / "materials" / "gallery"
+    if assets_gallery.exists():
+        gallery_dir = assets_gallery
+    elif legacy_gallery.exists():
+        gallery_dir = legacy_gallery
+    else:
+        raise FileNotFoundError("No gallery directory found. Expected assets/gallery.")
     meta_path = gallery_dir / "meta.json"
     full_dir = gallery_dir / "full"
 
