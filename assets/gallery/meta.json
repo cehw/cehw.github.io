@@ -3,7 +3,7 @@
     "group": "Austria",
     "group_order": 1,
     "thumb": "2025_showcase/austria_01.jpg",
-    "full": "full/austria_01.jpg",
+    "full": "2025_showcase/austria_01.jpg",
     "title": "Austria Field Photo I",
     "description": "Field and conference travel moments.",
     "date": "2025-05"
@@ -12,7 +12,7 @@
     "group": "Austria",
     "group_order": 1,
     "thumb": "2025_showcase/austria_02.jpg",
-    "full": "full/austria_02.jpg",
+    "full": "2025_showcase/austria_02.jpg",
     "title": "Austria Field Photo II",
     "description": "Field and conference travel moments.",
     "date": "2025-05"
@@ -120,7 +120,7 @@
     "group": "Sydney Visit",
     "group_order": 21,
     "thumb": "2025_showcase/portrait_02.jpg",
-    "full": "full/portrait_02.JPG",
+    "full": "2025_showcase/portrait_02_full.JPG",
     "title": "Sydney Visit · Photo 02",
     "description": "Photos taken in Sydney, Australia.",
     "date": "2023-08"
@@ -219,7 +219,7 @@
     "group": "Cairns Great Barrier Reef Diving",
     "group_order": 22,
     "thumb": "2025_showcase/portrait_03.jpg",
-    "full": "full/portrait_03.JPG",
+    "full": "2025_showcase/portrait_03_full.JPG",
     "title": "Cairns Great Barrier Reef Diving · Photo from Diving Boat",
     "description": "Diving and field travel in Cairns and the Great Barrier Reef, Australia, where I got AOW.",
     "date": "2023-08"

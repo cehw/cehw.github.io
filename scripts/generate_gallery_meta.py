@@ -115,6 +115,19 @@ def parse_date_for_sort(value: str) -> float:
     return float("-inf")
 
 
+def find_full_variant(gallery_dir: Path, thumb_rel: str) -> str:
+    thumb_path = Path(thumb_rel)
+    full_stem = f"{thumb_path.stem}_full"
+    candidates = []
+    for ext in IMAGE_EXTS:
+        candidates.append(thumb_path.with_name(f"{full_stem}{ext}"))
+        candidates.append(thumb_path.with_name(f"{full_stem}{ext.upper()}"))
+    for candidate in candidates:
+        if (gallery_dir / candidate).is_file():
+            return candidate.as_posix()
+    return ""
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     assets_gallery = root / "assets" / "gallery"
@@ -126,7 +139,6 @@ def main() -> None:
     else:
         raise FileNotFoundError("No gallery directory found. Expected assets/gallery.")
     meta_path = gallery_dir / "meta.json"
-    full_dir = gallery_dir / "full"
 
     existing = read_json(meta_path)
     existing_by_thumb = {
@@ -134,14 +146,6 @@ def main() -> None:
         for item in existing
         if str(item.get("thumb", "")).strip()
     }
-
-    # For resolving full images with different extension casing.
-    full_by_stem = {}
-    if full_dir.exists():
-        for file in full_dir.rglob("*"):
-            if not file.is_file() or file.suffix.lower() not in IMAGE_EXTS:
-                continue
-            full_by_stem.setdefault(file.stem.lower(), file)
 
     images: list[Path] = []
     for file in gallery_dir.rglob("*"):
@@ -151,7 +155,9 @@ def main() -> None:
             continue
         if file.name.lower() == "meta.json":
             continue
-        if "full" in file.parts:
+        # Treat *_full assets as full-size variants for existing thumbs.
+        # They are referenced from metadata and should not become gallery cards.
+        if file.stem.lower().endswith("_full"):
             continue
         if file.suffix.lower() not in IMAGE_EXTS:
             continue
@@ -183,9 +189,9 @@ def main() -> None:
         if prev_full and (gallery_dir / prev_full).exists():
             full_rel = prev_full
         else:
-            candidate = full_by_stem.get(file.stem.lower())
+            candidate = find_full_variant(gallery_dir, thumb_rel)
             if candidate:
-                full_rel = candidate.relative_to(gallery_dir).as_posix()
+                full_rel = candidate
             else:
                 full_rel = thumb_rel
 
