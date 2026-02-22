@@ -271,10 +271,10 @@ h1 {
 }
 
 .btn-icon img {
-  width: 20px !important;
-  height: 20px !important;
+  width: 19px !important;
+  height: 19px !important;
   display: block;
-  flex: 0 0 20px !important;
+  flex: 0 0 19px !important;
   object-fit: contain;
   opacity: 0.9;
 }
