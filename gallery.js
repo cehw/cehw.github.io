@@ -6,6 +6,7 @@ if (yearEl) {
 const indexContainer = document.getElementById("gallery-index");
 const groupsContainer = document.getElementById("gallery-groups");
 const empty = document.getElementById("gallery-empty");
+const groupsWithoutSmallTitles = new Set(["Halloween Painted Egg at UG Hall · 1"]);
 
 function escapeHtml(text) {
   return String(text)
@@ -206,6 +207,7 @@ async function renderGallery() {
           .map((groupBucket) => {
             const groupKey = String(groupBucket.key || "").trim();
             const groupTitle = escapeHtml(groupKey);
+            const hideSmallTitles = groupsWithoutSmallTitles.has(groupKey);
             const groupCount = groupBucket.items.length;
             const groupCountLabel = `${groupCount} photo${groupCount > 1 ? "s" : ""}`;
             const groupNote =
@@ -220,11 +222,11 @@ async function renderGallery() {
             const dateValues = [...new Set(rawDates.filter((value) => value))];
             const nonEmptyDateCount = rawDates.filter((value) => value).length;
             const sharedDesc =
-              groupCount > 1 && nonEmptyDescCount === groupCount && descValues.length === 1
+              !hideSmallTitles && groupCount > 1 && nonEmptyDescCount === groupCount && descValues.length === 1
                 ? descValues[0]
                 : "";
             const sharedDate =
-              groupCount > 1 && nonEmptyDateCount === groupCount && dateValues.length === 1
+              !hideSmallTitles && groupCount > 1 && nonEmptyDateCount === groupCount && dateValues.length === 1
                 ? dateValues[0]
                 : "";
             const sharedMetaHtml = sharedDesc || sharedDate
@@ -247,16 +249,19 @@ async function renderGallery() {
                 const rawDate = String(item.date || "").trim();
                 const desc = !sharedDesc && rawDesc ? escapeHtml(rawDesc) : "";
                 const date = !sharedDate && rawDate ? escapeHtml(rawDate) : "";
+                const cardMetaParts = [];
+                if (!hideSmallTitles) cardMetaParts.push(`<h3>${displayTitle}</h3>`);
+                if (desc) cardMetaParts.push(`<p>${desc}</p>`);
+                if (date) cardMetaParts.push(`<time>${date}</time>`);
+                const cardMetaHtml = cardMetaParts.length
+                  ? `<div class="gallery-meta">${cardMetaParts.join("")}</div>`
+                  : "";
                 return `
                   <article class="gallery-card">
                     <a href="${fullUrl}" target="_blank" rel="noreferrer">
                       <img src="${thumbUrl}" alt="${displayTitle}" loading="lazy" />
                     </a>
-                    <div class="gallery-meta">
-                      <h3>${displayTitle}</h3>
-                      ${desc ? `<p>${desc}</p>` : ""}
-                      ${date ? `<time>${date}</time>` : ""}
-                    </div>
+                    ${cardMetaHtml}
                   </article>
                 `;
               })
