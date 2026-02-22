@@ -267,15 +267,16 @@ h1 {
 .btn-icon {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
 
 .btn-icon img {
-  width: 12px;
-  height: 12px;
+  width: 9px;
+  height: 9px;
   display: block;
-  flex: 0 0 12px;
+  flex: 0 0 9px;
   object-fit: contain;
+  opacity: 0.9;
 }
 
 .btn-primary {
@@ -373,15 +374,16 @@ em {
 .contact-label {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
 }
 
 .contact-label img {
-  width: 11px;
-  height: 11px;
+  width: 8px;
+  height: 8px;
   display: block;
-  flex: 0 0 11px;
+  flex: 0 0 8px;
   object-fit: contain;
+  opacity: 0.9;
 }
 
 footer {
