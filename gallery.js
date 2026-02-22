@@ -39,6 +39,13 @@ function parseDate(dateText) {
   if (!dateText) return Number.NEGATIVE_INFINITY;
   const raw = String(dateText).trim();
   const normalized = raw.replaceAll("/", "-").replaceAll(".", "-");
+
+  const yearRange = normalized.match(/^(\d{4})\s*-\s*(\d{4})$/);
+  if (yearRange) {
+    const endYear = Number(yearRange[2]);
+    return new Date(endYear, 11, 31).getTime();
+  }
+
   const direct = Date.parse(normalized);
   if (!Number.isNaN(direct)) return direct;
 
@@ -49,6 +56,25 @@ function parseDate(dateText) {
     return new Date(year, month - 1, 1).getTime();
   }
   return Number.NEGATIVE_INFINITY;
+}
+
+function extractYears(dateText) {
+  if (!dateText) return [];
+  const raw = String(dateText).trim();
+  const normalized = raw.replaceAll("/", "-").replaceAll(".", "-");
+  const range = normalized.match(/^(\d{4})\s*-\s*(\d{4})$/);
+  if (range) {
+    return [Number(range[1]), Number(range[2])];
+  }
+  const ym = normalized.match(/^(\d{4})(?:-(\d{1,2}))?$/);
+  if (ym) {
+    return [Number(ym[1])];
+  }
+  const parsed = Date.parse(normalized);
+  if (!Number.isNaN(parsed)) {
+    return [new Date(parsed).getFullYear()];
+  }
+  return [];
 }
 
 async function renderGallery() {
@@ -77,8 +103,8 @@ async function renderGallery() {
       group.items.push(item);
     });
 
-    const sortedGroups = [...grouped.values()].sort((a, b) => a.order - b.order || a.key.localeCompare(b.key));
-    sortedGroups.forEach((group) => {
+    const groups = [...grouped.values()];
+    groups.forEach((group) => {
       group.items.sort((a, b) => {
         const dateDiff = parseDate(b.date) - parseDate(a.date);
         if (dateDiff !== 0) return dateDiff;
@@ -86,6 +112,16 @@ async function renderGallery() {
         const titleB = String(b.title || "").toLowerCase();
         return titleA.localeCompare(titleB);
       });
+
+      group.latestDate = Math.max(...group.items.map((item) => parseDate(item.date)));
+      const allYears = group.items.flatMap((item) => extractYears(item.date));
+      group.minYear = allYears.length ? Math.min(...allYears) : null;
+      group.maxYear = allYears.length ? Math.max(...allYears) : null;
+    });
+    const sortedGroups = groups.sort((a, b) => {
+      const dateDiff = b.latestDate - a.latestDate;
+      if (dateDiff !== 0) return dateDiff;
+      return a.order - b.order || a.key.localeCompare(b.key);
     });
 
     if (indexContainer) {
@@ -133,7 +169,13 @@ async function renderGallery() {
 
         const groupTitle = escapeHtml(group.key);
         const count = group.items.length;
-        const countLabel = `${count} photo${count > 1 ? "s" : ""}`;
+        const yearLabel =
+          group.minYear !== null && group.maxYear !== null
+            ? group.minYear === group.maxYear
+              ? String(group.maxYear)
+              : `${group.minYear}-${group.maxYear}`
+            : "";
+        const countLabel = `${yearLabel ? `${yearLabel} · ` : ""}${count} photo${count > 1 ? "s" : ""}`;
         const anchorId = escapeHtml(group.anchorId || slugify(group.key));
         return `
           <section class="gallery-group" id="group-${anchorId}">
