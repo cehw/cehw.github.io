@@ -180,6 +180,7 @@ async function renderGallery() {
     });
 
     sortedYears.forEach((yearBucket) => {
+      yearBucket.anchorId = `year-${slugify(yearBucket.key)}`;
       yearBucket.sortedGroups = [...yearBucket.groups.values()].sort((a, b) => {
         if (a.latestDate !== b.latestDate) return b.latestDate - a.latestDate;
         if (a.order !== b.order) return a.order - b.order;
@@ -198,19 +199,19 @@ async function renderGallery() {
     });
 
     if (indexContainer) {
-      if (sortedYears.length > 1) {
-        const chips = sortedYears
-          .map((yearBucket) => {
-            const label = yearBucket.key;
-            const yearId = `year-${slugify(label)}`;
-            yearBucket.anchorId = yearId;
-            return `<a class="gallery-index-chip" href="#${yearId}">${escapeHtml(label)}</a>`;
-          })
-          .join("");
+      const chips = sortedYears
+        .map((yearBucket) => {
+          const label = yearBucket.key;
+          const yearId = yearBucket.anchorId;
+          return `<a class="gallery-index-chip" href="#${yearId}">${escapeHtml(label)}</a>`;
+        })
+        .join("");
+      if (chips) {
         indexContainer.innerHTML = chips;
         indexContainer.hidden = false;
       } else {
-        indexContainer.hidden = true;
+        const hasStaticChips = indexContainer.querySelector(".gallery-index-chip");
+        indexContainer.hidden = !hasStaticChips;
       }
     }
 
@@ -318,6 +319,10 @@ async function renderGallery() {
     groupsContainer.innerHTML = html;
   } catch (err) {
     console.error("Gallery render failed:", err);
+    if (indexContainer) {
+      const hasStaticChips = indexContainer.querySelector(".gallery-index-chip");
+      indexContainer.hidden = !hasStaticChips;
+    }
     empty.hidden = false;
     if (isFileProtocol) {
       empty.textContent =
