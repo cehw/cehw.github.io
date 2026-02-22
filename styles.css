@@ -341,20 +341,38 @@ h1 {
   line-height: 0;
 }
 
-.btn-icon img {
-  width: 15px !important;
-  height: 15px !important;
-  display: block;
-  flex: 0 0 15px !important;
-  object-fit: contain;
-  filter: none;
-  opacity: 1;
+.social-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  background-color: currentColor;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
 }
 
-.btn-icon-only img {
-  width: 18px !important;
-  height: 18px !important;
-  flex: 0 0 18px !important;
+.social-icon--scholar {
+  -webkit-mask-image: url("./assets/icons/google-scholar.svg?v=20260222-brand2");
+  mask-image: url("./assets/icons/google-scholar.svg?v=20260222-brand2");
+}
+
+.social-icon--orcid {
+  -webkit-mask-image: url("./assets/icons/orcid.svg?v=20260222-brand2");
+  mask-image: url("./assets/icons/orcid.svg?v=20260222-brand2");
+}
+
+.social-icon--researchgate {
+  -webkit-mask-image: url("./assets/icons/researchgate.svg?v=20260222-brand2");
+  mask-image: url("./assets/icons/researchgate.svg?v=20260222-brand2");
+}
+
+.social-icon--mail {
+  -webkit-mask-image: url("./assets/icons/mail.svg?v=20260222-brand2");
+  mask-image: url("./assets/icons/mail.svg?v=20260222-brand2");
 }
 
 .btn-primary {
@@ -487,14 +505,10 @@ em {
   gap: 5px;
 }
 
-.contact-label img {
-  width: 13px !important;
-  height: 13px !important;
-  display: block;
-  flex: 0 0 13px !important;
-  object-fit: contain;
-  filter: none;
-  opacity: 1;
+.contact-label .social-icon {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
 }
 
 footer {
@@ -945,11 +959,6 @@ html[data-theme="dark"] .btn-ghost {
   color: #a8ced8;
   border-color: rgba(146, 188, 197, 0.32);
   background: rgba(10, 25, 35, 0.62);
-}
-
-html[data-theme="dark"] .btn-icon img,
-html[data-theme="dark"] .contact-label img {
-  filter: invert(0.9) brightness(1.15);
 }
 
 html[data-theme="dark"] em {

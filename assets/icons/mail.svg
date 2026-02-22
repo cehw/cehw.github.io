@@ -1,18 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-  <rect
-    x="3.5"
-    y="6"
-    width="17"
-    height="12"
-    rx="1.8"
-    stroke="currentColor"
-    stroke-width="1.8"
-  />
   <path
-    d="m4.5 7 7.5 5.4L19.5 7"
-    stroke="currentColor"
-    stroke-width="1.8"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    fill="#000000"
+    d="M3.75 5.25A2.25 2.25 0 0 0 1.5 7.5v.386l10.15 5.665a.75.75 0 0 0 .7 0L22.5 7.886V7.5a2.25 2.25 0 0 0-2.25-2.25H3.75Zm18.75 4.35-9.42 5.257a2.25 2.25 0 0 1-2.166 0L1.5 9.6v6.9a2.25 2.25 0 0 0 2.25 2.25h16.5a2.25 2.25 0 0 0 2.25-2.25V9.6Z"
   />
 </svg>
