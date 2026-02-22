@@ -107,16 +107,27 @@ function assetUrl(relPath) {
   return `./assets/gallery/${replaceAllCompat(replaceAllCompat(encodeURI(safe), "#", "%23"), "?", "%3F")}`;
 }
 
+async function loadGalleryItems() {
+  if (Array.isArray(window.GALLERY_ITEMS) && window.GALLERY_ITEMS.length) {
+    return window.GALLERY_ITEMS;
+  }
+
+  const response = await fetch("./assets/gallery/meta.json", { cache: "no-cache" });
+  if (!response.ok) {
+    throw new Error(`meta fetch failed: ${response.status}`);
+  }
+  const items = await response.json();
+  if (Array.isArray(items)) {
+    return items;
+  }
+  throw new Error("meta.json is not an array");
+}
+
 async function renderGallery() {
   if (!groupsContainer || !empty) return;
 
   try {
-    const response = await fetch("./assets/gallery/meta.json", { cache: "no-cache" });
-    if (!response.ok) {
-      throw new Error(`meta fetch failed: ${response.status}`);
-    }
-
-    const items = await response.json();
+    const items = await loadGalleryItems();
     if (!Array.isArray(items) || items.length === 0) {
       empty.hidden = false;
       return;
@@ -310,7 +321,7 @@ async function renderGallery() {
     empty.hidden = false;
     if (isFileProtocol) {
       empty.textContent =
-        "Gallery cannot load from file://. Open this site via GitHub Pages or run a local HTTP server.";
+        "Gallery data failed to load. If this is local preview, ensure assets/gallery/meta.js exists.";
       return;
     }
     empty.textContent =
