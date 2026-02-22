@@ -7,14 +7,19 @@ const indexContainer = document.getElementById("gallery-index");
 const groupsContainer = document.getElementById("gallery-groups");
 const empty = document.getElementById("gallery-empty");
 const groupsWithoutSmallTitles = new Set(["Easter Painted Egg at UG Hall · 1"]);
+const isFileProtocol = window.location.protocol === "file:";
+
+function replaceAllCompat(text, search, replacement) {
+  return String(text).split(search).join(replacement);
+}
 
 function escapeHtml(text) {
   return String(text)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function slugify(text) {
@@ -39,7 +44,7 @@ function inferGroup(item) {
 function parseDate(dateText) {
   if (!dateText) return Number.NEGATIVE_INFINITY;
   const raw = String(dateText).trim();
-  const normalized = raw.replaceAll("/", "-").replaceAll(".", "-");
+  const normalized = replaceAllCompat(replaceAllCompat(raw, "/", "-"), ".", "-");
 
   const yearRange = normalized.match(/^(\d{4})\s*-\s*(\d{4})$/);
   if (yearRange) {
@@ -62,7 +67,7 @@ function parseDate(dateText) {
 function extractYears(dateText) {
   if (!dateText) return [];
   const raw = String(dateText).trim();
-  const normalized = raw.replaceAll("/", "-").replaceAll(".", "-");
+  const normalized = replaceAllCompat(replaceAllCompat(raw, "/", "-"), ".", "-");
   const range = normalized.match(/^(\d{4})\s*-\s*(\d{4})$/);
   if (range) {
     return [Number(range[1]), Number(range[2])];
@@ -99,10 +104,12 @@ function compactCardTitle(rawTitle, groupTitle) {
 
 function assetUrl(relPath) {
   const safe = String(relPath || "").trim();
-  return `./assets/gallery/${encodeURI(safe).replaceAll("#", "%23").replaceAll("?", "%3F")}`;
+  return `./assets/gallery/${replaceAllCompat(replaceAllCompat(encodeURI(safe), "#", "%23"), "?", "%3F")}`;
 }
 
 async function renderGallery() {
+  if (!groupsContainer || !empty) return;
+
   try {
     const response = await fetch("./assets/gallery/meta.json", { cache: "no-cache" });
     if (!response.ok) {
@@ -299,9 +306,15 @@ async function renderGallery() {
 
     groupsContainer.innerHTML = html;
   } catch (err) {
+    console.error("Gallery render failed:", err);
     empty.hidden = false;
+    if (isFileProtocol) {
+      empty.textContent =
+        "Gallery cannot load from file://. Open this site via GitHub Pages or run a local HTTP server.";
+      return;
+    }
     empty.textContent =
-      "Gallery metadata not found. Add assets/gallery/meta.json and image files.";
+      "Gallery failed to load. Please hard refresh and try again. If the issue persists, deployment may still be syncing.";
   }
 }
 

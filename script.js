@@ -55,7 +55,10 @@ if (yearEl) {
 }
 
 const links = [...document.querySelectorAll("nav a")];
-const sectionLinks = links.filter((link) => link.getAttribute("href")?.startsWith("#"));
+const sectionLinks = links.filter((link) => {
+  const href = link.getAttribute("href");
+  return typeof href === "string" && href.startsWith("#");
+});
 const sections = sectionLinks
   .map((link) => document.querySelector(link.getAttribute("href")))
   .filter(Boolean);
