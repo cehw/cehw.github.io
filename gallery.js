@@ -162,8 +162,8 @@ async function renderGallery() {
 
     sortedYears.forEach((yearBucket) => {
       yearBucket.sortedGroups = [...yearBucket.groups.values()].sort((a, b) => {
-        if (a.order !== b.order) return a.order - b.order;
         if (a.latestDate !== b.latestDate) return b.latestDate - a.latestDate;
+        if (a.order !== b.order) return a.order - b.order;
         return a.key.localeCompare(b.key);
       });
 
