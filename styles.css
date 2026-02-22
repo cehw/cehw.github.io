@@ -28,6 +28,7 @@ html {
 
 body {
   font-family: "Source Sans 3", "Avenir Next", "Helvetica Neue", sans-serif;
+  font-size: 17px;
   color: var(--ink);
   line-height: 1.64;
   min-height: 100vh;
@@ -177,7 +178,7 @@ body {
 .site-nav a {
   text-decoration: none;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -346,7 +347,7 @@ h1 {
   display: block;
   flex: 0 0 15px !important;
   object-fit: contain;
-  opacity: 0.9;
+  opacity: 1;
 }
 
 .btn-icon-only img {
@@ -413,6 +414,7 @@ h3 {
 .panel p,
 .card p {
   margin: 0 0 10px;
+  font-size: 1.02rem;
   color: var(--muted);
 }
 
@@ -490,7 +492,7 @@ em {
   display: block;
   flex: 0 0 13px !important;
   object-fit: contain;
-  opacity: 0.9;
+  opacity: 1;
 }
 
 footer {
@@ -581,6 +583,10 @@ footer {
 }
 
 @media (max-width: 560px) {
+  body {
+    font-size: 16px;
+  }
+
   .site-header {
     margin-top: 8px;
     padding: 0;
@@ -591,7 +597,7 @@ footer {
   }
 
   .site-nav a {
-    font-size: 0.84rem;
+    font-size: 0.9rem;
   }
 
   .log-title {
