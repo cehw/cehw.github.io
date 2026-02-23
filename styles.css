@@ -712,6 +712,8 @@ footer {
   padding: 14px;
   background: var(--panel);
   box-shadow: var(--shadow);
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 760px;
 }
 
 .gallery-year-head {
@@ -749,6 +751,8 @@ footer {
   padding: 12px;
   background: var(--panel);
   box-shadow: var(--shadow);
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 520px;
 }
 
 .gallery-group-head {
@@ -808,6 +812,9 @@ footer {
   overflow: hidden;
   background: var(--panel);
   box-shadow: var(--shadow);
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 260px;
 }
 
 .gallery-card img {

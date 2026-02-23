@@ -140,6 +140,7 @@ async function renderGallery() {
       const candidateOrder = Number(item.group_order);
       const groupOrder = Number.isFinite(candidateOrder) ? candidateOrder : 1000 + index;
       const itemDate = parseDate(item.date);
+      item._dateTs = itemDate;
 
       if (!yearsMap.has(yearKey)) {
         yearsMap.set(yearKey, {
@@ -186,7 +187,7 @@ async function renderGallery() {
 
       yearBucket.sortedGroups.forEach((groupBucket) => {
         groupBucket.items.sort((a, b) => {
-          const dateDiff = parseDate(b.date) - parseDate(a.date);
+          const dateDiff = Number(b._dateTs || Number.NEGATIVE_INFINITY) - Number(a._dateTs || Number.NEGATIVE_INFINITY);
           if (dateDiff !== 0) return dateDiff;
           const titleA = String(a.title || "").toLowerCase();
           const titleB = String(b.title || "").toLowerCase();
@@ -270,7 +271,7 @@ async function renderGallery() {
                 return `
                   <article class="gallery-card">
                     <a href="${fullUrl}" target="_blank" rel="noreferrer">
-                      <img src="${thumbUrl}" alt="${displayTitle}" loading="lazy" />
+                      <img src="${thumbUrl}" alt="${displayTitle}" loading="lazy" decoding="async" fetchpriority="low" />
                     </a>
                     ${cardMetaHtml}
                   </article>

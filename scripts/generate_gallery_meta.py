@@ -146,6 +146,11 @@ def main() -> None:
         for item in existing
         if str(item.get("thumb", "")).strip()
     }
+    existing_by_full = {
+        str(item.get("full", "")).strip(): item
+        for item in existing
+        if str(item.get("full", "")).strip()
+    }
 
     images: list[Path] = []
     for file in gallery_dir.rglob("*"):
@@ -154,6 +159,9 @@ def main() -> None:
         if file.name.startswith("."):
             continue
         if file.name.lower() == "meta.json":
+            continue
+        rel_for_skip = file.relative_to(gallery_dir).as_posix().lower()
+        if rel_for_skip.startswith("thumbs/"):
             continue
         # Treat *_full assets as full-size variants for existing thumbs.
         # They are referenced from metadata and should not become gallery cards.
@@ -167,7 +175,7 @@ def main() -> None:
     out: list[dict[str, Any]] = []
     for file in images:
         thumb_rel = file.relative_to(gallery_dir).as_posix()
-        prev = existing_by_thumb.get(thumb_rel, {})
+        prev = existing_by_thumb.get(thumb_rel) or existing_by_full.get(thumb_rel, {})
 
         date_ym = str(prev.get("date", "")).strip()
         if not date_ym:
@@ -198,10 +206,16 @@ def main() -> None:
         title = str(prev.get("title", "")).strip() or prettify_title(thumb_rel, group)
         desc = str(prev.get("description", "")).strip() or default_description(group)
 
+        prev_thumb = str(prev.get("thumb", "")).strip()
+        if prev_thumb and (gallery_dir / prev_thumb).is_file():
+            thumb_out = prev_thumb
+        else:
+            thumb_out = thumb_rel
+
         item = {
             "group": group,
             "group_order": int(order),
-            "thumb": thumb_rel,
+            "thumb": thumb_out,
             "full": full_rel,
             "title": title,
             "description": desc,

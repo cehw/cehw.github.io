@@ -24,21 +24,21 @@
 
   const settings = {
     desktop: {
-      stars: 170,
-      globeParticles: 560,
-      nebulaBursts: 7,
+      stars: 128,
+      globeParticles: 360,
+      nebulaBursts: 6,
       globeScale: 0.34,
-      starSpeed: 0.034,
+      starSpeed: 0.03,
     },
     mobile: {
-      stars: 95,
-      globeParticles: 340,
-      nebulaBursts: 5,
+      stars: 72,
+      globeParticles: 210,
+      nebulaBursts: 4,
       globeScale: 0.28,
-      starSpeed: 0.026,
+      starSpeed: 0.022,
     },
     mouseRadius: 220,
-    mouseRepel: 3.8,
+    mouseRepel: 2.8,
   };
 
   const fallbackColor = {
@@ -61,6 +61,12 @@
   let globeCy = 0;
   let globeRadius = 0;
   let rotY = 0;
+  let pageQuality = 1;
+  let sprites = {
+    star: null,
+    ocean: null,
+    land: null,
+  };
 
   function currentPreset() {
     if (window.innerWidth <= 760 || coarsePointerQuery.matches) {
@@ -118,6 +124,46 @@
     globeCy = height * 0.92;
   }
 
+  function createParticleSprite(size, innerRgb, outerRgb) {
+    const sprite = document.createElement("canvas");
+    sprite.width = size;
+    sprite.height = size;
+    const sctx = sprite.getContext("2d", { alpha: true });
+    if (!sctx) {
+      return null;
+    }
+    const center = size / 2;
+    const radius = size / 2;
+    const gradient = sctx.createRadialGradient(center, center, 0, center, center, radius);
+    gradient.addColorStop(0, rgba(innerRgb, 0.95));
+    gradient.addColorStop(0.42, rgba(outerRgb, 0.5));
+    gradient.addColorStop(1, rgba(outerRgb, 0));
+    sctx.fillStyle = gradient;
+    sctx.beginPath();
+    sctx.arc(center, center, radius, 0, Math.PI * 2);
+    sctx.fill();
+    return sprite;
+  }
+
+  function buildSprites() {
+    const starCore = mixColor(color.dot, color.line, 0.52);
+    const starOuter = mixColor(color.line, color.pointer, 0.48);
+    const oceanCore = mixColor(color.line, color.pointer, 0.52);
+    const oceanOuter = mixColor(color.dot, color.pointer, 0.4);
+    const landCore = [
+      clamp(Math.round(color.pointer[0] * 0.68 + 30), 0, 255),
+      clamp(Math.round(color.pointer[1] * 0.8 + 52), 0, 255),
+      clamp(Math.round(color.pointer[2] * 0.6 + 28), 0, 255),
+    ];
+    const landOuter = mixColor(landCore, color.pointer, 0.55);
+
+    sprites = {
+      star: createParticleSprite(30, starCore, starOuter),
+      ocean: createParticleSprite(26, oceanCore, oceanOuter),
+      land: createParticleSprite(26, landCore, landOuter),
+    };
+  }
+
   function createStar(speedScale) {
     const angle = Math.random() * Math.PI * 2;
     const speed = randomBetween(0.35, 1.05) * speedScale;
@@ -156,8 +202,10 @@
 
   function rebuildParticles() {
     const preset = currentPreset();
-    stars = Array.from({ length: preset.stars }, () => createStar(preset.starSpeed));
-    globeParticles = Array.from({ length: preset.globeParticles }, createGlobeParticle);
+    const starsCount = Math.max(32, Math.round(preset.stars * pageQuality));
+    const globeCount = Math.max(120, Math.round(preset.globeParticles * pageQuality));
+    stars = Array.from({ length: starsCount }, () => createStar(preset.starSpeed));
+    globeParticles = Array.from({ length: globeCount }, createGlobeParticle);
   }
 
   function resizeCanvas() {
@@ -173,6 +221,7 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     updateGlobeGeometry();
     rebuildParticles();
+    buildSprites();
     drawFrame();
   }
 
@@ -245,27 +294,19 @@
   }
 
   function drawStars() {
-    const starColor = mixColor(color.dot, color.line, 0.5);
+    if (!sprites.star) return;
 
+    ctx.globalCompositeOperation = "lighter";
     for (let i = 0; i < stars.length; i += 1) {
       const star = stars[i];
       const twinkle = 0.72 + 0.28 * Math.sin(tick * star.twinkle + star.phase);
       const alpha = star.alpha * twinkle;
-      const glowRadius = star.size * 5.2;
-
-      const glow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, glowRadius);
-      glow.addColorStop(0, rgba(starColor, alpha * 0.72));
-      glow.addColorStop(1, rgba(starColor, 0));
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(star.x, star.y, glowRadius, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = rgba(starColor, alpha);
-      ctx.beginPath();
-      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-      ctx.fill();
+      const size = star.size * 7.8;
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(sprites.star, star.x - size / 2, star.y - size / 2, size, size);
     }
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
   }
 
   function drawGlobeHalo() {
@@ -289,62 +330,15 @@
 
   function drawGlobeParticles() {
     const pointerInfluence = pointer.strength > 0.01 && !coarsePointerQuery.matches;
-    const projected = [];
 
     const rotX = Math.sin(tick * 0.00022) * 0.2;
     const rotYLocal = rotY;
     const cosX = Math.cos(rotX);
     const sinX = Math.sin(rotX);
 
-    for (let i = 0; i < globeParticles.length; i += 1) {
-      const p = globeParticles[i];
-
-      const lon = p.lon + rotYLocal + Math.sin(tick * 0.00012 + p.phase) * 0.03;
-      const lat = p.lat + Math.cos(tick * 0.00009 + p.phase * 0.7) * 0.01;
-
-      let x = Math.cos(lat) * Math.cos(lon);
-      let y = Math.sin(lat);
-      let z = Math.cos(lat) * Math.sin(lon);
-
-      const y2 = y * cosX - z * sinX;
-      const z2 = y * sinX + z * cosX;
-
-      const perspective = 0.64 + (z2 + 1) * 0.42;
-      let px = globeCx + x * globeRadius * p.shell * perspective;
-      let py = globeCy + y2 * globeRadius * p.shell * perspective;
-
-      let localBoost = 1;
-      if (pointerInfluence) {
-        const dx = px - pointer.x;
-        const dy = py - pointer.y;
-        const distance = Math.hypot(dx, dy);
-        if (distance > 0.1 && distance < settings.mouseRadius * 0.95) {
-          const repel =
-            (1 - distance / (settings.mouseRadius * 0.95)) *
-            settings.mouseRepel *
-            0.42 *
-            pointer.strength;
-          px += (dx / distance) * repel;
-          py += (dy / distance) * repel;
-          localBoost = 1.18;
-        }
-      }
-
-      const depth = (z2 + 1) * 0.5;
-      const alpha = p.alpha * (0.18 + depth * 0.92) * localBoost;
-      const size = p.size * (0.62 + perspective * 0.88);
-
-      projected.push({
-        x: px,
-        y: py,
-        z: depth,
-        alpha,
-        size,
-        isLand: p.isLand,
-      });
+    if (!sprites.ocean || !sprites.land) {
+      return;
     }
-
-    projected.sort((a, b) => a.z - b.z);
 
     const oceanColor = mixColor(color.line, color.pointer, 0.52);
     const landColor = [
@@ -353,23 +347,62 @@
       clamp(Math.round(color.pointer[2] * 0.58 + 24), 0, 255),
     ];
 
-    for (let i = 0; i < projected.length; i += 1) {
-      const p = projected[i];
-      const base = p.isLand ? landColor : oceanColor;
+    function drawPass(frontOnly) {
+      for (let i = 0; i < globeParticles.length; i += 1) {
+        const p = globeParticles[i];
 
-      const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3.9);
-      glow.addColorStop(0, rgba(base, p.alpha * 0.78));
-      glow.addColorStop(1, rgba(base, 0));
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size * 3.9, 0, Math.PI * 2);
-      ctx.fill();
+        const lon = p.lon + rotYLocal + Math.sin(tick * 0.00012 + p.phase) * 0.03;
+        const lat = p.lat + Math.cos(tick * 0.00009 + p.phase * 0.7) * 0.01;
 
-      ctx.fillStyle = rgba(base, clamp(p.alpha * 1.08, 0, 0.96));
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
+        const x = Math.cos(lat) * Math.cos(lon);
+        const y = Math.sin(lat);
+        const z = Math.cos(lat) * Math.sin(lon);
+
+        const y2 = y * cosX - z * sinX;
+        const z2 = y * sinX + z * cosX;
+        const depth = (z2 + 1) * 0.5;
+        if (frontOnly && z2 < 0) continue;
+        if (!frontOnly && z2 >= 0) continue;
+
+        const perspective = 0.64 + (z2 + 1) * 0.42;
+        let px = globeCx + x * globeRadius * p.shell * perspective;
+        let py = globeCy + y2 * globeRadius * p.shell * perspective;
+
+        let localBoost = 1;
+        if (pointerInfluence) {
+          const dx = px - pointer.x;
+          const dy = py - pointer.y;
+          const distance = Math.hypot(dx, dy);
+          if (distance > 0.1 && distance < settings.mouseRadius * 0.95) {
+            const repel =
+              (1 - distance / (settings.mouseRadius * 0.95)) *
+              settings.mouseRepel *
+              0.38 *
+              pointer.strength;
+            px += (dx / distance) * repel;
+            py += (dy / distance) * repel;
+            localBoost = 1.14;
+          }
+        }
+
+        const alpha = p.alpha * (0.18 + depth * 0.92) * localBoost;
+        const size = p.size * (0.62 + perspective * 0.88) * 3.8;
+        const base = p.isLand ? landColor : oceanColor;
+        const sprite = p.isLand ? sprites.land : sprites.ocean;
+
+        ctx.globalAlpha = clamp(alpha * 0.6, 0, 0.92);
+        ctx.drawImage(sprite, px - size / 2, py - size / 2, size, size);
+        ctx.fillStyle = rgba(base, clamp(alpha * 0.92, 0, 0.94));
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(0.45, size * 0.14), 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
+
+    drawPass(false);
+    drawPass(true);
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
   }
 
   function drawPointerField() {
@@ -428,7 +461,7 @@
     }
 
     const reduced = reduceMotionQuery.matches;
-    const minFrameDelta = reduced ? 90 : 24;
+    const minFrameDelta = reduced ? 66 : 16;
     const delta = lastFrame > 0 ? timestamp - lastFrame : 16;
 
     if (delta >= minFrameDelta || lastFrame === 0) {
@@ -462,15 +495,19 @@
   }
 
   readThemeColors();
+  pageQuality = document.querySelector(".gallery-main") ? 0.78 : 1;
   resizeCanvas();
   startAnimation();
 
   window.addEventListener("resize", resizeCanvas, { passive: true });
-  window.addEventListener("pointermove", onPointerMove, { passive: true });
-  window.addEventListener("mousemove", onPointerMove, { passive: true });
-  window.addEventListener("pointerleave", onPointerExit);
-  window.addEventListener("mouseleave", onPointerExit);
-  window.addEventListener("pointercancel", onPointerExit);
+  if (window.PointerEvent) {
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerleave", onPointerExit);
+    window.addEventListener("pointercancel", onPointerExit);
+  } else {
+    window.addEventListener("mousemove", onPointerMove, { passive: true });
+    window.addEventListener("mouseleave", onPointerExit);
+  }
   window.addEventListener("blur", onPointerExit);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
@@ -494,6 +531,7 @@
 
   const observer = new MutationObserver(() => {
     readThemeColors();
+    buildSprites();
     drawFrame();
   });
   observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
