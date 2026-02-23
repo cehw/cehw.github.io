@@ -62,6 +62,10 @@
   let globeRadius = 0;
   let rotY = 0;
   let pageQuality = 1;
+  let adaptiveQuality = 1;
+  let perfSumMs = 0;
+  let perfSamples = 0;
+  let lastAdaptiveAdjustAt = 0;
   let sprites = {
     star: null,
     ocean: null,
@@ -202,10 +206,46 @@
 
   function rebuildParticles() {
     const preset = currentPreset();
-    const starsCount = Math.max(32, Math.round(preset.stars * pageQuality));
-    const globeCount = Math.max(120, Math.round(preset.globeParticles * pageQuality));
+    const qualityScale = clamp(pageQuality * adaptiveQuality, 0.5, 1);
+    const starsCount = Math.max(28, Math.round(preset.stars * qualityScale));
+    const globeCount = Math.max(96, Math.round(preset.globeParticles * qualityScale));
     stars = Array.from({ length: starsCount }, () => createStar(preset.starSpeed));
     globeParticles = Array.from({ length: globeCount }, createGlobeParticle);
+  }
+
+  function maybeAdjustAdaptiveQuality(deltaMs, timestamp) {
+    if (reduceMotionQuery.matches) {
+      return;
+    }
+
+    perfSumMs += deltaMs;
+    perfSamples += 1;
+
+    if (perfSamples < 45) {
+      return;
+    }
+
+    const avgFrame = perfSumMs / perfSamples;
+    perfSumMs = 0;
+    perfSamples = 0;
+
+    if (timestamp - lastAdaptiveAdjustAt < 900) {
+      return;
+    }
+
+    let next = adaptiveQuality;
+    if (avgFrame > 23) {
+      next = adaptiveQuality * 0.9;
+    } else if (avgFrame < 17) {
+      next = adaptiveQuality * 1.04;
+    }
+
+    next = clamp(next, 0.55, 1);
+    if (Math.abs(next - adaptiveQuality) >= 0.03) {
+      adaptiveQuality = next;
+      lastAdaptiveAdjustAt = timestamp;
+      rebuildParticles();
+    }
   }
 
   function resizeCanvas() {
@@ -466,6 +506,7 @@
 
     if (delta >= minFrameDelta || lastFrame === 0) {
       updateFrame(delta);
+      maybeAdjustAdaptiveQuality(delta, timestamp);
       drawFrame();
       lastFrame = timestamp;
     }
@@ -476,6 +517,8 @@
   function startAnimation() {
     stopAnimation();
     lastFrame = 0;
+    perfSumMs = 0;
+    perfSamples = 0;
     drawFrame();
     rafId = requestAnimationFrame(animate);
   }
@@ -495,7 +538,10 @@
   }
 
   readThemeColors();
-  pageQuality = document.querySelector(".gallery-main") ? 0.78 : 1;
+  const isGalleryPage = Boolean(document.querySelector(".gallery-main"));
+  const cores = Number(navigator.hardwareConcurrency || 4);
+  const coreScale = cores <= 2 ? 0.72 : cores <= 4 ? 0.86 : 1;
+  pageQuality = (isGalleryPage ? 0.78 : 1) * coreScale;
   resizeCanvas();
   startAnimation();
 

@@ -11,7 +11,7 @@ from PIL import Image, ImageOps
 
 
 MAX_SIZE = (1400, 1050)
-JPEG_QUALITY = 80
+WEBP_QUALITY = 76
 
 
 def main() -> None:
@@ -28,6 +28,7 @@ def main() -> None:
 
     generated = 0
     skipped_missing = 0
+    expected_rel_paths: set[str] = set()
 
     for item in items:
         if not isinstance(item, dict):
@@ -41,10 +42,11 @@ def main() -> None:
             skipped_missing += 1
             continue
 
-        rel_base = Path(full_rel).with_suffix(".jpg")
+        rel_base = Path(full_rel).with_suffix(".webp")
         thumb_rel = Path("thumbs") / rel_base
         thumb_path = gallery_dir / thumb_rel
         thumb_path.parent.mkdir(parents=True, exist_ok=True)
+        expected_rel_paths.add(thumb_rel.as_posix())
 
         regenerate = True
         if thumb_path.exists():
@@ -60,19 +62,29 @@ def main() -> None:
                 im.thumbnail(MAX_SIZE, Image.Resampling.LANCZOS)
                 im.save(
                     thumb_path,
-                    format="JPEG",
-                    quality=JPEG_QUALITY,
+                    format="WEBP",
+                    quality=WEBP_QUALITY,
+                    method=6,
                     optimize=True,
-                    progressive=True,
                 )
             generated += 1
 
         item["thumb"] = thumb_rel.as_posix()
 
+    removed = 0
+    for old_thumb in thumbs_root.rglob("*"):
+        if not old_thumb.is_file():
+            continue
+        old_rel = old_thumb.relative_to(gallery_dir).as_posix()
+        if old_rel not in expected_rel_paths:
+            old_thumb.unlink()
+            removed += 1
+
     meta_path.write_text(json.dumps(items, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(f"Updated {meta_path}")
     print(f"Generated/updated thumbs: {generated}")
+    print(f"Removed stale thumbs: {removed}")
     if skipped_missing:
         print(f"Missing source images skipped: {skipped_missing}")
 
