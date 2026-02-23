@@ -20,26 +20,6 @@
     return true;
   }
 
-  function loadStatcounter() {
-    const sc = cfg.statcounter || {};
-    const project = Number(sc.project);
-    const security = String(sc.security || "").trim();
-    if (!Number.isFinite(project) || project <= 0 || !security) return;
-
-    window.sc_project = project;
-    window.sc_invisible = Number(sc.invisible) === 0 ? 0 : 1;
-    window.sc_security = security;
-    if (sc.removeLink !== false) {
-      window.sc_remove_link = 1;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://www.statcounter.com/counter/counter.js";
-    script.async = true;
-    script.crossOrigin = "anonymous";
-    document.head.appendChild(script);
-  }
-
   async function lookupIp() {
     const endpoints = [
       "https://api64.ipify.org?format=json",
@@ -105,8 +85,6 @@
 
     sendWithFallback(url, payload);
   }
-
-  loadStatcounter();
 
   const delayMs = Math.max(0, Number((cfg.webhook || {}).delayMs || 0));
   if (delayMs > 0) {
