@@ -55,10 +55,10 @@ body {
 .bg-network {
   position: fixed;
   inset: 0;
-  z-index: -2;
+  z-index: -1;
   display: block;
   pointer-events: none;
-  opacity: 0.68;
+  opacity: 0.84;
 }
 
 .bg-flow {
@@ -69,7 +69,7 @@ body {
   background:
     repeating-radial-gradient(circle at 24% 18%, rgba(46, 89, 99, 0.05) 0 1px, transparent 1px 20px),
     repeating-radial-gradient(circle at 82% 74%, rgba(133, 98, 52, 0.04) 0 1px, transparent 1px 22px);
-  opacity: 0.45;
+  opacity: 0.34;
 }
 
 .bg-planet {
@@ -610,7 +610,7 @@ footer {
   }
 
   .bg-network {
-    opacity: 0.56;
+    opacity: 0.78;
   }
 }
 
@@ -662,7 +662,7 @@ footer {
   }
 
   .bg-network {
-    opacity: 0.5;
+    opacity: 0.72;
   }
 }
 
@@ -908,7 +908,7 @@ html[data-theme="dark"] .bg-flow {
 }
 
 html[data-theme="dark"] .bg-network {
-  opacity: 0.58;
+  opacity: 0.68;
 }
 
 html[data-theme="dark"] .bg-planet {

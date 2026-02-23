@@ -17,25 +17,25 @@
 
   const settings = {
     desktop: {
-      count: 48,
-      speed: 0.07,
-      radiusMin: 20,
-      radiusMax: 74,
-      alphaMin: 0.09,
-      alphaMax: 0.26,
+      count: 72,
+      speed: 0.1,
+      radiusMin: 9,
+      radiusMax: 38,
+      alphaMin: 0.14,
+      alphaMax: 0.38,
     },
     mobile: {
-      count: 30,
-      speed: 0.055,
-      radiusMin: 16,
-      radiusMax: 56,
-      alphaMin: 0.08,
-      alphaMax: 0.2,
+      count: 44,
+      speed: 0.085,
+      radiusMin: 7,
+      radiusMax: 30,
+      alphaMin: 0.12,
+      alphaMax: 0.32,
     },
-    pointerDistance: 260,
-    pointerForce: 0.022,
-    drag: 0.987,
-    jitter: 0.0042,
+    pointerDistance: 220,
+    pointerForce: 0.02,
+    drag: 0.991,
+    jitter: 0.0065,
   };
 
   const fallbackColor = {
@@ -183,13 +183,19 @@
       const radius = node.radius * pulse;
       const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, radius);
 
-      gradient.addColorStop(0, rgba(color.dot, node.alpha * 1.02));
-      gradient.addColorStop(0.48, rgba(color.line, node.alpha * 0.46));
+      gradient.addColorStop(0, rgba(color.dot, node.alpha * 0.98));
+      gradient.addColorStop(0.55, rgba(color.line, node.alpha * 0.34));
       gradient.addColorStop(1, rgba(color.dot, 0));
 
       ctx.fillStyle = gradient;
       ctx.beginPath();
       ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      const coreRadius = Math.max(1.4, radius * 0.16);
+      ctx.fillStyle = rgba(color.dot, Math.min(0.84, node.alpha * 2.3));
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, coreRadius, 0, Math.PI * 2);
       ctx.fill();
     }
 
