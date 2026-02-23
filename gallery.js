@@ -103,9 +103,36 @@ function compactCardTitle(rawTitle, groupTitle) {
   return compacted || title || "Untitled";
 }
 
+function isPanoramaItem(item) {
+  const hint = `${item.title || ""} ${item.thumb || item.file || ""} ${item.full || ""}`.toLowerCase();
+  return /(^|[^a-z])(pano|panorama|panoramic)([^a-z]|$)/.test(hint);
+}
+
 function assetUrl(relPath) {
   const safe = String(relPath || "").trim();
   return `./assets/gallery/${replaceAllCompat(replaceAllCompat(encodeURI(safe), "#", "%23"), "?", "%3F")}`;
+}
+
+function markPanoramaCardsByRatio(root) {
+  if (!root) return;
+  const images = root.querySelectorAll(".gallery-card img");
+  const panoramaRatioThreshold = 2.0;
+  images.forEach((img) => {
+    const card = img.closest(".gallery-card");
+    if (!card) return;
+    const apply = () => {
+      if (!img.naturalWidth || !img.naturalHeight) return;
+      const ratio = img.naturalWidth / img.naturalHeight;
+      if (ratio >= panoramaRatioThreshold) {
+        card.classList.add("is-panorama");
+      }
+    };
+    if (img.complete) {
+      apply();
+      return;
+    }
+    img.addEventListener("load", apply, { once: true });
+  });
 }
 
 async function loadGalleryItems() {
@@ -261,6 +288,7 @@ async function renderGallery() {
                 const rawDate = String(item.date || "").trim();
                 const desc = !sharedDesc && rawDesc ? escapeHtml(rawDesc) : "";
                 const date = !sharedDate && rawDate ? escapeHtml(rawDate) : "";
+                const panoClass = isPanoramaItem(item) ? " is-panorama" : "";
                 const cardMetaParts = [];
                 if (!hideSmallTitles) cardMetaParts.push(`<h3>${displayTitle}</h3>`);
                 if (desc) cardMetaParts.push(`<p>${desc}</p>`);
@@ -269,7 +297,7 @@ async function renderGallery() {
                   ? `<div class="gallery-meta">${cardMetaParts.join("")}</div>`
                   : "";
                 return `
-                  <article class="gallery-card">
+                  <article class="gallery-card${panoClass}">
                     <a href="${fullUrl}" target="_blank" rel="noreferrer">
                       <img src="${thumbUrl}" alt="${displayTitle}" loading="lazy" decoding="async" fetchpriority="low" />
                     </a>
@@ -310,6 +338,7 @@ async function renderGallery() {
       .join("");
 
     groupsContainer.innerHTML = html;
+    markPanoramaCardsByRatio(groupsContainer);
   } catch (err) {
     console.error("Gallery render failed:", err);
     if (indexContainer) indexContainer.hidden = true;

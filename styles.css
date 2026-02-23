@@ -803,6 +803,7 @@ footer {
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: row dense;
   gap: 14px;
 }
 
@@ -822,6 +823,15 @@ footer {
   aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
+}
+
+.gallery-card.is-panorama {
+  grid-column: span 2;
+  contain-intrinsic-size: 620px 250px;
+}
+
+.gallery-card.is-panorama img {
+  aspect-ratio: 12 / 5;
 }
 
 .gallery-meta {
@@ -875,6 +885,14 @@ footer {
 
   .gallery-grid {
     grid-template-columns: 1fr;
+  }
+
+  .gallery-card.is-panorama {
+    grid-column: span 1;
+  }
+
+  .gallery-card.is-panorama img {
+    aspect-ratio: 16 / 9;
   }
 }
 
