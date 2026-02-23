@@ -18,7 +18,7 @@
   const settings = {
     desktop: { count: 64, maxDistance: 138, speed: 0.26, radiusMin: 1, radiusMax: 2.2 },
     mobile: { count: 34, maxDistance: 98, speed: 0.2, radiusMin: 0.9, radiusMax: 1.8 },
-    pointerDistance: 178,
+    pointerDistance: 240,
   };
 
   const fallbackColor = {
@@ -33,6 +33,7 @@
   let height = 0;
   let dpr = 1;
   let rafId = null;
+  let lastStepTime = 0;
 
   function randomBetween(min, max) {
     return min + Math.random() * (max - min);
@@ -102,11 +103,11 @@
     drawFrame();
   }
 
-  function updateNodes() {
+  function updateNodes(multiplier) {
     for (let index = 0; index < nodes.length; index += 1) {
       const node = nodes[index];
-      node.x += node.vx;
-      node.y += node.vy;
+      node.x += node.vx * multiplier;
+      node.y += node.vy * multiplier;
 
       if (node.x <= 0 || node.x >= width) {
         node.vx *= -1;
@@ -136,7 +137,7 @@
         }
 
         const dist = Math.sqrt(distSq);
-        const alpha = (1 - dist / maxDistance) * 0.35;
+        const alpha = (1 - dist / maxDistance) * 0.55;
         ctx.strokeStyle = rgba(color.line, alpha);
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -166,9 +167,9 @@
       }
 
       const dist = Math.sqrt(distSq);
-      const alpha = (1 - dist / maxDistance) * 0.55;
+      const alpha = (1 - dist / maxDistance) * 0.82;
       ctx.strokeStyle = rgba(color.pointer, alpha);
-      ctx.lineWidth = 1.15;
+      ctx.lineWidth = 1.35;
       ctx.beginPath();
       ctx.moveTo(pointer.x, pointer.y);
       ctx.lineTo(node.x, node.y);
@@ -179,7 +180,7 @@
   function drawNodes() {
     for (let i = 0; i < nodes.length; i += 1) {
       const node = nodes[i];
-      ctx.fillStyle = rgba(color.dot, 0.7);
+      ctx.fillStyle = rgba(color.dot, 0.88);
       ctx.beginPath();
       ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
       ctx.fill();
@@ -201,23 +202,26 @@
     }
   }
 
-  function animate() {
+  function animate(timestamp) {
     if (document.hidden) {
       rafId = requestAnimationFrame(animate);
       return;
     }
 
-    updateNodes();
-    drawFrame();
+    const reduced = reduceMotionQuery.matches;
+    const minFrameDelta = reduced ? 180 : 16;
+    if (timestamp - lastStepTime >= minFrameDelta) {
+      updateNodes(reduced ? 0.35 : 1);
+      drawFrame();
+      lastStepTime = timestamp;
+    }
     rafId = requestAnimationFrame(animate);
   }
 
   function startAnimation() {
     stopAnimation();
-    if (reduceMotionQuery.matches) {
-      drawFrame();
-      return;
-    }
+    lastStepTime = 0;
+    drawFrame();
     rafId = requestAnimationFrame(animate);
   }
 
@@ -225,10 +229,16 @@
     pointer.x = event.clientX;
     pointer.y = event.clientY;
     pointer.active = true;
+    if (reduceMotionQuery.matches) {
+      drawFrame();
+    }
   }
 
   function onPointerExit() {
     pointer.active = false;
+    if (reduceMotionQuery.matches) {
+      drawFrame();
+    }
   }
 
   readThemeColors();
@@ -237,7 +247,9 @@
 
   window.addEventListener("resize", resizeCanvas, { passive: true });
   window.addEventListener("pointermove", onPointerMove, { passive: true });
+  window.addEventListener("mousemove", onPointerMove, { passive: true });
   window.addEventListener("pointerleave", onPointerExit);
+  window.addEventListener("mouseleave", onPointerExit);
   window.addEventListener("pointercancel", onPointerExit);
   window.addEventListener("blur", onPointerExit);
   document.addEventListener("visibilitychange", () => {
