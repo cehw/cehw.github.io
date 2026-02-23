@@ -7,6 +7,13 @@ if (yearEl) {
 const indexContainer = document.getElementById("gallery-index");
 const groupsContainer = document.getElementById("gallery-groups");
 const empty = document.getElementById("gallery-empty");
+const lightbox = document.getElementById("gallery-lightbox");
+const lightboxImage = document.getElementById("gallery-lightbox-image");
+const lightboxCaption = document.getElementById("gallery-lightbox-caption");
+const lightboxOpen = document.getElementById("gallery-lightbox-open");
+const lightboxClose = document.getElementById("gallery-lightbox-close");
+let lightboxLastFocus = null;
+let lightboxReady = false;
 const groupsWithoutSmallTitles = new Set(["Easter Painted Egg at UG Hall · 1"]);
 const GALLERY_META_PATH = "./assets/gallery/meta.json";
 
@@ -132,6 +139,73 @@ function markPanoramaCardsByRatio(root) {
       return;
     }
     img.addEventListener("load", apply, { once: true });
+  });
+}
+
+function closeLightbox() {
+  if (!lightbox || lightbox.hidden) return;
+  lightbox.hidden = true;
+  lightbox.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("is-lightbox-open");
+  if (lightboxImage) {
+    lightboxImage.removeAttribute("src");
+    lightboxImage.alt = "";
+  }
+  if (lightboxCaption) lightboxCaption.textContent = "";
+  if (lightboxOpen) lightboxOpen.setAttribute("href", "#");
+  if (lightboxLastFocus && typeof lightboxLastFocus.focus === "function") {
+    lightboxLastFocus.focus();
+  }
+  lightboxLastFocus = null;
+}
+
+function openLightbox(fullUrl, titleText) {
+  if (!lightbox || !lightboxImage || !lightboxOpen) return;
+  lightboxLastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  lightboxImage.src = fullUrl;
+  lightboxImage.alt = titleText || "Gallery image";
+  if (lightboxCaption) lightboxCaption.textContent = titleText || "";
+  lightboxOpen.href = fullUrl;
+  lightbox.hidden = false;
+  lightbox.setAttribute("aria-hidden", "false");
+  document.body.classList.add("is-lightbox-open");
+  if (lightboxClose && typeof lightboxClose.focus === "function") {
+    lightboxClose.focus();
+  }
+}
+
+function setupLightboxEvents() {
+  if (lightboxReady) return;
+  if (!groupsContainer || !lightbox || !lightboxImage || !lightboxOpen || !lightboxClose) return;
+  lightboxReady = true;
+
+  groupsContainer.addEventListener("click", (event) => {
+    const link = event.target instanceof Element ? event.target.closest(".gallery-card-link") : null;
+    if (!link) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    const fullUrl = link.getAttribute("data-full-url") || link.getAttribute("href");
+    const titleText =
+      link.getAttribute("data-lightbox-title") ||
+      (link.querySelector("img") ? link.querySelector("img").alt : "Gallery image");
+    if (!fullUrl) return;
+    openLightbox(fullUrl, titleText);
+  });
+
+  lightbox.addEventListener("click", (event) => {
+    if (event.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  lightboxClose.addEventListener("click", () => {
+    closeLightbox();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && lightbox && !lightbox.hidden) {
+      closeLightbox();
+    }
   });
 }
 
@@ -298,7 +372,7 @@ async function renderGallery() {
                   : "";
                 return `
                   <article class="gallery-card${panoClass}">
-                    <a href="${fullUrl}" target="_blank" rel="noreferrer">
+                    <a class="gallery-card-link" href="${fullUrl}" target="_blank" rel="noreferrer" data-full-url="${fullUrl}" data-lightbox-title="${displayTitle}">
                       <img src="${thumbUrl}" alt="${displayTitle}" loading="lazy" decoding="async" fetchpriority="low" />
                     </a>
                     ${cardMetaHtml}
@@ -339,6 +413,7 @@ async function renderGallery() {
 
     groupsContainer.innerHTML = html;
     markPanoramaCardsByRatio(groupsContainer);
+    setupLightboxEvents();
   } catch (err) {
     console.error("Gallery render failed:", err);
     if (indexContainer) indexContainer.hidden = true;

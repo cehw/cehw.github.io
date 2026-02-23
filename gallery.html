@@ -32,7 +32,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png?v=20260222-fav1" />
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=20260222-fav1" />
     <link rel="shortcut icon" href="./favicon.ico?v=20260222-fav1" />
-    <link rel="stylesheet" href="./styles.css?v=20260223-pano1" />
+    <link rel="stylesheet" href="./styles.css?v=20260223-lightbox1" />
   </head>
   <body>
     <div class="bg-orb orb-a"></div>
@@ -78,6 +78,17 @@
       </section>
     </main>
 
+    <div class="gallery-lightbox" id="gallery-lightbox" hidden aria-hidden="true" role="dialog" aria-label="Image preview">
+      <button class="gallery-lightbox-close" id="gallery-lightbox-close" type="button" aria-label="Close image preview">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <figure class="gallery-lightbox-figure">
+        <img id="gallery-lightbox-image" alt="" />
+        <figcaption id="gallery-lightbox-caption"></figcaption>
+      </figure>
+      <a class="gallery-lightbox-open" id="gallery-lightbox-open" href="#" target="_blank" rel="noreferrer">Open original</a>
+    </div>
+
     <footer>
       <p>&copy; <span id="year"></span> Han Wang</p>
     </footer>
@@ -107,6 +118,6 @@
     <script src="./private-analytics.js?v=20260223-analytics3"></script>
     <script src="./background-network.js?v=20260223-perf2"></script>
     <script src="./script.js?v=20260222-theme5"></script>
-    <script src="./gallery.js?v=20260223-pano1"></script>
+    <script src="./gallery.js?v=20260223-lightbox1"></script>
   </body>
 </html>
