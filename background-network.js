@@ -16,9 +16,26 @@
   const pointer = { x: -9999, y: -9999, active: false };
 
   const settings = {
-    desktop: { count: 64, maxDistance: 138, speed: 0.26, radiusMin: 1, radiusMax: 2.2 },
-    mobile: { count: 34, maxDistance: 98, speed: 0.2, radiusMin: 0.9, radiusMax: 1.8 },
-    pointerDistance: 240,
+    desktop: {
+      count: 48,
+      speed: 0.07,
+      radiusMin: 20,
+      radiusMax: 74,
+      alphaMin: 0.09,
+      alphaMax: 0.26,
+    },
+    mobile: {
+      count: 30,
+      speed: 0.055,
+      radiusMin: 16,
+      radiusMax: 56,
+      alphaMin: 0.08,
+      alphaMax: 0.2,
+    },
+    pointerDistance: 260,
+    pointerForce: 0.022,
+    drag: 0.987,
+    jitter: 0.0042,
   };
 
   const fallbackColor = {
@@ -34,6 +51,7 @@
   let dpr = 1;
   let rafId = null;
   let lastStepTime = 0;
+  let tick = 0;
 
   function randomBetween(min, max) {
     return min + Math.random() * (max - min);
@@ -73,13 +91,15 @@
 
   function createNode(currentPreset) {
     const angle = Math.random() * Math.PI * 2;
-    const speed = randomBetween(0.35, 1) * currentPreset.speed;
+    const speed = randomBetween(0.3, 1) * currentPreset.speed;
     return {
       x: Math.random() * width,
       y: Math.random() * height,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
       radius: randomBetween(currentPreset.radiusMin, currentPreset.radiusMax),
+      alpha: randomBetween(currentPreset.alphaMin, currentPreset.alphaMax),
+      drift: randomBetween(0.25, 1.12),
     };
   }
 
@@ -104,94 +124,97 @@
   }
 
   function updateNodes(multiplier) {
+    const currentPreset = preset();
+    const windX = Math.sin(tick * 0.0011) * 0.009;
+    const windY = Math.cos(tick * 0.0013) * 0.007;
+    const pointerMaxDistance = settings.pointerDistance;
+
     for (let index = 0; index < nodes.length; index += 1) {
       const node = nodes[index];
+      node.vx += windX * node.drift;
+      node.vy += windY * node.drift;
+
+      node.vx += (Math.random() - 0.5) * settings.jitter * node.drift;
+      node.vy += (Math.random() - 0.5) * settings.jitter * node.drift;
+
+      if (pointer.active && !coarsePointerQuery.matches) {
+        const dx = node.x - pointer.x;
+        const dy = node.y - pointer.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance > 0.1 && distance < pointerMaxDistance) {
+          const force =
+            (1 - distance / pointerMaxDistance) * settings.pointerForce * node.drift;
+          node.vx += (dx / distance) * force;
+          node.vy += (dy / distance) * force;
+        }
+      }
+
+      node.vx *= settings.drag;
+      node.vy *= settings.drag;
+
       node.x += node.vx * multiplier;
       node.y += node.vy * multiplier;
 
-      if (node.x <= 0 || node.x >= width) {
-        node.vx *= -1;
-        node.x = Math.max(0, Math.min(width, node.x));
+      const margin = node.radius + 28;
+      if (node.x < -margin) {
+        node.x = width + margin;
+        node.y = Math.random() * height;
+      } else if (node.x > width + margin) {
+        node.x = -margin;
+        node.y = Math.random() * height;
       }
-      if (node.y <= 0 || node.y >= height) {
-        node.vy *= -1;
-        node.y = Math.max(0, Math.min(height, node.y));
-      }
-    }
-  }
-
-  function drawConnections(currentPreset) {
-    const maxDistance = currentPreset.maxDistance;
-    const maxDistanceSq = maxDistance * maxDistance;
-
-    for (let i = 0; i < nodes.length; i += 1) {
-      const nodeA = nodes[i];
-      for (let j = i + 1; j < nodes.length; j += 1) {
-        const nodeB = nodes[j];
-        const dx = nodeA.x - nodeB.x;
-        const dy = nodeA.y - nodeB.y;
-        const distSq = dx * dx + dy * dy;
-
-        if (distSq > maxDistanceSq) {
-          continue;
-        }
-
-        const dist = Math.sqrt(distSq);
-        const alpha = (1 - dist / maxDistance) * 0.55;
-        ctx.strokeStyle = rgba(color.line, alpha);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(nodeA.x, nodeA.y);
-        ctx.lineTo(nodeB.x, nodeB.y);
-        ctx.stroke();
-      }
-    }
-  }
-
-  function drawPointerConnections() {
-    if (!pointer.active || coarsePointerQuery.matches) {
-      return;
-    }
-
-    const maxDistance = settings.pointerDistance;
-    const maxDistanceSq = maxDistance * maxDistance;
-
-    for (let i = 0; i < nodes.length; i += 1) {
-      const node = nodes[i];
-      const dx = node.x - pointer.x;
-      const dy = node.y - pointer.y;
-      const distSq = dx * dx + dy * dy;
-
-      if (distSq > maxDistanceSq) {
-        continue;
+      if (node.y < -margin) {
+        node.y = height + margin;
+        node.x = Math.random() * width;
+      } else if (node.y > height + margin) {
+        node.y = -margin;
+        node.x = Math.random() * width;
       }
 
-      const dist = Math.sqrt(distSq);
-      const alpha = (1 - dist / maxDistance) * 0.82;
-      ctx.strokeStyle = rgba(color.pointer, alpha);
-      ctx.lineWidth = 1.35;
-      ctx.beginPath();
-      ctx.moveTo(pointer.x, pointer.y);
-      ctx.lineTo(node.x, node.y);
-      ctx.stroke();
+      node.radius = Math.max(currentPreset.radiusMin, Math.min(currentPreset.radiusMax, node.radius));
     }
   }
 
   function drawNodes() {
+    ctx.globalCompositeOperation = "source-over";
     for (let i = 0; i < nodes.length; i += 1) {
       const node = nodes[i];
-      ctx.fillStyle = rgba(color.dot, 0.88);
+      const pulse = 0.88 + Math.sin((tick + i * 42) * 0.005) * 0.12;
+      const radius = node.radius * pulse;
+      const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, radius);
+
+      gradient.addColorStop(0, rgba(color.dot, node.alpha * 1.02));
+      gradient.addColorStop(0.48, rgba(color.line, node.alpha * 0.46));
+      gradient.addColorStop(1, rgba(color.dot, 0));
+
+      ctx.fillStyle = gradient;
       ctx.beginPath();
-      ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+      ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    if (pointer.active && !coarsePointerQuery.matches) {
+      const pointerGlow = ctx.createRadialGradient(
+        pointer.x,
+        pointer.y,
+        0,
+        pointer.x,
+        pointer.y,
+        settings.pointerDistance * 0.72
+      );
+      pointerGlow.addColorStop(0, rgba(color.pointer, 0.065));
+      pointerGlow.addColorStop(0.62, rgba(color.pointer, 0.03));
+      pointerGlow.addColorStop(1, rgba(color.pointer, 0));
+
+      ctx.fillStyle = pointerGlow;
+      ctx.beginPath();
+      ctx.arc(pointer.x, pointer.y, settings.pointerDistance * 0.72, 0, Math.PI * 2);
       ctx.fill();
     }
   }
 
   function drawFrame() {
-    const currentPreset = preset();
     ctx.clearRect(0, 0, width, height);
-    drawConnections(currentPreset);
-    drawPointerConnections();
     drawNodes();
   }
 
@@ -209,9 +232,11 @@
     }
 
     const reduced = reduceMotionQuery.matches;
-    const minFrameDelta = reduced ? 180 : 16;
-    if (timestamp - lastStepTime >= minFrameDelta) {
-      updateNodes(reduced ? 0.35 : 1);
+    const minFrameDelta = reduced ? 110 : 22;
+    const delta = lastStepTime > 0 ? timestamp - lastStepTime : 16;
+    if (delta >= minFrameDelta || lastStepTime === 0) {
+      tick += delta;
+      updateNodes(reduced ? 0.55 : 1);
       drawFrame();
       lastStepTime = timestamp;
     }
@@ -229,16 +254,10 @@
     pointer.x = event.clientX;
     pointer.y = event.clientY;
     pointer.active = true;
-    if (reduceMotionQuery.matches) {
-      drawFrame();
-    }
   }
 
   function onPointerExit() {
     pointer.active = false;
-    if (reduceMotionQuery.matches) {
-      drawFrame();
-    }
   }
 
   readThemeColors();

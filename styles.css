@@ -58,7 +58,7 @@ body {
   z-index: -2;
   display: block;
   pointer-events: none;
-  opacity: 0.76;
+  opacity: 0.68;
 }
 
 .bg-flow {
@@ -610,7 +610,7 @@ footer {
   }
 
   .bg-network {
-    opacity: 0.62;
+    opacity: 0.56;
   }
 }
 
@@ -662,7 +662,7 @@ footer {
   }
 
   .bg-network {
-    opacity: 0.52;
+    opacity: 0.5;
   }
 }
 
@@ -908,7 +908,7 @@ html[data-theme="dark"] .bg-flow {
 }
 
 html[data-theme="dark"] .bg-network {
-  opacity: 0.52;
+  opacity: 0.58;
 }
 
 html[data-theme="dark"] .bg-planet {
