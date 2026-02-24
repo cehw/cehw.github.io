@@ -13,7 +13,6 @@
   window.__SPACE_EARTH_BG_INIT__ = true;
 
   const root = document.documentElement;
-  root.classList.add("has-cinematic-earth-bg");
 
   const scene = new THREE_NS.Scene();
   scene.fog = new THREE_NS.FogExp2(0x000000, 0.0005);
@@ -36,6 +35,30 @@
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setClearColor(0x000000, 0);
   container.replaceChildren(renderer.domElement);
+
+  let cinematicActive = false;
+
+  function isDarkTheme() {
+    return root.getAttribute("data-theme") === "dark";
+  }
+
+  function setCinematicActive(nextActive) {
+    if (cinematicActive === nextActive) return;
+    cinematicActive = nextActive;
+    root.classList.toggle("has-cinematic-earth-bg", cinematicActive);
+
+    if (!cinematicActive) {
+      if (renderer.__rafId) {
+        cancelAnimationFrame(renderer.__rafId);
+        renderer.__rafId = null;
+      }
+      return;
+    }
+
+    if (!document.hidden && !renderer.__rafId) {
+      animate();
+    }
+  }
 
   const earthGroup = new THREE_NS.Group();
   earthGroup.position.y = earthYOffset;
@@ -323,6 +346,11 @@
   const clock = new THREE_NS.Clock();
 
   function animate() {
+    if (!cinematicActive) {
+      renderer.__rafId = null;
+      return;
+    }
+
     const raf = requestAnimationFrame(animate);
     renderer.__rafId = raf;
 
@@ -358,8 +386,13 @@
       renderer.__rafId = null;
       return;
     }
-    if (!renderer.__rafId) animate();
+    if (cinematicActive && !renderer.__rafId) animate();
   });
 
-  animate();
+  const themeObserver = new MutationObserver(() => {
+    setCinematicActive(isDarkTheme());
+  });
+  themeObserver.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+
+  setCinematicActive(isDarkTheme());
 })();

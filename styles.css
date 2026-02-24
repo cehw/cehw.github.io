@@ -129,25 +129,6 @@ body.is-lightbox-open {
   transition: opacity 600ms ease;
 }
 
-html.has-cinematic-earth-bg .space-earth-canvas {
-  opacity: 1;
-}
-
-html.has-cinematic-earth-bg body {
-  background:
-    radial-gradient(circle at 18% 12%, rgba(5, 18, 38, 0.38), transparent 44%),
-    radial-gradient(circle at 82% 84%, rgba(3, 12, 28, 0.34), transparent 46%),
-    linear-gradient(180deg, #000000 0%, #01040a 56%, #000000 100%) !important;
-}
-
-html.has-cinematic-earth-bg .bg-orb,
-html.has-cinematic-earth-bg .bg-grid,
-html.has-cinematic-earth-bg .bg-flow,
-html.has-cinematic-earth-bg .bg-network,
-html.has-cinematic-earth-bg .bg-planet {
-  display: none !important;
-}
-
 .bg-orb {
   position: fixed;
   border-radius: 999px;
@@ -1193,4 +1174,23 @@ html[data-theme="dark"] .gallery-lightbox-close {
 
 html[data-theme="dark"] .contact-list a {
   color: #a7d1dc;
+}
+
+html[data-theme="dark"].has-cinematic-earth-bg .space-earth-canvas {
+  opacity: 1;
+}
+
+html[data-theme="dark"].has-cinematic-earth-bg body {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(5, 18, 38, 0.38), transparent 44%),
+    radial-gradient(circle at 82% 84%, rgba(3, 12, 28, 0.34), transparent 46%),
+    linear-gradient(180deg, #000000 0%, #01040a 56%, #000000 100%) !important;
+}
+
+html[data-theme="dark"].has-cinematic-earth-bg .bg-orb,
+html[data-theme="dark"].has-cinematic-earth-bg .bg-grid,
+html[data-theme="dark"].has-cinematic-earth-bg .bg-flow,
+html[data-theme="dark"].has-cinematic-earth-bg .bg-network,
+html[data-theme="dark"].has-cinematic-earth-bg .bg-planet {
+  display: none !important;
 }
