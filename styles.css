@@ -119,6 +119,23 @@ body.is-lightbox-open {
   opacity: 0.42;
 }
 
+.bg-planet-particles {
+  position: fixed;
+  width: min(42vw, 560px);
+  aspect-ratio: 1 / 1;
+  right: -150px;
+  bottom: -230px;
+  z-index: -1;
+  display: block;
+  pointer-events: none;
+  opacity: 0.66;
+  filter: saturate(1.04) contrast(1.04);
+}
+
+html.has-particle-planet .bg-planet {
+  opacity: 0;
+}
+
 .bg-orb {
   position: fixed;
   border-radius: 999px;
@@ -613,6 +630,13 @@ footer {
     opacity: 0.75;
   }
 
+  .bg-planet-particles {
+    width: min(58vw, 420px);
+    right: -120px;
+    bottom: -150px;
+    opacity: 0.62;
+  }
+
   .bg-network {
     opacity: 0.84;
   }
@@ -663,6 +687,13 @@ footer {
     right: -160px;
     bottom: -190px;
     opacity: 0.58;
+  }
+
+  .bg-planet-particles {
+    width: 320px;
+    right: -160px;
+    bottom: -190px;
+    opacity: 0.54;
   }
 
   .bg-network {
@@ -1044,6 +1075,11 @@ html[data-theme="dark"] .bg-planet {
     radial-gradient(circle at 24% 22%, rgba(196, 232, 234, 0.64), transparent 20%),
     radial-gradient(circle at 60% 40%, rgba(108, 172, 179, 0.54), transparent 36%),
     radial-gradient(circle at 50% 50%, rgba(56, 115, 144, 0.64), rgba(20, 44, 61, 0.9) 62%, rgba(9, 20, 29, 0.95) 100%);
+}
+
+html[data-theme="dark"] .bg-planet-particles {
+  opacity: 0.94;
+  filter: saturate(1.14) contrast(1.16);
 }
 
 html[data-theme="dark"] .site-header {
