@@ -1,17 +1,40 @@
 (() => {
   const canvas = document.querySelector(".bg-network");
-  if (!canvas) {
-    return;
-  }
+  if (!canvas) return;
 
   const ctx = canvas.getContext("2d", { alpha: true });
-  if (!ctx) {
-    return;
-  }
+  if (!ctx) return;
 
   const root = document.documentElement;
   const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+
+  const fallbackColor = {
+    dot: [68, 99, 107],
+    line: [86, 126, 137],
+    pointer: [62, 105, 117],
+  };
+
+  const settings = {
+    desktop: {
+      stars: 140,
+      cloudParticles: 360,
+      warmParticles: 90,
+      cloudBands: 6,
+      starSpeed: 0.034,
+      cloudSpeed: 0.16,
+    },
+    mobile: {
+      stars: 80,
+      cloudParticles: 220,
+      warmParticles: 52,
+      cloudBands: 4,
+      starSpeed: 0.024,
+      cloudSpeed: 0.12,
+    },
+    mouseRadius: 210,
+    mouseForce: 0.22,
+  };
 
   const pointer = {
     x: 0,
@@ -22,60 +45,37 @@
     strength: 0,
   };
 
-  const settings = {
-    desktop: {
-      stars: 128,
-      globeParticles: 360,
-      nebulaBursts: 6,
-      globeScale: 0.34,
-      starSpeed: 0.03,
-    },
-    mobile: {
-      stars: 72,
-      globeParticles: 210,
-      nebulaBursts: 4,
-      globeScale: 0.28,
-      starSpeed: 0.022,
-    },
-    mouseRadius: 220,
-    mouseRepel: 2.8,
-  };
-
-  const fallbackColor = {
-    dot: [68, 99, 107],
-    line: [86, 126, 137],
-    pointer: [62, 105, 117],
-  };
-
   let color = { ...fallbackColor };
   let stars = [];
-  let globeParticles = [];
+  let clouds = [];
+  let warm = [];
+
   let width = 0;
   let height = 0;
   let dpr = 1;
   let rafId = null;
-  let lastFrame = 0;
   let tick = 0;
+  let lastFrame = 0;
 
-  let globeCx = 0;
-  let globeCy = 0;
-  let globeRadius = 0;
-  let rotY = 0;
   let pageQuality = 1;
   let adaptiveQuality = 1;
   let perfSumMs = 0;
   let perfSamples = 0;
   let lastAdaptiveAdjustAt = 0;
+
+  let horizonCx = 0;
+  let horizonCy = 0;
+  let horizonRx = 0;
+  let horizonRy = 0;
+
   let sprites = {
     star: null,
-    ocean: null,
-    land: null,
+    cloud: null,
+    warm: null,
   };
 
   function currentPreset() {
-    if (window.innerWidth <= 760 || coarsePointerQuery.matches) {
-      return settings.mobile;
-    }
+    if (window.innerWidth <= 760 || coarsePointerQuery.matches) return settings.mobile;
     return settings.desktop;
   }
 
@@ -85,6 +85,18 @@
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  function rgba(rgb, alpha) {
+    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+  }
+
+  function mixColor(a, b, t) {
+    return [
+      Math.round(a[0] + (b[0] - a[0]) * t),
+      Math.round(a[1] + (b[1] - a[1]) * t),
+      Math.round(a[2] + (b[2] - a[2]) * t),
+    ];
   }
 
   function parseColorVariable(value, fallback) {
@@ -101,144 +113,149 @@
     color = {
       dot: parseColorVariable(styles.getPropertyValue("--network-dot-rgb"), fallbackColor.dot),
       line: parseColorVariable(styles.getPropertyValue("--network-line-rgb"), fallbackColor.line),
-      pointer: parseColorVariable(
-        styles.getPropertyValue("--network-pointer-rgb"),
-        fallbackColor.pointer
-      ),
+      pointer: parseColorVariable(styles.getPropertyValue("--network-pointer-rgb"), fallbackColor.pointer),
     };
   }
 
-  function rgba(rgb, alpha) {
-    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+  function isDarkTheme() {
+    return root.getAttribute("data-theme") === "dark";
   }
 
-  function mixColor(a, b, t) {
-    return [
-      Math.round(a[0] + (b[0] - a[0]) * t),
-      Math.round(a[1] + (b[1] - a[1]) * t),
-      Math.round(a[2] + (b[2] - a[2]) * t),
-    ];
-  }
-
-  function updateGlobeGeometry() {
-    const preset = currentPreset();
-    const base = Math.min(width, height);
-    globeRadius = base * preset.globeScale;
-    globeCx = width * 0.93;
-    globeCy = height * 0.92;
-  }
-
-  function createParticleSprite(size, innerRgb, outerRgb) {
+  function createParticleSprite(size, innerRgb, outerRgb, innerAlpha, outerAlpha) {
     const sprite = document.createElement("canvas");
     sprite.width = size;
     sprite.height = size;
     const sctx = sprite.getContext("2d", { alpha: true });
-    if (!sctx) {
-      return null;
-    }
-    const center = size / 2;
-    const radius = size / 2;
-    const gradient = sctx.createRadialGradient(center, center, 0, center, center, radius);
-    gradient.addColorStop(0, rgba(innerRgb, 0.95));
-    gradient.addColorStop(0.42, rgba(outerRgb, 0.5));
-    gradient.addColorStop(1, rgba(outerRgb, 0));
-    sctx.fillStyle = gradient;
+    if (!sctx) return null;
+
+    const c = size / 2;
+    const grad = sctx.createRadialGradient(c, c, 0, c, c, c);
+    grad.addColorStop(0, rgba(innerRgb, innerAlpha));
+    grad.addColorStop(0.42, rgba(outerRgb, outerAlpha));
+    grad.addColorStop(1, rgba(outerRgb, 0));
+
+    sctx.fillStyle = grad;
     sctx.beginPath();
-    sctx.arc(center, center, radius, 0, Math.PI * 2);
+    sctx.arc(c, c, c, 0, Math.PI * 2);
     sctx.fill();
     return sprite;
   }
 
   function buildSprites() {
-    const starCore = mixColor(color.dot, color.line, 0.52);
-    const starOuter = mixColor(color.line, color.pointer, 0.48);
-    const oceanCore = mixColor(color.line, color.pointer, 0.52);
-    const oceanOuter = mixColor(color.dot, color.pointer, 0.4);
-    const landCore = [
-      clamp(Math.round(color.pointer[0] * 0.68 + 30), 0, 255),
-      clamp(Math.round(color.pointer[1] * 0.8 + 52), 0, 255),
-      clamp(Math.round(color.pointer[2] * 0.6 + 28), 0, 255),
-    ];
-    const landOuter = mixColor(landCore, color.pointer, 0.55);
+    const starCore = mixColor(color.dot, color.pointer, 0.62);
+    const starOuter = mixColor(color.line, color.pointer, 0.35);
+
+    const cloudCore = mixColor(color.line, color.pointer, 0.55);
+    const cloudOuter = mixColor(color.dot, color.line, 0.62);
+
+    const warmCore = [255, 206, 128];
+    const warmOuter = [255, 172, 92];
 
     sprites = {
-      star: createParticleSprite(30, starCore, starOuter),
-      ocean: createParticleSprite(26, oceanCore, oceanOuter),
-      land: createParticleSprite(26, landCore, landOuter),
+      star: createParticleSprite(30, starCore, starOuter, 0.95, 0.48),
+      cloud: createParticleSprite(42, cloudCore, cloudOuter, 0.92, 0.38),
+      warm: createParticleSprite(34, warmCore, warmOuter, 0.95, 0.28),
     };
   }
 
-  function createStar(speedScale) {
+  function updateHorizonGeometry() {
+    horizonCx = width * 0.5;
+    horizonCy = height * 1.07;
+    horizonRx = width * 0.9;
+    horizonRy = height * 0.42;
+  }
+
+  function createStar(starSpeedScale) {
     const angle = Math.random() * Math.PI * 2;
-    const speed = randomBetween(0.35, 1.05) * speedScale;
+    const speed = randomBetween(0.34, 0.92) * starSpeedScale;
     return {
       x: Math.random() * width,
       y: Math.random() * height,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
-      size: randomBetween(0.45, 1.95),
-      alpha: randomBetween(0.16, 0.48),
-      twinkle: randomBetween(0.002, 0.007),
+      size: randomBetween(0.45, 1.9),
+      alpha: randomBetween(0.12, 0.44),
+      twinkle: randomBetween(0.0015, 0.007),
       phase: Math.random() * Math.PI * 2,
     };
   }
 
-  function createGlobeParticle() {
-    const lon = Math.random() * Math.PI * 2;
-    const lat = Math.asin(randomBetween(-1, 1));
-    const shell = randomBetween(0.68, 1.02);
-    const continentSeed =
-      Math.sin(lon * 1.9 + 0.7) * 0.54 +
-      Math.cos(lat * 2.6 - 0.9) * 0.36 +
-      Math.sin((lon + lat) * 2.3 + 0.2) * 0.22;
+  function horizonPoint() {
+    const t = randomBetween(-Math.PI * 0.95, -Math.PI * 0.05);
+    const x = horizonCx + Math.cos(t) * horizonRx;
+    const y = horizonCy + Math.sin(t) * horizonRy;
+    return {
+      x,
+      y,
+      arcT: t,
+    };
+  }
+
+  function createCloudParticle(cloudSpeedScale) {
+    const h = horizonPoint();
+    const depth = Math.random();
+    const jitterX = randomBetween(-width * 0.03, width * 0.03);
+    const jitterY = randomBetween(-height * 0.025, height * 0.02);
 
     return {
-      lon,
-      lat,
-      shell,
-      size: randomBetween(0.75, 2.15),
-      alpha: randomBetween(0.2, 0.72),
+      x: h.x + jitterX,
+      y: h.y + jitterY,
+      vx: randomBetween(-0.4, 0.4) * cloudSpeedScale,
+      vy: randomBetween(-0.12, 0.1) * cloudSpeedScale,
+      size: randomBetween(0.5, 1.5),
+      alpha: randomBetween(0.08, 0.46),
       phase: Math.random() * Math.PI * 2,
-      drift: randomBetween(0.6, 1.5),
-      isLand: continentSeed > 0.38,
+      twinkle: randomBetween(0.0012, 0.004),
+      depth,
+      drift: randomBetween(0.2, 1.1),
+      band: Math.floor(randomBetween(0, 6)),
+    };
+  }
+
+  function createWarmParticle(cloudSpeedScale) {
+    const h = horizonPoint();
+    return {
+      x: h.x + randomBetween(-width * 0.02, width * 0.02),
+      y: h.y + randomBetween(-height * 0.012, height * 0.012),
+      vx: randomBetween(-0.3, 0.3) * cloudSpeedScale,
+      vy: randomBetween(-0.08, 0.08) * cloudSpeedScale,
+      size: randomBetween(0.55, 1.4),
+      alpha: randomBetween(0.12, 0.5),
+      phase: Math.random() * Math.PI * 2,
+      pulse: randomBetween(0.002, 0.006),
     };
   }
 
   function rebuildParticles() {
     const preset = currentPreset();
     const qualityScale = clamp(pageQuality * adaptiveQuality, 0.5, 1);
-    const starsCount = Math.max(28, Math.round(preset.stars * qualityScale));
-    const globeCount = Math.max(96, Math.round(preset.globeParticles * qualityScale));
-    stars = Array.from({ length: starsCount }, () => createStar(preset.starSpeed));
-    globeParticles = Array.from({ length: globeCount }, createGlobeParticle);
+    const themeScale = isDarkTheme() ? 1 : 0.58;
+
+    const starCount = Math.max(22, Math.round(preset.stars * qualityScale * themeScale));
+    const cloudCount = Math.max(64, Math.round(preset.cloudParticles * qualityScale * themeScale));
+    const warmCount = Math.max(10, Math.round(preset.warmParticles * qualityScale * themeScale));
+
+    stars = Array.from({ length: starCount }, () => createStar(preset.starSpeed));
+    clouds = Array.from({ length: cloudCount }, () => createCloudParticle(preset.cloudSpeed));
+    warm = Array.from({ length: warmCount }, () => createWarmParticle(preset.cloudSpeed));
   }
 
   function maybeAdjustAdaptiveQuality(deltaMs, timestamp) {
-    if (reduceMotionQuery.matches) {
-      return;
-    }
+    if (reduceMotionQuery.matches) return;
 
     perfSumMs += deltaMs;
     perfSamples += 1;
+    if (perfSamples < 45) return;
 
-    if (perfSamples < 45) {
-      return;
-    }
-
-    const avgFrame = perfSumMs / perfSamples;
+    const avg = perfSumMs / perfSamples;
     perfSumMs = 0;
     perfSamples = 0;
 
-    if (timestamp - lastAdaptiveAdjustAt < 900) {
-      return;
-    }
+    if (timestamp - lastAdaptiveAdjustAt < 900) return;
 
     let next = adaptiveQuality;
-    if (avgFrame > 23) {
-      next = adaptiveQuality * 0.9;
-    } else if (avgFrame < 17) {
-      next = adaptiveQuality * 1.04;
-    }
+    if (avg > 23) next *= 0.9;
+    else if (avg < 17) next *= 1.04;
 
     next = clamp(next, 0.55, 1);
     if (Math.abs(next - adaptiveQuality) >= 0.03) {
@@ -259,231 +276,192 @@
     canvas.style.height = `${height}px`;
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    updateGlobeGeometry();
+
+    updateHorizonGeometry();
     rebuildParticles();
     buildSprites();
     drawFrame();
   }
 
   function updatePointer() {
-    const easing = 0.13;
-    pointer.x += (pointer.targetX - pointer.x) * easing;
-    pointer.y += (pointer.targetY - pointer.y) * easing;
-    const targetStrength = pointer.active ? 1 : 0;
-    pointer.strength += (targetStrength - pointer.strength) * 0.08;
+    pointer.x += (pointer.targetX - pointer.x) * 0.14;
+    pointer.y += (pointer.targetY - pointer.y) * 0.14;
+    const target = pointer.active ? 1 : 0;
+    pointer.strength += (target - pointer.strength) * 0.08;
+  }
+
+  function applyPointerInfluence(particle, scale) {
+    if (pointer.strength < 0.01 || coarsePointerQuery.matches) return;
+
+    const dx = particle.x - pointer.x;
+    const dy = particle.y - pointer.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist <= 0.001 || dist >= settings.mouseRadius) return;
+
+    const n = 1 - dist / settings.mouseRadius;
+    const force = n * settings.mouseForce * pointer.strength * scale;
+    particle.x += (dx / dist) * force;
+    particle.y += (dy / dist) * force;
   }
 
   function updateStars(deltaScale) {
-    const windX = Math.sin(tick * 0.00029) * 0.028;
-    const windY = Math.cos(tick * 0.00021) * 0.022;
+    const windX = Math.sin(tick * 0.00025) * 0.024;
+    const windY = Math.cos(tick * 0.00019) * 0.02;
 
     for (let i = 0; i < stars.length; i += 1) {
-      const star = stars[i];
-      star.x += (star.vx + windX) * deltaScale;
-      star.y += (star.vy + windY) * deltaScale;
+      const s = stars[i];
+      s.x += (s.vx + windX) * deltaScale;
+      s.y += (s.vy + windY) * deltaScale;
 
-      if (pointer.strength > 0.01 && !coarsePointerQuery.matches) {
-        const dx = star.x - pointer.x;
-        const dy = star.y - pointer.y;
-        const distance = Math.hypot(dx, dy);
-        if (distance > 0.01 && distance < settings.mouseRadius) {
-          const repel = (1 - distance / settings.mouseRadius) * settings.mouseRepel * pointer.strength;
-          star.x += (dx / distance) * repel;
-          star.y += (dy / distance) * repel;
-        }
-      }
+      applyPointerInfluence(s, 0.6);
 
-      if (star.x < -6) {
-        star.x = width + 6;
-      } else if (star.x > width + 6) {
-        star.x = -6;
-      }
-      if (star.y < -6) {
-        star.y = height + 6;
-      } else if (star.y > height + 6) {
-        star.y = -6;
-      }
+      if (s.x < -8) s.x = width + 8;
+      else if (s.x > width + 8) s.x = -8;
+      if (s.y < -8) s.y = height + 8;
+      else if (s.y > height + 8) s.y = -8;
     }
   }
 
-  function drawNebula() {
+  function updateCloudParticles(deltaScale) {
+    const driftX = Math.sin(tick * 0.00015) * 0.12;
+    const driftY = Math.cos(tick * 0.00012) * 0.06;
+
+    for (let i = 0; i < clouds.length; i += 1) {
+      const p = clouds[i];
+      const wobble = Math.sin(tick * p.twinkle + p.phase) * 0.22;
+      p.x += (p.vx + driftX * p.drift + wobble * 0.04) * deltaScale;
+      p.y += (p.vy + driftY * p.drift + Math.cos(tick * 0.00009 + p.phase) * 0.02) * deltaScale;
+
+      applyPointerInfluence(p, 0.95);
+
+      if (p.x < -80) p.x = width + 80;
+      else if (p.x > width + 80) p.x = -80;
+      if (p.y < -80) p.y = height + 80;
+      else if (p.y > height + 80) p.y = -80;
+    }
+
+    for (let i = 0; i < warm.length; i += 1) {
+      const w = warm[i];
+      w.x += (w.vx + driftX * 0.5) * deltaScale;
+      w.y += (w.vy + driftY * 0.35) * deltaScale;
+
+      applyPointerInfluence(w, 1.05);
+
+      if (w.x < -60) w.x = width + 60;
+      else if (w.x > width + 60) w.x = -60;
+      if (w.y < -60) w.y = height + 60;
+      else if (w.y > height + 60) w.y = -60;
+    }
+  }
+
+  function drawStarLayer() {
+    if (!sprites.star) return;
+    const themeAlpha = isDarkTheme() ? 1 : 0.62;
+    ctx.globalCompositeOperation = "screen";
+
+    for (let i = 0; i < stars.length; i += 1) {
+      const s = stars[i];
+      const twinkle = 0.72 + 0.28 * Math.sin(tick * s.twinkle + s.phase);
+      const alpha = s.alpha * twinkle * themeAlpha;
+      const size = s.size * 7.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(sprites.star, s.x - size / 2, s.y - size / 2, size, size);
+    }
+
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  function drawCloudBands() {
     const preset = currentPreset();
-    const nebulaColorA = mixColor(color.line, color.pointer, 0.45);
-    const nebulaColorB = mixColor(color.dot, color.pointer, 0.6);
+    const bands = preset.cloudBands;
+    const themeAlpha = isDarkTheme() ? 1 : 0.44;
+    const a = mixColor(color.line, color.pointer, 0.5);
+    const b = mixColor(color.dot, color.line, 0.6);
 
-    ctx.globalCompositeOperation = "lighter";
+    ctx.globalCompositeOperation = "screen";
 
-    for (let i = 0; i < preset.nebulaBursts; i += 1) {
-      const ring = i / Math.max(1, preset.nebulaBursts - 1);
-      const sweep = tick * 0.00008 + i * 0.9;
-      const nx = globeCx + Math.cos(sweep) * globeRadius * (0.5 + ring * 0.48);
-      const ny = globeCy + Math.sin(sweep * 0.82) * globeRadius * (0.32 + ring * 0.36);
-      const nr = globeRadius * (0.44 + ring * 0.42);
+    for (let i = 0; i < bands; i += 1) {
+      const n = i / Math.max(1, bands - 1);
+      const sweep = tick * 0.000035 + i * 0.8;
+      const cx = width * (0.18 + n * 0.64) + Math.sin(sweep) * width * 0.02;
+      const cy = height * (0.78 + n * 0.16) + Math.cos(sweep * 1.2) * height * 0.02;
+      const r = Math.max(width, height) * (0.14 + n * 0.22);
 
-      const grad = ctx.createRadialGradient(nx, ny, 0, nx, ny, nr);
-      grad.addColorStop(0, rgba(nebulaColorA, 0.085));
-      grad.addColorStop(0.54, rgba(nebulaColorB, 0.035));
-      grad.addColorStop(1, rgba(nebulaColorB, 0));
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      grad.addColorStop(0, rgba(a, 0.08 * themeAlpha));
+      grad.addColorStop(0.45, rgba(b, 0.04 * themeAlpha));
+      grad.addColorStop(1, rgba(b, 0));
+
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(nx, ny, nr, 0, Math.PI * 2);
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.globalCompositeOperation = "source-over";
   }
 
-  function drawStars() {
-    if (!sprites.star) return;
+  function drawCloudParticles() {
+    if (!sprites.cloud || !sprites.warm) return;
+    const themeAlpha = isDarkTheme() ? 1 : 0.5;
 
     ctx.globalCompositeOperation = "lighter";
-    for (let i = 0; i < stars.length; i += 1) {
-      const star = stars[i];
-      const twinkle = 0.72 + 0.28 * Math.sin(tick * star.twinkle + star.phase);
-      const alpha = star.alpha * twinkle;
-      const size = star.size * 7.8;
-      ctx.globalAlpha = alpha;
-      ctx.drawImage(sprites.star, star.x - size / 2, star.y - size / 2, size, size);
-    }
-    ctx.globalAlpha = 1;
-    ctx.globalCompositeOperation = "source-over";
-  }
 
-  function drawGlobeHalo() {
-    const outer = ctx.createRadialGradient(globeCx, globeCy, globeRadius * 0.18, globeCx, globeCy, globeRadius * 1.22);
-    outer.addColorStop(0, rgba(color.pointer, 0.1));
-    outer.addColorStop(0.62, rgba(color.line, 0.05));
-    outer.addColorStop(1, rgba(color.pointer, 0));
-    ctx.fillStyle = outer;
-    ctx.beginPath();
-    ctx.arc(globeCx, globeCy, globeRadius * 1.22, 0, Math.PI * 2);
-    ctx.fill();
+    for (let i = 0; i < clouds.length; i += 1) {
+      const p = clouds[i];
+      const pulse = 0.74 + 0.26 * Math.sin(tick * p.twinkle + p.phase);
+      const alpha = p.alpha * pulse * (0.5 + p.depth * 0.7) * themeAlpha;
+      const size = p.size * (12 + p.depth * 12);
 
-    ctx.strokeStyle = rgba(color.pointer, 0.14);
-    ctx.lineWidth = 1;
-    ctx.setLineDash([5, 7]);
-    ctx.beginPath();
-    ctx.ellipse(globeCx, globeCy, globeRadius * 1.03, globeRadius * 0.38, -0.22, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-
-  function drawGlobeParticles() {
-    const pointerInfluence = pointer.strength > 0.01 && !coarsePointerQuery.matches;
-
-    const rotX = Math.sin(tick * 0.00022) * 0.2;
-    const rotYLocal = rotY;
-    const cosX = Math.cos(rotX);
-    const sinX = Math.sin(rotX);
-
-    if (!sprites.ocean || !sprites.land) {
-      return;
+      ctx.globalAlpha = clamp(alpha, 0.03, 0.78);
+      ctx.drawImage(sprites.cloud, p.x - size / 2, p.y - size / 2, size, size);
     }
 
-    const oceanColor = mixColor(color.line, color.pointer, 0.52);
-    const landColor = [
-      clamp(Math.round(color.pointer[0] * 0.68 + 32), 0, 255),
-      clamp(Math.round(color.pointer[1] * 0.78 + 52), 0, 255),
-      clamp(Math.round(color.pointer[2] * 0.58 + 24), 0, 255),
-    ];
+    for (let i = 0; i < warm.length; i += 1) {
+      const w = warm[i];
+      const pulse = 0.66 + 0.34 * Math.sin(tick * w.pulse + w.phase);
+      const alpha = w.alpha * pulse * themeAlpha;
+      const size = w.size * 10.5;
 
-    function drawPass(frontOnly) {
-      for (let i = 0; i < globeParticles.length; i += 1) {
-        const p = globeParticles[i];
-
-        const lon = p.lon + rotYLocal + Math.sin(tick * 0.00012 + p.phase) * 0.03;
-        const lat = p.lat + Math.cos(tick * 0.00009 + p.phase * 0.7) * 0.01;
-
-        const x = Math.cos(lat) * Math.cos(lon);
-        const y = Math.sin(lat);
-        const z = Math.cos(lat) * Math.sin(lon);
-
-        const y2 = y * cosX - z * sinX;
-        const z2 = y * sinX + z * cosX;
-        const depth = (z2 + 1) * 0.5;
-        if (frontOnly && z2 < 0) continue;
-        if (!frontOnly && z2 >= 0) continue;
-
-        const perspective = 0.64 + (z2 + 1) * 0.42;
-        let px = globeCx + x * globeRadius * p.shell * perspective;
-        let py = globeCy + y2 * globeRadius * p.shell * perspective;
-
-        let localBoost = 1;
-        if (pointerInfluence) {
-          const dx = px - pointer.x;
-          const dy = py - pointer.y;
-          const distance = Math.hypot(dx, dy);
-          if (distance > 0.1 && distance < settings.mouseRadius * 0.95) {
-            const repel =
-              (1 - distance / (settings.mouseRadius * 0.95)) *
-              settings.mouseRepel *
-              0.38 *
-              pointer.strength;
-            px += (dx / distance) * repel;
-            py += (dy / distance) * repel;
-            localBoost = 1.14;
-          }
-        }
-
-        const alpha = p.alpha * (0.18 + depth * 0.92) * localBoost;
-        const size = p.size * (0.62 + perspective * 0.88) * 3.8;
-        const base = p.isLand ? landColor : oceanColor;
-        const sprite = p.isLand ? sprites.land : sprites.ocean;
-
-        ctx.globalAlpha = clamp(alpha * 0.6, 0, 0.92);
-        ctx.drawImage(sprite, px - size / 2, py - size / 2, size, size);
-        ctx.fillStyle = rgba(base, clamp(alpha * 0.92, 0, 0.94));
-        ctx.beginPath();
-        ctx.arc(px, py, Math.max(0.45, size * 0.14), 0, Math.PI * 2);
-        ctx.fill();
-      }
+      ctx.globalAlpha = clamp(alpha, 0.06, 0.86);
+      ctx.drawImage(sprites.warm, w.x - size / 2, w.y - size / 2, size, size);
     }
 
-    drawPass(false);
-    drawPass(true);
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";
   }
 
   function drawPointerField() {
-    if (!pointer.active || coarsePointerQuery.matches) {
-      return;
-    }
+    if (!pointer.active || coarsePointerQuery.matches) return;
 
-    const grad = ctx.createRadialGradient(
-      pointer.x,
-      pointer.y,
-      0,
-      pointer.x,
-      pointer.y,
-      settings.mouseRadius * 0.8
-    );
-    grad.addColorStop(0, rgba(color.pointer, 0.09 * pointer.strength));
-    grad.addColorStop(0.5, rgba(color.pointer, 0.04 * pointer.strength));
+    const grad = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, settings.mouseRadius * 0.85);
+    grad.addColorStop(0, rgba(color.pointer, 0.08 * pointer.strength));
+    grad.addColorStop(0.48, rgba(color.pointer, 0.032 * pointer.strength));
     grad.addColorStop(1, rgba(color.pointer, 0));
 
     ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.arc(pointer.x, pointer.y, settings.mouseRadius * 0.8, 0, Math.PI * 2);
+    ctx.arc(pointer.x, pointer.y, settings.mouseRadius * 0.85, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  function updateFrame(delta) {
+  function updateFrame(deltaMs) {
     const reduced = reduceMotionQuery.matches;
-    const speedFactor = reduced ? 0.32 : 1;
+    const speed = reduced ? 0.3 : 1;
 
-    tick += delta;
-    rotY += delta * 0.00008 * speedFactor;
+    tick += deltaMs;
     updatePointer();
-    updateStars(speedFactor);
+    updateStars(speed);
+    updateCloudParticles(speed);
   }
 
   function drawFrame() {
     ctx.clearRect(0, 0, width, height);
-    drawNebula();
-    drawStars();
-    drawGlobeHalo();
-    drawGlobeParticles();
+    drawCloudBands();
+    drawStarLayer();
+    drawCloudParticles();
     drawPointerField();
   }
 
@@ -541,11 +519,13 @@
   const isGalleryPage = Boolean(document.querySelector(".gallery-main"));
   const cores = Number(navigator.hardwareConcurrency || 4);
   const coreScale = cores <= 2 ? 0.72 : cores <= 4 ? 0.86 : 1;
-  pageQuality = (isGalleryPage ? 0.78 : 1) * coreScale;
+  pageQuality = (isGalleryPage ? 0.8 : 1) * coreScale;
+
   resizeCanvas();
   startAnimation();
 
   window.addEventListener("resize", resizeCanvas, { passive: true });
+
   if (window.PointerEvent) {
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerleave", onPointerExit);
@@ -554,13 +534,12 @@
     window.addEventListener("mousemove", onPointerMove, { passive: true });
     window.addEventListener("mouseleave", onPointerExit);
   }
+
   window.addEventListener("blur", onPointerExit);
+
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      stopAnimation();
-    } else {
-      startAnimation();
-    }
+    if (document.hidden) stopAnimation();
+    else startAnimation();
   });
 
   if (typeof reduceMotionQuery.addEventListener === "function") {
@@ -580,5 +559,6 @@
     buildSprites();
     drawFrame();
   });
+
   observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
 })();
