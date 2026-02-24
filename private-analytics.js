@@ -9,6 +9,35 @@
 
   if (onlyOnDomains.length > 0 && !onlyOnDomains.includes(host)) return;
 
+  function toSafeInt(value, fallback) {
+    const parsed = Number.parseInt(String(value ?? ""), 10);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+
+  function initStatcounter() {
+    const sc = cfg.statcounter || {};
+    const project = toSafeInt(sc.project, 0);
+    const security = String(sc.security || "").trim();
+    if (!project || !security) return;
+
+    if (window.__PRIVATE_ANALYTICS_STATCOUNTER_INIT__) return;
+    window.__PRIVATE_ANALYTICS_STATCOUNTER_INIT__ = true;
+
+    window.sc_project = project;
+    window.sc_security = security;
+    window.sc_invisible = toSafeInt(sc.invisible, 1);
+    if (sc.removeLink !== undefined) {
+      window.sc_remove_link = sc.removeLink ? 1 : 0;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://www.statcounter.com/counter/counter.js";
+    script.async = true;
+    script.dataset.privateAnalytics = "statcounter";
+    script.referrerPolicy = "no-referrer-when-downgrade";
+    document.head.appendChild(script);
+  }
+
   const oncePerSession = cfg.oncePerSession !== false;
 
   function markSessionKey(key) {
@@ -94,4 +123,6 @@
   } else {
     sendWebhook().catch(() => {});
   }
+
+  initStatcounter();
 })();

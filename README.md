@@ -1,39 +1,44 @@
 # cehw.github.io
-My personal website
+Personal homepage and gallery.
 
-## Private visitor analytics (no public widget)
+## Runtime
 
-This site includes a private analytics loader:
+- Entry pages: `index.html`, `gallery.html`
+- Shared styles: `styles.css`
+- Shared UI script: `script.js`
+- Gallery renderer: `gallery.js`
+- Cinematic background: `space-earth-bg.js`
 
-- `/assets/private-analytics-config.js`
-- `/private-analytics.js`
+## Analytics (single source of truth)
 
-### Quick setup
+Analytics are configured only via:
 
-1. Open `/assets/private-analytics-config.js`
-2. Set `enabled: true`
-3. Fill Statcounter keys:
-   - `statcounter.project`
-   - `statcounter.security`
+- `assets/private-analytics-config.js`
+- `private-analytics.js`
 
-This gives you private dashboard metrics (visits, paths, referrers, countries, devices).
+### Statcounter
 
-### Optional: capture visitor IP to your own endpoint
+Set these fields in `assets/private-analytics-config.js`:
 
-Fill `webhook.url` with your webhook URL (for example a server endpoint, Pipedream, or Apps Script web app).
-When enabled, the site posts a JSON payload including IP, page path, referrer, user agent, timezone, and viewport.
+- `enabled`
+- `onlyOnDomains`
+- `statcounter.project`
+- `statcounter.security`
+- Optional: `statcounter.invisible`, `statcounter.removeLink`
 
-### Notes
+`private-analytics.js` loads Statcounter dynamically using that config.
 
-- The tracker is invisible on the page (`invisible: 1`).
-- It only runs on domains listed in `onlyOnDomains`.
-- Set `oncePerSession: true` if you only want one record per page path per browser session.
-- Current default is disabled to avoid accidental tracking.
+### Optional webhook logging
 
-## Education
+Set `webhook.url` to your endpoint to receive a JSON payload with page, referrer, user agent, timezone, viewport, and optional IP.
 
--PhD, HKUST (2021-2025)
--BSc, HHU (2017-2021)
+- `webhook.includeIp`: include IP lookup result
+- `webhook.delayMs`: delay before sending
+- `oncePerSession`: dedupe by page path per browser session
 
+## Gallery workflow
 
-## Employment
+- Metadata file: `assets/gallery/meta.json`
+- Build/update metadata: `python3 scripts/generate_gallery_meta.py`
+- Build/update thumbnails: `python3 scripts/generate_gallery_thumbs.py`
+- Validate metadata references: `python3 scripts/validate_gallery_meta.py`

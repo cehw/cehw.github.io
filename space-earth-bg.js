@@ -48,7 +48,7 @@
   earthGroup.rotation.y = -Math.PI / 2;
   scene.add(earthGroup);
 
-  const earthGeometry = new THREE_NS.SphereGeometry(earthRadius, 128, 128);
+  const earthGeometry = new THREE_NS.SphereGeometry(earthRadius, 96, 96);
   const earthMaterial = new THREE_NS.MeshBasicMaterial({ color: 0x010408 });
   const earthSphere = new THREE_NS.Mesh(earthGeometry, earthMaterial);
   earthGroup.add(earthSphere);
@@ -72,7 +72,7 @@
     }
   `;
 
-  const atmosphereGeometry = new THREE_NS.SphereGeometry(earthRadius * 1.025, 128, 128);
+  const atmosphereGeometry = new THREE_NS.SphereGeometry(earthRadius * 1.025, 96, 96);
   const atmosphereMaterial = new THREE_NS.ShaderMaterial({
     vertexShader: atmosVertexShader,
     fragmentShader: atmosFragmentShader,
@@ -159,7 +159,7 @@
       return n;
     }
 
-    const samples = window.innerWidth <= 760 ? 130000 : 200000;
+    const samples = window.innerWidth <= 760 ? 90000 : 140000;
 
     for (let i = 0; i < samples; i += 1) {
       const phi = Math.acos(-1 + (2 * i) / samples);
@@ -185,8 +185,7 @@
 
   function loadRealEarthData() {
     const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_lights_2048.png";
+    img.src = "./assets/textures/earth_lights_2048.png";
 
     img.onload = () => {
       try {
@@ -204,7 +203,7 @@
 
         const posArray = [];
         const colorArray = [];
-        const attempts = window.innerWidth <= 760 ? 500000 : 900000;
+        const attempts = window.innerWidth <= 760 ? 300000 : 550000;
         const warmColor = new THREE_NS.Color(0xffbb33);
 
         for (let i = 0; i < attempts; i += 1) {
@@ -284,7 +283,7 @@
     }
   `;
 
-  const auroraGeometry = new THREE_NS.SphereGeometry(earthRadius * 1.04, 128, 128);
+  const auroraGeometry = new THREE_NS.SphereGeometry(earthRadius * 1.04, 96, 96);
   const auroraMaterial = new THREE_NS.ShaderMaterial({
     vertexShader: auroraVertexShader,
     fragmentShader: auroraFragmentShader,
@@ -345,8 +344,8 @@
   }
 
   const isMobile = window.innerWidth <= 760;
-  const starsPrimary = createStarField(isMobile ? 7000 : 14500, 4200, 1.2, 0.62);
-  const starsFar = createStarField(isMobile ? 4800 : 9800, 5200, 0.8, 0.28);
+  const starsPrimary = createStarField(isMobile ? 5200 : 11000, 4200, 1.2, 0.62);
+  const starsFar = createStarField(isMobile ? 3300 : 7200, 5200, 0.8, 0.28);
   scene.add(starsFar);
   scene.add(starsPrimary);
 
