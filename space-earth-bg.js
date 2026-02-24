@@ -296,6 +296,32 @@
   const auroraMesh = new THREE_NS.Mesh(auroraGeometry, auroraMaterial);
   earthGroup.add(auroraMesh);
 
+  function createSoftPointTexture(size = 64) {
+    const textureCanvas = document.createElement("canvas");
+    textureCanvas.width = size;
+    textureCanvas.height = size;
+    const textureCtx = textureCanvas.getContext("2d", { alpha: true });
+    if (!textureCtx) return null;
+
+    const c = size / 2;
+    const gradient = textureCtx.createRadialGradient(c, c, 0, c, c, c);
+    gradient.addColorStop(0, "rgba(255,255,255,1)");
+    gradient.addColorStop(0.35, "rgba(210,235,255,0.92)");
+    gradient.addColorStop(0.7, "rgba(160,210,245,0.36)");
+    gradient.addColorStop(1, "rgba(160,210,245,0)");
+    textureCtx.fillStyle = gradient;
+    textureCtx.fillRect(0, 0, size, size);
+
+    const texture = new THREE_NS.CanvasTexture(textureCanvas);
+    texture.minFilter = THREE_NS.LinearFilter;
+    texture.magFilter = THREE_NS.LinearFilter;
+    texture.generateMipmaps = false;
+    texture.needsUpdate = true;
+    return texture;
+  }
+
+  const starSprite = createSoftPointTexture();
+
   function createStarField(count, spread, size, opacity) {
     const geometry = new THREE_NS.BufferGeometry();
     const posArray = new Float32Array(count * 3);
@@ -309,7 +335,12 @@
       transparent: true,
       opacity,
       sizeAttenuation: true,
+      map: starSprite || undefined,
+      alphaMap: starSprite || undefined,
+      depthWrite: false,
+      blending: THREE_NS.AdditiveBlending,
     });
+    material.alphaTest = 0.02;
     return new THREE_NS.Points(geometry, material);
   }
 
