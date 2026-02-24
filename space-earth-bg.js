@@ -13,6 +13,7 @@
   window.__SPACE_EARTH_BG_INIT__ = true;
 
   const root = document.documentElement;
+  root.classList.add("has-cinematic-earth-bg");
 
   const scene = new THREE_NS.Scene();
   scene.fog = new THREE_NS.FogExp2(0x000000, 0.0005);
@@ -36,28 +37,8 @@
   renderer.setClearColor(0x000000, 0);
   container.replaceChildren(renderer.domElement);
 
-  let cinematicActive = false;
-
   function isDarkTheme() {
     return root.getAttribute("data-theme") === "dark";
-  }
-
-  function setCinematicActive(nextActive) {
-    if (cinematicActive === nextActive) return;
-    cinematicActive = nextActive;
-    root.classList.toggle("has-cinematic-earth-bg", cinematicActive);
-
-    if (!cinematicActive) {
-      if (renderer.__rafId) {
-        cancelAnimationFrame(renderer.__rafId);
-        renderer.__rafId = null;
-      }
-      return;
-    }
-
-    if (!document.hidden && !renderer.__rafId) {
-      animate();
-    }
   }
 
   const earthGroup = new THREE_NS.Group();
@@ -315,23 +296,53 @@
   const auroraMesh = new THREE_NS.Mesh(auroraGeometry, auroraMaterial);
   earthGroup.add(auroraMesh);
 
-  const starCount = window.innerWidth <= 760 ? 4500 : 10000;
-  const starGeometry = new THREE_NS.BufferGeometry();
-  const starPosArray = new Float32Array(starCount * 3);
-  for (let i = 0; i < starCount * 3; i += 1) {
-    starPosArray[i] = (Math.random() - 0.5) * 4000;
+  function createStarField(count, spread, size, opacity) {
+    const geometry = new THREE_NS.BufferGeometry();
+    const posArray = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i += 1) {
+      posArray[i] = (Math.random() - 0.5) * spread;
+    }
+    geometry.setAttribute("position", new THREE_NS.BufferAttribute(posArray, 3));
+    const material = new THREE_NS.PointsMaterial({
+      size,
+      color: 0xffffff,
+      transparent: true,
+      opacity,
+      sizeAttenuation: true,
+    });
+    return new THREE_NS.Points(geometry, material);
   }
 
-  starGeometry.setAttribute("position", new THREE_NS.BufferAttribute(starPosArray, 3));
-  const starMaterial = new THREE_NS.PointsMaterial({
-    size: 1.5,
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.6,
-    sizeAttenuation: true,
-  });
-  const stars = new THREE_NS.Points(starGeometry, starMaterial);
-  scene.add(stars);
+  const isMobile = window.innerWidth <= 760;
+  const starsPrimary = createStarField(isMobile ? 7000 : 14500, 4200, 1.2, 0.62);
+  const starsFar = createStarField(isMobile ? 4800 : 9800, 5200, 0.8, 0.28);
+  scene.add(starsFar);
+  scene.add(starsPrimary);
+
+  const baseStarOpacity = {
+    primary: starsPrimary.material.opacity,
+    far: starsFar.material.opacity,
+  };
+
+  const performanceProfile = {
+    frameIntervalMs: 1000 / 60,
+    motionScale: 1,
+    pointerScale: 0.02,
+    cameraBlend: 0.02,
+    starOpacityScale: 1,
+  };
+
+  function applyThemeProfile() {
+    const dark = isDarkTheme();
+    performanceProfile.frameIntervalMs = dark ? 1000 / 60 : 1000 / 26;
+    performanceProfile.motionScale = dark ? 1 : 0.42;
+    performanceProfile.pointerScale = dark ? 0.02 : 0.011;
+    performanceProfile.cameraBlend = dark ? 0.02 : 0.012;
+    performanceProfile.starOpacityScale = dark ? 1 : 0.42;
+
+    starsPrimary.material.opacity = baseStarOpacity.primary * performanceProfile.starOpacityScale;
+    starsFar.material.opacity = baseStarOpacity.far * performanceProfile.starOpacityScale;
+  }
 
   let mouseX = 0;
   let mouseY = 0;
@@ -343,29 +354,36 @@
 
   document.addEventListener("mousemove", onMouseMove, { passive: true });
 
-  const clock = new THREE_NS.Clock();
+  let sceneTime = 0;
+  let lastRenderAt = 0;
 
-  function animate() {
-    if (!cinematicActive) {
-      renderer.__rafId = null;
-      return;
-    }
+  function animate(now = 0) {
+    renderer.__rafId = requestAnimationFrame(animate);
+    if (document.hidden) return;
 
-    const raf = requestAnimationFrame(animate);
-    renderer.__rafId = raf;
+    if (!lastRenderAt) lastRenderAt = now;
+    const elapsedMs = now - lastRenderAt;
+    if (elapsedMs < performanceProfile.frameIntervalMs) return;
+    lastRenderAt = now;
 
-    const elapsed = clock.getElapsedTime();
-    auroraUniforms.time.value = elapsed;
-    cityLightsUniforms.time.value = elapsed;
+    const deltaSeconds = Math.min(elapsedMs / 1000, 0.08);
+    const frameScale = deltaSeconds * 60;
+    const motion = performanceProfile.motionScale;
+    sceneTime += deltaSeconds * motion;
 
-    earthGroup.rotation.y += 0.0003;
-    stars.rotation.y += 0.0001;
+    auroraUniforms.time.value = sceneTime;
+    cityLightsUniforms.time.value = sceneTime;
 
-    const targetX = mouseX * 0.02;
-    const targetY = mouseY * 0.02;
+    earthGroup.rotation.y += 0.0003 * motion * frameScale;
+    starsPrimary.rotation.y += 0.0001 * motion * frameScale;
+    starsFar.rotation.y -= 0.00005 * motion * frameScale;
 
-    camera.position.x += (targetX - camera.position.x) * 0.02;
-    camera.position.y += (60 - targetY - camera.position.y) * 0.02;
+    const targetX = mouseX * performanceProfile.pointerScale;
+    const targetY = mouseY * performanceProfile.pointerScale;
+    const blend = Math.min(0.22, performanceProfile.cameraBlend * frameScale);
+
+    camera.position.x += (targetX - camera.position.x) * blend;
+    camera.position.y += (60 - targetY - camera.position.y) * blend;
     camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
@@ -384,15 +402,15 @@
     if (document.hidden) {
       if (renderer.__rafId) cancelAnimationFrame(renderer.__rafId);
       renderer.__rafId = null;
+      lastRenderAt = 0;
       return;
     }
-    if (cinematicActive && !renderer.__rafId) animate();
+    if (!renderer.__rafId) animate();
   });
 
-  const themeObserver = new MutationObserver(() => {
-    setCinematicActive(isDarkTheme());
-  });
+  const themeObserver = new MutationObserver(applyThemeProfile);
   themeObserver.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
 
-  setCinematicActive(isDarkTheme());
+  applyThemeProfile();
+  if (!document.hidden && !renderer.__rafId) animate();
 })();

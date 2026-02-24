@@ -126,7 +126,7 @@ body.is-lightbox-open {
   display: block;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 600ms ease;
+  transition: opacity 600ms ease, filter 600ms ease;
 }
 
 .bg-orb {
@@ -1176,8 +1176,18 @@ html[data-theme="dark"] .contact-list a {
   color: #a7d1dc;
 }
 
+html.has-cinematic-earth-bg .space-earth-canvas {
+  opacity: 0.16;
+  filter: saturate(0.54) brightness(1.24) contrast(0.82);
+}
+
+html[data-theme="light"].has-cinematic-earth-bg body {
+  background: linear-gradient(180deg, #fbfbfa 0%, #f1f1ef 100%) !important;
+}
+
 html[data-theme="dark"].has-cinematic-earth-bg .space-earth-canvas {
   opacity: 1;
+  filter: none;
 }
 
 html[data-theme="dark"].has-cinematic-earth-bg body {
