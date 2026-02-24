@@ -1029,7 +1029,7 @@ html[data-theme="dark"] .bg-grid {
     radial-gradient(circle, rgba(131, 178, 228, 0.46) 0.7px, transparent 1.1px);
   background-size: 96px 96px, 140px 140px;
   background-position: 0 0, 40px 52px;
-  opacity: 0.34;
+  opacity: 0.6;
   mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.22) 74%, rgba(255, 255, 255, 0.08));
 }
 
@@ -1038,11 +1038,11 @@ html[data-theme="dark"] .bg-flow {
     radial-gradient(120% 45% at 50% 104%, rgba(56, 124, 194, 0.38), transparent 64%),
     radial-gradient(88% 22% at 50% 96%, rgba(124, 232, 255, 0.28), transparent 72%),
     linear-gradient(180deg, rgba(66, 120, 188, 0.14), transparent 34%);
-  opacity: 0.34;
+  opacity: 0.72;
 }
 
 html[data-theme="dark"] .bg-network {
-  opacity: 0.82;
+  opacity: 0.55;
   mix-blend-mode: screen;
 }
 
@@ -1062,8 +1062,7 @@ html[data-theme="dark"] .bg-planet {
     0 -8px 34px rgba(115, 224, 255, 0.17),
     inset 0 16px 28px rgba(129, 213, 255, 0.16),
     inset 0 -30px 48px rgba(1, 6, 20, 0.8);
-  filter: saturate(1.03) contrast(1.06);
-  opacity: 0.6;
+  filter: saturate(1.06) contrast(1.1);
 }
 
 html[data-theme="dark"] .bg-planet::before {
@@ -1076,7 +1075,7 @@ html[data-theme="dark"] .bg-planet::before {
     radial-gradient(122% 78% at 50% 2%, rgba(84, 255, 176, 0.2) 0 7%, transparent 12%),
     radial-gradient(124% 82% at 50% 6%, transparent 11.5%, rgba(93, 180, 255, 0.36) 12.2%, transparent 14.8%);
   mix-blend-mode: screen;
-  opacity: 0.76;
+  opacity: 0.92;
 }
 
 html[data-theme="dark"] .bg-planet::after {
@@ -1095,7 +1094,7 @@ html[data-theme="dark"] .bg-planet::after {
     radial-gradient(circle at 80% 40%, rgba(255, 196, 120, 0.5) 0 1.1%, transparent 2.7%),
     linear-gradient(180deg, rgba(196, 226, 245, 0.16) 24%, rgba(92, 135, 185, 0.06) 44%, rgba(8, 24, 54, 0.38) 74%, rgba(2, 8, 20, 0.7) 100%);
   mix-blend-mode: screen;
-  opacity: 0.54;
+  opacity: 0.88;
 }
 
 html[data-theme="dark"] .bg-orb {
