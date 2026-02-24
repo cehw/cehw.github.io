@@ -21,19 +21,19 @@
       cloudParticles: 360,
       warmParticles: 90,
       cloudBands: 6,
-      starSpeed: 0.034,
-      cloudSpeed: 0.16,
+      starSpeed: 0.024,
+      cloudSpeed: 0.095,
     },
     mobile: {
       stars: 80,
       cloudParticles: 220,
       warmParticles: 52,
       cloudBands: 4,
-      starSpeed: 0.024,
-      cloudSpeed: 0.12,
+      starSpeed: 0.017,
+      cloudSpeed: 0.07,
     },
     mouseRadius: 210,
-    mouseForce: 0.22,
+    mouseForce: 0.11,
   };
 
   const pointer = {
@@ -240,29 +240,8 @@
     warm = Array.from({ length: warmCount }, () => createWarmParticle(preset.cloudSpeed));
   }
 
-  function maybeAdjustAdaptiveQuality(deltaMs, timestamp) {
-    if (reduceMotionQuery.matches) return;
-
-    perfSumMs += deltaMs;
-    perfSamples += 1;
-    if (perfSamples < 45) return;
-
-    const avg = perfSumMs / perfSamples;
-    perfSumMs = 0;
-    perfSamples = 0;
-
-    if (timestamp - lastAdaptiveAdjustAt < 900) return;
-
-    let next = adaptiveQuality;
-    if (avg > 23) next *= 0.9;
-    else if (avg < 17) next *= 1.04;
-
-    next = clamp(next, 0.55, 1);
-    if (Math.abs(next - adaptiveQuality) >= 0.03) {
-      adaptiveQuality = next;
-      lastAdaptiveAdjustAt = timestamp;
-      rebuildParticles();
-    }
+  function maybeAdjustAdaptiveQuality() {
+    // Intentionally disabled for now to avoid visible re-seeding jitter.
   }
 
   function resizeCanvas() {
@@ -305,15 +284,15 @@
   }
 
   function updateStars(deltaScale) {
-    const windX = Math.sin(tick * 0.00025) * 0.024;
-    const windY = Math.cos(tick * 0.00019) * 0.02;
+    const windX = Math.sin(tick * 0.00025) * 0.012;
+    const windY = Math.cos(tick * 0.00019) * 0.01;
 
     for (let i = 0; i < stars.length; i += 1) {
       const s = stars[i];
       s.x += (s.vx + windX) * deltaScale;
       s.y += (s.vy + windY) * deltaScale;
 
-      applyPointerInfluence(s, 0.6);
+      applyPointerInfluence(s, 0.28);
 
       if (s.x < -8) s.x = width + 8;
       else if (s.x > width + 8) s.x = -8;
@@ -323,16 +302,16 @@
   }
 
   function updateCloudParticles(deltaScale) {
-    const driftX = Math.sin(tick * 0.00015) * 0.12;
-    const driftY = Math.cos(tick * 0.00012) * 0.06;
+    const driftX = Math.sin(tick * 0.00015) * 0.06;
+    const driftY = Math.cos(tick * 0.00012) * 0.03;
 
     for (let i = 0; i < clouds.length; i += 1) {
       const p = clouds[i];
-      const wobble = Math.sin(tick * p.twinkle + p.phase) * 0.22;
-      p.x += (p.vx + driftX * p.drift + wobble * 0.04) * deltaScale;
-      p.y += (p.vy + driftY * p.drift + Math.cos(tick * 0.00009 + p.phase) * 0.02) * deltaScale;
+      const wobble = Math.sin(tick * p.twinkle + p.phase) * 0.14;
+      p.x += (p.vx + driftX * p.drift + wobble * 0.03) * deltaScale;
+      p.y += (p.vy + driftY * p.drift + Math.cos(tick * 0.00009 + p.phase) * 0.012) * deltaScale;
 
-      applyPointerInfluence(p, 0.95);
+      applyPointerInfluence(p, 0.55);
 
       if (p.x < -80) p.x = width + 80;
       else if (p.x > width + 80) p.x = -80;
@@ -345,7 +324,7 @@
       w.x += (w.vx + driftX * 0.5) * deltaScale;
       w.y += (w.vy + driftY * 0.35) * deltaScale;
 
-      applyPointerInfluence(w, 1.05);
+      applyPointerInfluence(w, 0.65);
 
       if (w.x < -60) w.x = width + 60;
       else if (w.x > width + 60) w.x = -60;
@@ -449,7 +428,8 @@
 
   function updateFrame(deltaMs) {
     const reduced = reduceMotionQuery.matches;
-    const speed = reduced ? 0.3 : 1;
+    const frameScale = clamp(deltaMs / 16.666, 0.6, 1.8);
+    const speed = (reduced ? 0.3 : 1) * frameScale;
 
     tick += deltaMs;
     updatePointer();
@@ -484,7 +464,6 @@
 
     if (delta >= minFrameDelta || lastFrame === 0) {
       updateFrame(delta);
-      maybeAdjustAdaptiveQuality(delta, timestamp);
       drawFrame();
       lastFrame = timestamp;
     }
