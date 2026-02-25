@@ -12,8 +12,12 @@ const lightboxImage = document.getElementById("gallery-lightbox-image");
 const lightboxCaption = document.getElementById("gallery-lightbox-caption");
 const lightboxOpen = document.getElementById("gallery-lightbox-open");
 const lightboxClose = document.getElementById("gallery-lightbox-close");
+const lightboxPrev = document.getElementById("gallery-lightbox-prev");
+const lightboxNext = document.getElementById("gallery-lightbox-next");
 let lightboxLastFocus = null;
 let lightboxReady = false;
+let lightboxItems = [];
+let lightboxCurrentIndex = -1;
 const groupsWithoutSmallTitles = new Set(["Easter Painted Egg at UG Hall · 1"]);
 const GALLERY_META_PATH = "./assets/gallery/meta.json";
 
@@ -142,6 +146,33 @@ function markPanoramaCardsByRatio(root) {
   });
 }
 
+function getLightboxPayload(link) {
+  if (!link) return { fullUrl: "", titleText: "Gallery image" };
+  const fullUrl = link.getAttribute("data-full-url") || link.getAttribute("href") || "";
+  const titleText =
+    link.getAttribute("data-lightbox-title") ||
+    (link.querySelector("img") ? link.querySelector("img").alt : "Gallery image");
+  return { fullUrl, titleText };
+}
+
+function syncLightboxNavState() {
+  const canNavigate = lightboxItems.length > 1;
+  if (lightboxPrev) lightboxPrev.disabled = !canNavigate;
+  if (lightboxNext) lightboxNext.disabled = !canNavigate;
+}
+
+function refreshLightboxItems() {
+  if (!groupsContainer) {
+    lightboxItems = [];
+    lightboxCurrentIndex = -1;
+    syncLightboxNavState();
+    return;
+  }
+  lightboxItems = [...groupsContainer.querySelectorAll(".gallery-card-link")];
+  if (!lightboxItems.length) lightboxCurrentIndex = -1;
+  syncLightboxNavState();
+}
+
 function closeLightbox() {
   if (!lightbox || lightbox.hidden) return;
   lightbox.hidden = true;
@@ -157,11 +188,14 @@ function closeLightbox() {
     lightboxLastFocus.focus();
   }
   lightboxLastFocus = null;
+  lightboxCurrentIndex = -1;
 }
 
 function openLightbox(fullUrl, titleText) {
   if (!lightbox || !lightboxImage || !lightboxOpen) return;
-  lightboxLastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  if (lightbox.hidden) {
+    lightboxLastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  }
   lightboxImage.src = fullUrl;
   lightboxImage.alt = titleText || "Gallery image";
   if (lightboxCaption) lightboxCaption.textContent = titleText || "";
@@ -174,6 +208,27 @@ function openLightbox(fullUrl, titleText) {
   }
 }
 
+function openLightboxAt(index) {
+  if (!lightboxItems.length) return;
+  const total = lightboxItems.length;
+  const normalized = ((index % total) + total) % total;
+  const link = lightboxItems[normalized];
+  const { fullUrl, titleText } = getLightboxPayload(link);
+  if (!fullUrl) return;
+  lightboxCurrentIndex = normalized;
+  openLightbox(fullUrl, titleText);
+  syncLightboxNavState();
+}
+
+function navigateLightbox(step) {
+  if (!lightbox || lightbox.hidden || !lightboxItems.length) return;
+  if (lightboxCurrentIndex < 0) {
+    openLightboxAt(0);
+    return;
+  }
+  openLightboxAt(lightboxCurrentIndex + step);
+}
+
 function setupLightboxEvents() {
   if (lightboxReady) return;
   if (!groupsContainer || !lightbox || !lightboxImage || !lightboxOpen || !lightboxClose) return;
@@ -184,10 +239,13 @@ function setupLightboxEvents() {
     if (!link) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
-    const fullUrl = link.getAttribute("data-full-url") || link.getAttribute("href");
-    const titleText =
-      link.getAttribute("data-lightbox-title") ||
-      (link.querySelector("img") ? link.querySelector("img").alt : "Gallery image");
+    refreshLightboxItems();
+    const itemIndex = lightboxItems.indexOf(link);
+    if (itemIndex >= 0) {
+      openLightboxAt(itemIndex);
+      return;
+    }
+    const { fullUrl, titleText } = getLightboxPayload(link);
     if (!fullUrl) return;
     openLightbox(fullUrl, titleText);
   });
@@ -202,9 +260,33 @@ function setupLightboxEvents() {
     closeLightbox();
   });
 
+  if (lightboxPrev) {
+    lightboxPrev.addEventListener("click", () => {
+      navigateLightbox(-1);
+    });
+  }
+
+  if (lightboxNext) {
+    lightboxNext.addEventListener("click", () => {
+      navigateLightbox(1);
+    });
+  }
+
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && lightbox && !lightbox.hidden) {
+    if (!lightbox || lightbox.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
       closeLightbox();
+      return;
+    }
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      navigateLightbox(-1);
+      return;
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      navigateLightbox(1);
     }
   });
 }
@@ -414,6 +496,7 @@ async function renderGallery() {
     groupsContainer.innerHTML = html;
     markPanoramaCardsByRatio(groupsContainer);
     setupLightboxEvents();
+    refreshLightboxItems();
   } catch (err) {
     console.error("Gallery render failed:", err);
     if (indexContainer) indexContainer.hidden = true;
