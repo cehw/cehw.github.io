@@ -12,12 +12,7 @@
       (() => {
         try {
           const saved = localStorage.getItem("site-theme");
-          const theme =
-            saved === "dark" || saved === "light"
-              ? saved
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
+          const theme = saved === "dark" || saved === "light" ? saved : "dark";
           document.documentElement.setAttribute("data-theme", theme);
         } catch (_) {}
       })();
@@ -225,6 +220,6 @@
     <script src="./private-analytics.js?v=20260224-analytics4"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./space-earth-bg.js?v=20260224-space8"></script>
-    <script src="./script.js?v=20260222-theme5"></script>
+    <script src="./script.js?v=20260224-theme6"></script>
   </body>
 </html>

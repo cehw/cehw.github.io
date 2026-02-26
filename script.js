@@ -1,6 +1,5 @@
 const THEME_STORAGE_KEY = "site-theme";
 const themeButtons = [...document.querySelectorAll(".theme-toggle")];
-const prefersDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
 const SUN_ICON =
   '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.2 2.2M7.5 16.5l-2.2 2.2M18.7 18.7l-2.2-2.2M7.5 7.5 5.3 5.3"></path></svg>';
 const MOON_ICON =
@@ -13,7 +12,7 @@ const storedTheme = (() => {
   }
 })();
 const hasStoredTheme = storedTheme === "light" || storedTheme === "dark";
-let activeTheme = hasStoredTheme ? storedTheme : prefersDarkQuery.matches ? "dark" : "light";
+let activeTheme = hasStoredTheme ? storedTheme : "dark";
 
 function renderThemeButtons(theme) {
   const nextThemeLabel = theme === "dark" ? "Light" : "Dark";
@@ -37,14 +36,6 @@ function applyTheme(theme, persist) {
 }
 
 applyTheme(activeTheme, hasStoredTheme);
-
-if (!hasStoredTheme) {
-  if (typeof prefersDarkQuery.addEventListener === "function") {
-    prefersDarkQuery.addEventListener("change", (event) => {
-      applyTheme(event.matches ? "dark" : "light", false);
-    });
-  }
-}
 
 themeButtons.forEach((button) => {
   button.addEventListener("click", () => {
