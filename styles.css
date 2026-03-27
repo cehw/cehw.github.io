@@ -444,6 +444,26 @@ h3 {
   color: #2a4247;
 }
 
+.card h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.card-title-icon {
+  display: inline-flex;
+  width: 1.05em;
+  height: 1.05em;
+  color: #5f95a4;
+  flex: 0 0 auto;
+}
+
+.card-title-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .panel p,
 .card p {
   margin: 0 0 10px;
