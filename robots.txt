@@ -1,16 +1,4 @@
-# Indexing policy: allow major search engines, reduce other crawler traffic.
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: BingPreview
-Allow: /
-
-# Default policy for other bots
 User-agent: *
-Disallow: /
+Allow: /
 
 Sitemap: https://cehw.github.io/sitemap.xml
