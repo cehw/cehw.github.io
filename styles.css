@@ -729,6 +729,17 @@ em {
   font-size: 1em;
 }
 
+#service a {
+  color: inherit;
+  text-decoration-color: var(--muted);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+#service a:hover {
+  text-decoration-color: currentColor;
+}
+
 .contact-list {
   margin: 8px 0 0;
   padding-left: 18px;
