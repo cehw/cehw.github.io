@@ -729,41 +729,6 @@ em {
   font-size: 1em;
 }
 
-.service-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin: 4px 0 0;
-  padding: 6px 12px 6px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(133, 98, 52, 0.35);
-  background: rgba(133, 98, 52, 0.1);
-  color: #6d5028;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.service-badge-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: rgba(133, 98, 52, 0.22);
-  font-size: 0.72rem;
-  line-height: 1;
-}
-
-html[data-theme="dark"] .service-badge {
-  border-color: rgba(224, 196, 144, 0.4);
-  background: rgba(224, 196, 144, 0.1);
-  color: #e2c387;
-}
-
-html[data-theme="dark"] .service-badge-icon {
-  background: rgba(224, 196, 144, 0.22);
-}
-
 .contact-list {
   margin: 8px 0 0;
   padding-left: 18px;
