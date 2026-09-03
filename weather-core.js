@@ -106,7 +106,7 @@
   // Simple hour-angle azimuth: 0 at local midnight, 180 at local noon.
   function sunAzimuthDeg(date) {
     const { hour, minute } = hkParts(date);
-    return (((hour + minute / 60) / 24) * 360 + 180) % 360;
+    return (((hour + minute / 60) / 24) * 360) % 360;
   }
 
   function synthetic(category, isDay) {
