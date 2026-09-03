@@ -79,3 +79,17 @@ const io = new IntersectionObserver(
 );
 
 sections.forEach((section) => io.observe(section));
+
+// Sticky header: blurred backdrop once the page has scrolled past the top.
+const siteHeader = document.querySelector(".site-header");
+const headerSentinel = document.querySelector(".header-sentinel");
+if (siteHeader && headerSentinel && "IntersectionObserver" in window) {
+  const stuckObserver = new IntersectionObserver(
+    ([entry]) => {
+      siteHeader.classList.toggle("is-stuck", !entry.isIntersecting);
+    },
+    { threshold: 0 }
+  );
+  stuckObserver.observe(headerSentinel);
+}
+if (siteHeader && pageQuery.get("stuck") === "1") siteHeader.classList.add("is-stuck");
