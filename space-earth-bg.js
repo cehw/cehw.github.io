@@ -61,19 +61,30 @@
     }
   `;
 
+  const atmosUniforms = {
+    sunDir: { value: new THREE_NS.Vector3(0, 1, 0) },
+    dayMix: { value: 0 },
+  };
+
   const atmosFragmentShader = `
+    uniform vec3 sunDir;
+    uniform float dayMix;
     varying vec3 vNormal;
     void main() {
       float intensity = pow(0.55 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.5);
       vec3 greenEdge = vec3(0.3, 0.8, 0.5);
       vec3 blueSpace = vec3(0.0, 0.2, 0.8);
       vec3 finalColor = mix(blueSpace, greenEdge, intensity * 1.2);
-      gl_FragColor = vec4(finalColor, intensity * 1.5);
+      // Daytime: the limb facing the sun brightens toward a pale sky blue.
+      float sun = pow(max(dot(normalize(vNormal), sunDir), 0.0), 1.5) * dayMix;
+      finalColor = mix(finalColor, vec3(0.78, 0.90, 1.0), sun);
+      gl_FragColor = vec4(finalColor, intensity * 1.5 * (1.0 + 1.1 * sun));
     }
   `;
 
   const atmosphereGeometry = new THREE_NS.SphereGeometry(earthRadius * 1.025, 96, 96);
   const atmosphereMaterial = new THREE_NS.ShaderMaterial({
+    uniforms: atmosUniforms,
     vertexShader: atmosVertexShader,
     fragmentShader: atmosFragmentShader,
     blending: THREE_NS.AdditiveBlending,
@@ -84,7 +95,7 @@
   const atmosphere = new THREE_NS.Mesh(atmosphereGeometry, atmosphereMaterial);
   earthGroup.add(atmosphere);
 
-  const cityLightsUniforms = { time: { value: 0.0 } };
+  const cityLightsUniforms = { time: { value: 0.0 }, dim: { value: 0.0 } };
 
   function createParticles(posArray, colorArray) {
     const particlesGeometry = new THREE_NS.BufferGeometry();
@@ -115,6 +126,7 @@
       `,
       fragmentShader: `
         uniform float time;
+        uniform float dim;
         varying vec3 vColor;
         varying float vPhase;
         void main() {
@@ -134,7 +146,7 @@
           float sharpTwinkle = pow(noise, 3.5);
           float twinkle = 0.5 + (twinkleAmt * 3.5 * sharpTwinkle);
 
-          gl_FragColor = vec4(vColor * twinkle * 1.8, alpha);
+          gl_FragColor = vec4(vColor * twinkle * 1.8 * mix(1.0, 0.6, dim), alpha);
         }
       `,
       transparent: true,
@@ -295,6 +307,30 @@
   const auroraMesh = new THREE_NS.Mesh(auroraGeometry, auroraMaterial);
   earthGroup.add(auroraMesh);
 
+  function createSoftPointTexture(size = 64) {
+    const textureCanvas = document.createElement("canvas");
+    textureCanvas.width = size;
+    textureCanvas.height = size;
+    const textureCtx = textureCanvas.getContext("2d", { alpha: true });
+    if (!textureCtx) return null;
+
+    const c = size / 2;
+    const gradient = textureCtx.createRadialGradient(c, c, 0, c, c, c);
+    gradient.addColorStop(0, "rgba(255,255,255,1)");
+    gradient.addColorStop(0.35, "rgba(210,235,255,0.92)");
+    gradient.addColorStop(0.7, "rgba(160,210,245,0.36)");
+    gradient.addColorStop(1, "rgba(160,210,245,0)");
+    textureCtx.fillStyle = gradient;
+    textureCtx.fillRect(0, 0, size, size);
+
+    const texture = new THREE_NS.CanvasTexture(textureCanvas);
+    texture.minFilter = THREE_NS.LinearFilter;
+    texture.magFilter = THREE_NS.LinearFilter;
+    texture.generateMipmaps = false;
+    texture.needsUpdate = true;
+    return texture;
+  }
+
   // ---------------------------------------------------------------------
   // Weather layer: driven by weather.js via window.__HK_WEATHER__ / "hk-weather".
   // Everything eases toward its target so a weather change fades in.
@@ -329,6 +365,7 @@
     weather.target.storm = cat === "storm";
     weather.storm = cat === "storm";
     if (Number.isFinite(detail.sunAzimuthDeg)) weather.sunAzimuthDeg = detail.sunAzimuthDeg;
+    if (typeof updateSunDir === "function") updateSunDir();
   }
 
   const cloudUniforms = {
@@ -398,8 +435,8 @@
       float facing = smoothstep(0.10, 0.55, dot(vNormal, vec3(0.0, 0.0, 1.0)));
 
       vec3 col = mix(vec3(0.50, 0.56, 0.64), vec3(0.26, 0.29, 0.34), rain);
-      float flash = lightning * exp(-distance(p, flashPos) * 7.0);
-      col += vec3(0.92, 0.95, 1.0) * flash * 1.8;
+      float flash = lightning * exp(-distance(p, flashPos) * 5.0);
+      col += vec3(0.92, 0.95, 1.0) * flash * 2.2;
 
       float alpha = band * cover * (0.50 + 0.28 * rain) * facing;
       alpha += flash * 0.9 * facing;
@@ -424,7 +461,172 @@
   if (window.__HK_WEATHER__) setWeather(window.__HK_WEATHER__);
   window.addEventListener("hk-weather", (event) => setWeather(event.detail));
 
-  function easeWeather(frameScale) {
+  // Sun direction in view space from the HK hour angle: sunrise from the
+  // right, noon overhead, sunset to the left.
+  function updateSunDir() {
+    const az = (weather.sunAzimuthDeg * Math.PI) / 180;
+    const elevation = Math.max(0, -Math.cos(az)); // 0 at 06:00/18:00, 1 at noon
+    atmosUniforms.sunDir.value.set(Math.sin(az) * 0.9, 0.35 + 0.65 * elevation, -0.15).normalize();
+  }
+  updateSunDir();
+  setInterval(() => {
+    const wx = window.__HK_WEATHER__;
+    if (wx && wx.source === "override") return;
+    if (window.WeatherCore) weather.sunAzimuthDeg = window.WeatherCore.sunAzimuthDeg(new Date());
+    updateSunDir();
+  }, 60 * 1000);
+
+  // Lightning: only in thunderstorms, never for reduced-motion users.
+  const lightning = { value: 0, nextAt: 0, followUpAt: 0 };
+  const tmpVec = new THREE_NS.Vector3();
+
+  function randomVisiblePoint(target) {
+    // A random direction on the camera-facing, upper part of the globe.
+    tmpVec.set((Math.random() - 0.5) * 1.2, 0.25 + Math.random() * 0.75, 0.35 + Math.random() * 0.65).normalize();
+    const world = tmpVec.clone().multiplyScalar(earthRadius).add(earthGroup.position);
+    earthGroup.worldToLocal(world);
+    target.copy(world.normalize());
+  }
+
+  function triggerFlash(now) {
+    randomVisiblePoint(cloudUniforms.flashPos.value);
+    lightning.value = 1;
+    if (Math.random() < 0.3) lightning.followUpAt = now + 90;
+  }
+
+  function stepLightning(now, frameScale) {
+    if (qaFlash) {
+      if (!lightning.value) randomVisiblePoint(cloudUniforms.flashPos.value);
+      lightning.value = 1;
+      cloudUniforms.lightning.value = 1;
+      return;
+    }
+    if (!weather.storm || prefersReducedMotion) {
+      lightning.value = 0;
+      cloudUniforms.lightning.value = 0;
+      return;
+    }
+    if (!lightning.nextAt) lightning.nextAt = now + 1500 + Math.random() * 3000;
+    if (now >= lightning.nextAt) {
+      triggerFlash(now);
+      lightning.nextAt = now + 4000 + Math.random() * 8000;
+    } else if (lightning.followUpAt && now >= lightning.followUpAt) {
+      lightning.followUpAt = 0;
+      lightning.value = Math.max(lightning.value, 0.85);
+    }
+    if (lightning.value > 0.01) {
+      lightning.value *= Math.pow(0.78, frameScale);
+    } else {
+      lightning.value = 0;
+    }
+    cloudUniforms.lightning.value = lightning.value;
+  }
+
+  // Hong Kong marker. Inverse of the texture sampler used for city lights:
+  // u = 0.5 + atan2(z, x) / 2pi, v = 0.5 - asin(y) / pi.
+  const HK_LAT = (22.30 * Math.PI) / 180;
+  const HK_LON = (114.17 * Math.PI) / 180;
+  const hkDir = new THREE_NS.Vector3(
+    Math.cos(HK_LAT) * Math.cos(HK_LON),
+    Math.sin(HK_LAT),
+    Math.cos(HK_LAT) * Math.sin(HK_LON)
+  );
+  const qaParams = new URLSearchParams(window.location.search);
+  const hkDebug = qaParams.get("hkdebug") === "1";
+  const qaFlash = qaParams.get("flash") === "1";
+  const markerTexture = createSoftPointTexture(64);
+  const markerMaterial = new THREE_NS.SpriteMaterial({
+    map: markerTexture || undefined,
+    color: hkDebug ? 0xff3355 : 0x9fe3ff,
+    transparent: true,
+    opacity: 0.95,
+    depthWrite: false,
+    depthTest: false,
+    blending: THREE_NS.AdditiveBlending,
+  });
+  const ringMaterial = new THREE_NS.SpriteMaterial({
+    map: markerTexture || undefined,
+    color: hkDebug ? 0xff3355 : 0x9fe3ff,
+    transparent: true,
+    opacity: 0.18,
+    depthWrite: false,
+    depthTest: false,
+    blending: THREE_NS.AdditiveBlending,
+  });
+  // Choose the initial yaw so Hong Kong faces the camera near the top limb.
+  // Under ?hkdebug=1 the globe is frozen there for an alignment check.
+  (function orientGlobeToHongKong() {
+    // Target = the globe surface point under a screen position on the visible
+    // left side (NDC -0.84, 0.0); falls back to a fixed direction when the
+    // viewport is too narrow for that ray to hit the sphere.
+    const target = new THREE_NS.Vector3(-0.62, 0.62, 0.48).normalize();
+    (function unprojectTarget() {
+      camera.updateMatrixWorld();
+      const origin = camera.position.clone();
+      const dir = new THREE_NS.Vector3(-0.84, 0.0, 0.5).unproject(camera).sub(origin).normalize();
+      const centre = earthGroup.position.clone();
+      const oc = origin.clone().sub(centre);
+      const b = oc.dot(dir);
+      const c = oc.dot(oc) - earthRadius * earthRadius;
+      const disc = b * b - c;
+      if (disc < 0) return;
+      const t = -b - Math.sqrt(disc);
+      if (t <= 0) return;
+      target.copy(origin).addScaledVector(dir, t).sub(centre).normalize();
+    })();
+    // Search yaw and forward tilt (axial tilt kept) so the point is reachable.
+    const probe = new THREE_NS.Vector3();
+    const euler = new THREE_NS.Euler(earthGroup.rotation.x, 0, earthGroup.rotation.z, earthGroup.rotation.order);
+    let bestYaw = earthGroup.rotation.y;
+    let bestTilt = earthGroup.rotation.x;
+    let bestDot = -Infinity;
+    for (let j = 0; j <= 84; j += 1) {
+      const tilt = -1.3 + (j / 84) * 2.2;
+      euler.x = tilt;
+      for (let i = 0; i < 360; i += 1) {
+        const yaw = (i / 360) * Math.PI * 2;
+        euler.y = yaw;
+        probe.copy(hkDir).applyEuler(euler);
+        const d = probe.dot(target);
+        if (d > bestDot) {
+          bestDot = d;
+          bestYaw = yaw;
+          bestTilt = tilt;
+        }
+      }
+    }
+    earthGroup.rotation.x = bestTilt;
+    earthGroup.rotation.y = bestYaw;
+  })();
+
+  const hkMarker = new THREE_NS.Sprite(markerMaterial);
+  const hkRing = new THREE_NS.Sprite(ringMaterial);
+  hkMarker.position.copy(hkDir).multiplyScalar(earthRadius * 1.02);
+  hkRing.position.copy(hkMarker.position);
+  hkMarker.renderOrder = 5;
+  hkRing.renderOrder = 4;
+  earthGroup.add(hkMarker);
+  earthGroup.add(hkRing);
+  if (hkDebug) {
+    window.__EARTH_DEBUG__ = { scene, camera, earthGroup, hkMarker, hkRing, cloudMesh, weather, THREE: THREE_NS };
+  }
+
+  const markerWorld = new THREE_NS.Vector3();
+  const markerNormal = new THREE_NS.Vector3();
+  function stepMarker(time) {
+    const breath = 0.5 + 0.5 * Math.sin(time * 1.6);
+    const base = hkDebug ? 40 : 9;
+    hkMarker.scale.setScalar(base * (0.8 + 0.4 * breath));
+    hkRing.scale.setScalar(base * 2.4 * (0.9 + 0.2 * breath));
+    hkMarker.getWorldPosition(markerWorld);
+    markerNormal.copy(markerWorld).sub(earthGroup.position).normalize();
+    tmpVec.copy(camera.position).sub(markerWorld).normalize();
+    const visible = hkDebug || markerNormal.dot(tmpVec) > 0.02;
+    hkMarker.visible = visible;
+    hkRing.visible = visible;
+  }
+
+  function easeWeather(frameScale, now) {
     const k = Math.min(0.2, 0.02 * frameScale);
     weather.cover += (weather.target.cover - weather.cover) * k;
     weather.rain += (weather.target.rain - weather.rain) * k;
@@ -435,30 +637,10 @@
     cloudUniforms.rain.value = weather.rain;
     cloudUniforms.drift.value.set(weather.driftX, weather.driftY);
     cloudUniforms.lightTheme.value = isDarkTheme() ? 0 : 1;
-  }
-
-  function createSoftPointTexture(size = 64) {
-    const textureCanvas = document.createElement("canvas");
-    textureCanvas.width = size;
-    textureCanvas.height = size;
-    const textureCtx = textureCanvas.getContext("2d", { alpha: true });
-    if (!textureCtx) return null;
-
-    const c = size / 2;
-    const gradient = textureCtx.createRadialGradient(c, c, 0, c, c, c);
-    gradient.addColorStop(0, "rgba(255,255,255,1)");
-    gradient.addColorStop(0.35, "rgba(210,235,255,0.92)");
-    gradient.addColorStop(0.7, "rgba(160,210,245,0.36)");
-    gradient.addColorStop(1, "rgba(160,210,245,0)");
-    textureCtx.fillStyle = gradient;
-    textureCtx.fillRect(0, 0, size, size);
-
-    const texture = new THREE_NS.CanvasTexture(textureCanvas);
-    texture.minFilter = THREE_NS.LinearFilter;
-    texture.magFilter = THREE_NS.LinearFilter;
-    texture.generateMipmaps = false;
-    texture.needsUpdate = true;
-    return texture;
+    atmosUniforms.dayMix.value = weather.day;
+    cityLightsUniforms.dim.value = weather.day;
+    stepLightning(now, frameScale);
+    stepMarker(sceneTime);
   }
 
   const starSprite = createSoftPointTexture();
@@ -546,9 +728,9 @@
     auroraUniforms.time.value = sceneTime;
     cityLightsUniforms.time.value = sceneTime;
     cloudUniforms.time.value = sceneTime;
-    easeWeather(frameScale);
+    easeWeather(frameScale, now);
 
-    earthGroup.rotation.y += 0.0003 * motion * frameScale;
+    if (!hkDebug) earthGroup.rotation.y += 0.0003 * motion * frameScale;
     starsPrimary.rotation.y += 0.0001 * motion * frameScale;
     starsFar.rotation.y -= 0.00005 * motion * frameScale;
 

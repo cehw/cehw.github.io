@@ -19,6 +19,8 @@
   const params = new URLSearchParams(window.location.search);
   const override = params.get("weather");
   const overrideDay = params.get("day");
+  const overrideHour = Number(params.get("hour"));
+  const hasHourOverride = Number.isFinite(overrideHour) && params.get("hour") !== null;
   const isOverride = CATEGORIES.includes(override);
 
   let current = null;
@@ -68,7 +70,7 @@
       category,
       daypart,
       windMs: core.windMs(data.wind_speed_10m),
-      sunAzimuthDeg: core.sunAzimuthDeg(new Date()),
+      sunAzimuthDeg: hasHourOverride ? ((overrideHour / 24) * 360) % 360 : core.sunAzimuthDeg(new Date()),
       source,
     };
     window.__HK_WEATHER__ = detail;

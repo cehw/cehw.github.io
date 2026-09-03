@@ -312,7 +312,7 @@ h1 {
 .weather-line {
   margin: 0;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   font-size: 0.86rem;
   font-weight: 500;
@@ -324,6 +324,7 @@ h1 {
 
 .weather-line::before {
   content: "";
+  margin-top: 0.42em;
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -738,6 +739,10 @@ footer {
 
   .hero {
     padding-top: 24px;
+  }
+
+  .weather-line {
+    font-size: 0.8rem;
   }
 
   .bg-planet {
