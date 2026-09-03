@@ -8,7 +8,14 @@
   --accent: #24535f;
   --accent-2: #f0d090;
   --accent-3: #4f8f84;
-  --shadow: 0 14px 28px rgba(43, 54, 56, 0.14);
+  --shadow: 0 10px 30px rgba(43, 54, 56, 0.10);
+  --shadow-soft: 0 1px 2px rgba(43, 54, 56, 0.06);
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 40px;
+  --s6: 48px;
 }
 
 * {
@@ -268,7 +275,7 @@ section[id],
   border: 1px solid var(--line);
   border-radius: 16px;
   box-shadow: var(--shadow);
-  padding: 28px;
+  padding: var(--s4);
 }
 
 .eyebrow {
@@ -468,14 +475,25 @@ html[data-weather="storm"] { --wx-dot: #b48ce6; }
   border: 1px solid var(--line);
   border-radius: 16px;
   box-shadow: var(--shadow);
-  padding: 24px;
-  margin-top: 16px;
+  padding: var(--s4);
+  margin-top: var(--s3);
 }
 
 h2 {
   font-size: clamp(1.42rem, 2.7vw, 1.9rem);
-  margin-bottom: 10px;
+  margin-bottom: 18px;
   color: #24383c;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 2px;
+  margin-top: 8px;
+  border-radius: 2px;
+  background: var(--accent-2);
+  opacity: 0.9;
 }
 
 h3 {
@@ -532,28 +550,30 @@ h3 {
   color: var(--muted);
 }
 
-.about-badges {
+.facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 2px 0 14px;
+  gap: 4px 0;
+  margin: -6px 0 var(--s2);
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
 }
 
-.about-badges span {
+.facts span {
   display: inline-flex;
   align-items: center;
-  border: 1px solid rgba(62, 82, 86, 0.28);
-  background: rgba(88, 130, 140, 0.12);
-  color: #35545b;
-  border-radius: 999px;
-  padding: 5px 10px;
-  font-size: 0.82rem;
-  line-height: 1.35;
+  white-space: nowrap;
 }
 
-.about-badges strong {
-  color: #24373b;
-  margin-right: 4px;
+.facts span + span::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  margin: 0 10px;
+  background: var(--accent-2);
+  opacity: 0.9;
 }
 
 .grid {
@@ -566,9 +586,9 @@ h3 {
 .card {
   border: 1px solid var(--line);
   border-radius: 13px;
-  padding: 15px;
+  padding: var(--s2) 18px;
   background: var(--panel);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-soft);
 }
 
 ol {
@@ -580,6 +600,65 @@ ol li {
   margin-bottom: 10px;
 }
 
+.pubs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pub {
+  display: grid;
+  grid-template-columns: 3.6rem 1fr;
+  gap: 0 var(--s2);
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  margin: 0;
+}
+
+.pub:first-child {
+  border-top: 0;
+  padding-top: 4px;
+}
+
+.pub-year {
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.pub-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pub-title {
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.pub-meta {
+  color: var(--muted);
+  font-size: 0.96rem;
+}
+
+.pub-doi {
+  align-self: flex-start;
+  font-size: 0.82rem;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.pub-doi:hover {
+  border-bottom-color: currentColor;
+}
+
 em {
   font-style: italic;
 }
@@ -589,8 +668,9 @@ em {
   color: #2f5c66;
   font-family: "Source Sans 3", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 600;
+  font-style: normal;
   letter-spacing: 0.005em;
-  font-size: 1.01em;
+  font-size: 1em;
 }
 
 .contact-list {
@@ -734,7 +814,16 @@ footer {
 
   .hero-main,
   .panel {
-    padding: 18px;
+    padding: 20px;
+  }
+
+  .pub {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .pub-year {
+    font-size: 1rem;
   }
 
   .hero {
@@ -1234,15 +1323,23 @@ html[data-theme="dark"] .gallery-year-title {
   color: #d6e8ed;
 }
 
-html[data-theme="dark"] .field-tags span,
-html[data-theme="dark"] .about-badges span {
+html[data-theme="dark"] .field-tags span {
   border-color: rgba(146, 188, 197, 0.3);
   background: rgba(42, 90, 102, 0.2);
   color: #cbe2e8;
 }
 
-html[data-theme="dark"] .about-badges strong {
-  color: #edf6f8;
+html[data-theme="dark"] .facts {
+  color: #aabdc3;
+}
+
+html[data-theme="dark"] .pub-title {
+  color: #e4eef1;
+}
+
+html[data-theme="dark"] .pub-year,
+html[data-theme="dark"] .pub-doi {
+  color: #a7d1dc;
 }
 
 html[data-theme="dark"] .btn-ghost {
