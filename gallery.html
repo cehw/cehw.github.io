@@ -11,7 +11,8 @@
     <script>
       (() => {
         try {
-          const saved = localStorage.getItem("site-theme");
+          const q = new URLSearchParams(window.location.search).get("theme");
+          const saved = q === "dark" || q === "light" ? q : localStorage.getItem("site-theme");
           const theme = saved === "dark" || saved === "light" ? saved : "dark";
           document.documentElement.setAttribute("data-theme", theme);
         } catch (_) {}
@@ -97,6 +98,8 @@
     <script src="./assets/private-analytics-config.js?v=20260224-analytics4"></script>
     <script src="./private-analytics.js?v=20260224-analytics4"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./weather-core.js?v=20260903-wx1"></script>
+    <script src="./weather.js?v=20260903-wx1"></script>
     <script src="./space-earth-bg.js?v=20260224-space8"></script>
     <script src="./script.js?v=20260224-theme6"></script>
     <script src="./gallery.js?v=20260224-lightbox2"></script>

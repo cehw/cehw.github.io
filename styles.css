@@ -304,6 +304,45 @@ h1 {
   color: var(--muted);
 }
 
+.weather-slot {
+  min-height: 1.5em;
+  margin-top: 10px;
+}
+
+.weather-line {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  animation: weather-in 500ms ease both;
+}
+
+.weather-line::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--wx-dot, #8fb4bd);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wx-dot, #8fb4bd) 22%, transparent);
+  flex: 0 0 auto;
+}
+
+html[data-weather="clear"] { --wx-dot: #e9c46a; }
+html[data-weather="cloudy"] { --wx-dot: #9fb8c2; }
+html[data-weather="overcast"] { --wx-dot: #7d8f97; }
+html[data-weather="rain"] { --wx-dot: #5b9bd5; }
+html[data-weather="storm"] { --wx-dot: #b48ce6; }
+
+@keyframes weather-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .field-tags {
   margin-top: 16px;
   display: flex;
