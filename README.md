@@ -7,8 +7,8 @@ Personal homepage and gallery.
 - Shared styles: `styles.css`
 - Shared UI script: `script.js`
 - Gallery renderer: `gallery.js`
-- Cinematic background: `space-earth-bg.js` (reacts to live weather: cloud shell,
-  daytime limb, lightning, Hong Kong marker)
+- Cinematic background: `space-earth-bg.js` (reacts to live weather: daytime limb
+  glow, city-light dimming, Hong Kong marker)
 - Weather layer: `weather-core.js` (pure helpers, unit-tested) + `weather.js`
   (Open-Meteo fetch for HKUST, 15-min cache, sets `data-weather` / `data-daypart`
   on `<html>`, fills the hero weather line, dispatches `hk-weather`)
@@ -20,7 +20,7 @@ Personal homepage and gallery.
 - Screenshot helper: `bash scripts/qa_shot.sh <page> <dark|light> <width> <weather|none> <day|none> <out.png>`
 - URL parameters for previews (no effect on normal visitors):
   `?theme=dark|light`, `?weather=clear|cloudy|overcast|rain|storm`, `?day=0|1`,
-  `?hour=0-23` (sun position), `?flash=1` (hold a lightning flash),
+  `?hour=0-23` (sun position),
   `?hkdebug=1` (large red marker, frozen globe), `?bgonly=1` (hide page chrome),
   `?stuck=1` (force the sticky header state)
 

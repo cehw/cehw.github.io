@@ -339,130 +339,17 @@
     typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const weather = {
-    target: { cover: 0, rain: 0, day: 0, driftX: 0.0003, driftY: 0, storm: false },
-    cover: 0,
-    rain: 0,
+    target: { day: 0 },
     day: 0,
-    driftX: 0.0003,
-    driftY: 0,
-    storm: false,
     sunAzimuthDeg: 0,
   };
 
   function setWeather(detail) {
     if (!detail) return;
-    const cover = Math.min(1, Math.max(0, Number(detail.cloud_cover || 0) / 100));
-    const cat = detail.category || "clear";
-    const rain = cat === "storm" ? 1 : cat === "rain" ? 0.75 : 0;
-    const windMs = Number.isFinite(detail.windMs) ? detail.windMs : Number(detail.wind_speed_10m || 0) / 3.6;
-    const toward = ((Number(detail.wind_direction_10m || 0) + 180) * Math.PI) / 180;
-    const speed = 0.00025 + windMs * 0.00006;
-    weather.target.cover = Math.max(cover, rain > 0 ? 0.8 : 0);
-    weather.target.rain = rain;
     weather.target.day = detail.daypart === "day" ? 1 : 0;
-    weather.target.driftX = Math.cos(toward) * speed;
-    weather.target.driftY = Math.sin(toward) * speed * 0.25;
-    weather.target.storm = cat === "storm";
-    weather.storm = cat === "storm";
     if (Number.isFinite(detail.sunAzimuthDeg)) weather.sunAzimuthDeg = detail.sunAzimuthDeg;
     if (typeof updateSunDir === "function") updateSunDir();
   }
-
-  const cloudUniforms = {
-    cloudMap: { value: null },
-    hasMap: { value: 0 },
-    time: { value: 0 },
-    cover: { value: 0 },
-    rain: { value: 0 },
-    lightning: { value: 0 },
-    flashPos: { value: new THREE_NS.Vector3(0, 1, 0) },
-    drift: { value: new THREE_NS.Vector2(0.0003, 0) },
-    lightTheme: { value: 0 },
-  };
-
-  const cloudVertexShader = `
-    varying vec3 vNormal;
-    varying vec3 vPos;
-    varying vec2 vUv;
-    void main() {
-      vNormal = normalize(normalMatrix * normal);
-      vPos = position;
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `;
-
-  const cloudFragmentShader = `
-    uniform sampler2D cloudMap;
-    uniform float hasMap;
-    uniform float time;
-    uniform float cover;
-    uniform float rain;
-    uniform float lightning;
-    uniform vec3 flashPos;
-    uniform vec2 drift;
-    uniform float lightTheme;
-    varying vec3 vNormal;
-    varying vec3 vPos;
-    varying vec2 vUv;
-
-    void main() {
-      if (hasMap < 0.5) discard;
-      // SphereGeometry UVs are mirrored relative to the city-light sampler:
-      // sample at (1 - u, 1 - v) so the cloud map lines up with the lights.
-      vec2 uv = vec2(1.0 - vUv.x + drift.x * time, 1.0 - vUv.y + drift.y * time);
-      float base = texture2D(cloudMap, uv).r;
-      // A second, slower-moving layer at double frequency adds slow evolution
-      // without any visible repetition.
-      float detail = texture2D(cloudMap, uv * vec2(2.0, 2.0) + vec2(0.37, 0.11) + drift * time * 0.6).r;
-      float density = base * (0.72 + 0.56 * detail);
-
-      // Low cover keeps only the densest cores; high cover reveals the thin veils too.
-      float lo = mix(0.62, 0.10, cover);
-      float hi = mix(1.05, 0.62, cover);
-      float cloud = smoothstep(lo, hi, density);
-
-      float facing = smoothstep(0.08, 0.5, dot(vNormal, vec3(0.0, 0.0, 1.0)));
-
-      vec3 col = mix(vec3(0.56, 0.61, 0.69), vec3(0.30, 0.33, 0.38), rain);
-      vec3 p = normalize(vPos);
-      float flash = lightning * exp(-distance(p, flashPos) * 5.0);
-      col += vec3(0.92, 0.95, 1.0) * flash * 2.2;
-
-      float alpha = cloud * (0.30 + 0.42 * cover) * (1.0 + 0.25 * rain) * facing;
-      alpha += flash * 0.9 * facing;
-      alpha *= mix(1.0, 0.55, lightTheme);
-      gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
-    }
-  `;
-
-  const cloudSegments = window.innerWidth <= 760 ? 48 : 72;
-  const cloudGeometry = new THREE_NS.SphereGeometry(earthRadius * 1.012, cloudSegments, cloudSegments);
-  const cloudMaterial = new THREE_NS.ShaderMaterial({
-    uniforms: cloudUniforms,
-    vertexShader: cloudVertexShader,
-    fragmentShader: cloudFragmentShader,
-    transparent: true,
-    depthWrite: false,
-  });
-  const cloudMesh = new THREE_NS.Mesh(cloudGeometry, cloudMaterial);
-  cloudMesh.renderOrder = 2;
-  earthGroup.add(cloudMesh);
-
-  new THREE_NS.TextureLoader().load(
-    "./assets/textures/earth_clouds_2048.jpg",
-    (texture) => {
-      texture.wrapS = THREE_NS.RepeatWrapping;
-      texture.wrapT = THREE_NS.ClampToEdgeWrapping;
-      texture.minFilter = THREE_NS.LinearMipmapLinearFilter;
-      texture.magFilter = THREE_NS.LinearFilter;
-      texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-      cloudUniforms.cloudMap.value = texture;
-      cloudUniforms.hasMap.value = 1;
-    },
-    undefined,
-    () => console.warn("Cloud texture unavailable; clouds disabled.")
-  );
 
   if (window.__HK_WEATHER__) setWeather(window.__HK_WEATHER__);
   window.addEventListener("hk-weather", (event) => setWeather(event.detail));
@@ -482,51 +369,7 @@
     updateSunDir();
   }, 60 * 1000);
 
-  // Lightning: only in thunderstorms, never for reduced-motion users.
-  const lightning = { value: 0, nextAt: 0, followUpAt: 0 };
   const tmpVec = new THREE_NS.Vector3();
-
-  function randomVisiblePoint(target) {
-    // A random direction on the camera-facing, upper part of the globe.
-    tmpVec.set((Math.random() - 0.5) * 1.2, 0.25 + Math.random() * 0.75, 0.35 + Math.random() * 0.65).normalize();
-    const world = tmpVec.clone().multiplyScalar(earthRadius).add(earthGroup.position);
-    earthGroup.worldToLocal(world);
-    target.copy(world.normalize());
-  }
-
-  function triggerFlash(now) {
-    randomVisiblePoint(cloudUniforms.flashPos.value);
-    lightning.value = 1;
-    if (Math.random() < 0.3) lightning.followUpAt = now + 90;
-  }
-
-  function stepLightning(now, frameScale) {
-    if (qaFlash) {
-      if (!lightning.value) randomVisiblePoint(cloudUniforms.flashPos.value);
-      lightning.value = 1;
-      cloudUniforms.lightning.value = 1;
-      return;
-    }
-    if (!weather.storm || prefersReducedMotion) {
-      lightning.value = 0;
-      cloudUniforms.lightning.value = 0;
-      return;
-    }
-    if (!lightning.nextAt) lightning.nextAt = now + 1500 + Math.random() * 3000;
-    if (now >= lightning.nextAt) {
-      triggerFlash(now);
-      lightning.nextAt = now + 4000 + Math.random() * 8000;
-    } else if (lightning.followUpAt && now >= lightning.followUpAt) {
-      lightning.followUpAt = 0;
-      lightning.value = Math.max(lightning.value, 0.85);
-    }
-    if (lightning.value > 0.01) {
-      lightning.value *= Math.pow(0.78, frameScale);
-    } else {
-      lightning.value = 0;
-    }
-    cloudUniforms.lightning.value = lightning.value;
-  }
 
   // Hong Kong marker. Inverse of the texture sampler used for city lights:
   // u = 0.5 + atan2(z, x) / 2pi, v = 0.5 - asin(y) / pi.
@@ -539,7 +382,6 @@
   );
   const qaParams = new URLSearchParams(window.location.search);
   const hkDebug = qaParams.get("hkdebug") === "1";
-  const qaFlash = qaParams.get("flash") === "1";
   const markerTexture = createSoftPointTexture(64);
   const markerMaterial = new THREE_NS.SpriteMaterial({
     map: markerTexture || undefined,
@@ -614,7 +456,7 @@
   earthGroup.add(hkMarker);
   earthGroup.add(hkRing);
   if (hkDebug) {
-    window.__EARTH_DEBUG__ = { scene, camera, earthGroup, hkMarker, hkRing, cloudMesh, weather, THREE: THREE_NS };
+    window.__EARTH_DEBUG__ = { scene, camera, earthGroup, hkMarker, hkRing, weather, THREE: THREE_NS };
   }
 
   const markerWorld = new THREE_NS.Vector3();
@@ -632,20 +474,11 @@
     hkRing.visible = visible;
   }
 
-  function easeWeather(frameScale, now) {
+  function easeWeather(frameScale) {
     const k = Math.min(0.2, 0.02 * frameScale);
-    weather.cover += (weather.target.cover - weather.cover) * k;
-    weather.rain += (weather.target.rain - weather.rain) * k;
     weather.day += (weather.target.day - weather.day) * k;
-    weather.driftX += (weather.target.driftX - weather.driftX) * k;
-    weather.driftY += (weather.target.driftY - weather.driftY) * k;
-    cloudUniforms.cover.value = weather.cover;
-    cloudUniforms.rain.value = weather.rain;
-    cloudUniforms.drift.value.set(weather.driftX, weather.driftY);
-    cloudUniforms.lightTheme.value = isDarkTheme() ? 0 : 1;
     atmosUniforms.dayMix.value = weather.day;
     cityLightsUniforms.dim.value = weather.day;
-    stepLightning(now, frameScale);
     stepMarker(sceneTime);
   }
 
@@ -733,8 +566,7 @@
 
     auroraUniforms.time.value = sceneTime;
     cityLightsUniforms.time.value = sceneTime;
-    cloudUniforms.time.value = sceneTime;
-    easeWeather(frameScale, now);
+    easeWeather(frameScale);
 
     if (!hkDebug) earthGroup.rotation.y += 0.0003 * motion * frameScale;
     starsPrimary.rotation.y += 0.0001 * motion * frameScale;
