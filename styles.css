@@ -1310,6 +1310,31 @@ html.has-cinematic-earth-bg .space-earth-canvas {
 
 html[data-theme="light"].has-cinematic-earth-bg body {
   background: linear-gradient(180deg, #fbfbfa 0%, #f1f1ef 100%) !important;
+  transition: background 800ms ease;
+}
+
+/* Light theme carries the weather as a faint shift in colour temperature. */
+html[data-theme="light"][data-weather="clear"].has-cinematic-earth-bg body {
+  background:
+    radial-gradient(circle at 16% 10%, rgba(233, 196, 106, 0.16), transparent 42%),
+    linear-gradient(180deg, #fcfaf5 0%, #f3eee3 100%) !important;
+}
+
+html[data-theme="light"][data-weather="cloudy"].has-cinematic-earth-bg body {
+  background: linear-gradient(180deg, #fafbfb 0%, #eef1f2 100%) !important;
+}
+
+html[data-theme="light"][data-weather="overcast"].has-cinematic-earth-bg body,
+html[data-theme="light"][data-weather="rain"].has-cinematic-earth-bg body {
+  background:
+    radial-gradient(circle at 80% 0%, rgba(91, 155, 213, 0.10), transparent 46%),
+    linear-gradient(180deg, #f5f7f8 0%, #e6eaee 100%) !important;
+}
+
+html[data-theme="light"][data-weather="storm"].has-cinematic-earth-bg body {
+  background:
+    radial-gradient(circle at 80% 0%, rgba(120, 100, 170, 0.12), transparent 46%),
+    linear-gradient(180deg, #eff1f4 0%, #dde2e8 100%) !important;
 }
 
 html[data-theme="light"].has-cinematic-earth-bg .bg-planet {
