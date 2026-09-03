@@ -106,12 +106,11 @@ function escapeRegExp(text) {
 }
 
 function compactCardTitle(rawTitle, groupTitle) {
-  const title = String(rawTitle || "Untitled").trim();
-  const group = String(groupTitle || "").trim();
-  if (!group) return title || "Untitled";
-  const prefixPattern = new RegExp(`^${escapeRegExp(group)}\\s*[·:|-]\\s*`, "i");
-  const compacted = title.replace(prefixPattern, "").trim();
-  return compacted || title || "Untitled";
+  const core = window.GalleryCore;
+  if (core && typeof core.displayTitle === "function") {
+    return core.displayTitle(rawTitle, groupTitle);
+  }
+  return String(rawTitle || "").trim();
 }
 
 function isPanoramaItem(item) {
@@ -439,26 +438,31 @@ async function renderGallery() {
                 const fullRaw = item.full || item.file || "";
                 const thumbUrl = escapeHtml(assetUrl(thumbRaw));
                 const fullUrl = escapeHtml(assetUrl(fullRaw));
-                const displayTitle = escapeHtml(compactCardTitle(item.title || "Untitled", groupBucket.key));
+                const cleanTitle = hideSmallTitles ? "" : compactCardTitle(item.title, groupBucket.key);
+                const displayTitle = escapeHtml(cleanTitle);
                 const rawDesc = String(item.description || "").trim();
                 const rawDate = String(item.date || "").trim();
                 const desc = !sharedDesc && rawDesc ? escapeHtml(rawDesc) : "";
                 const date = !sharedDate && rawDate ? escapeHtml(rawDate) : "";
                 const panoClass = isPanoramaItem(item) ? " is-panorama" : "";
-                const cardMetaParts = [];
-                if (!hideSmallTitles) cardMetaParts.push(`<h3>${displayTitle}</h3>`);
-                if (desc) cardMetaParts.push(`<p>${desc}</p>`);
-                if (date) cardMetaParts.push(`<time>${date}</time>`);
-                const cardMetaHtml = cardMetaParts.length
-                  ? `<div class="gallery-meta">${cardMetaParts.join("")}</div>`
+                const lightboxTitle = escapeHtml(
+                  [cleanTitle || groupKey, rawDate].filter(Boolean).join(" · ")
+                );
+                const altText = escapeHtml(cleanTitle || groupKey || "Gallery image");
+                const captionParts = [];
+                if (displayTitle) captionParts.push(`<span class="gallery-caption-title">${displayTitle}</span>`);
+                if (desc) captionParts.push(`<span class="gallery-caption-desc">${desc}</span>`);
+                if (date) captionParts.push(`<time>${date}</time>`);
+                const captionHtml = captionParts.length
+                  ? `<figcaption class="gallery-caption">${captionParts.join("")}</figcaption>`
                   : "";
                 return `
-                  <article class="gallery-card${panoClass}">
-                    <a class="gallery-card-link" href="${fullUrl}" target="_blank" rel="noreferrer" data-full-url="${fullUrl}" data-lightbox-title="${displayTitle}">
-                      <img src="${thumbUrl}" alt="${displayTitle}" loading="lazy" decoding="async" fetchpriority="low" />
+                  <figure class="gallery-card${panoClass}">
+                    <a class="gallery-card-link" href="${fullUrl}" target="_blank" rel="noreferrer" data-full-url="${fullUrl}" data-lightbox-title="${lightboxTitle}">
+                      <img src="${thumbUrl}" alt="${altText}" loading="lazy" decoding="async" fetchpriority="low" />
                     </a>
-                    ${cardMetaHtml}
-                  </article>
+                    ${captionHtml}
+                  </figure>
                 `;
               })
               .join("");
