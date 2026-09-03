@@ -1329,3 +1329,7 @@ html[data-theme="dark"].has-cinematic-earth-bg .bg-flow,
 html[data-theme="dark"].has-cinematic-earth-bg .bg-planet {
   display: none !important;
 }
+
+html.qa-bg-only :is(.site-header, main, footer) {
+  visibility: hidden;
+}

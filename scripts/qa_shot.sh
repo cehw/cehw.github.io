@@ -12,7 +12,7 @@ Q="theme=$THEME"
 [ "$WX" != none ] && Q="$Q&weather=$WX"
 [ "$DAY" != none ] && Q="$Q&day=$DAY"
 [ -n "$EXTRA" ] && Q="$Q&$EXTRA"
-"$CH" --headless=new --disable-gpu --hide-scrollbars --window-size="${W},2400" \
+"$CH" --headless=new --disable-gpu --hide-scrollbars --window-size="${W},${QA_H:-2400}" \
   --virtual-time-budget=8000 --screenshot="$(cygpath -w "$OUT")" \
   "http://localhost:$PORT/$PAGE?$Q" >/dev/null 2>&1 || true
 kill $SRV 2>/dev/null || true

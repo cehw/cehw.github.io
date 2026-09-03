@@ -295,6 +295,148 @@
   const auroraMesh = new THREE_NS.Mesh(auroraGeometry, auroraMaterial);
   earthGroup.add(auroraMesh);
 
+  // ---------------------------------------------------------------------
+  // Weather layer: driven by weather.js via window.__HK_WEATHER__ / "hk-weather".
+  // Everything eases toward its target so a weather change fades in.
+  // ---------------------------------------------------------------------
+  const prefersReducedMotion =
+    typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const weather = {
+    target: { cover: 0, rain: 0, day: 0, driftX: 0.004, driftY: 0, storm: false },
+    cover: 0,
+    rain: 0,
+    day: 0,
+    driftX: 0.004,
+    driftY: 0,
+    storm: false,
+    sunAzimuthDeg: 0,
+  };
+
+  function setWeather(detail) {
+    if (!detail) return;
+    const cover = Math.min(1, Math.max(0, Number(detail.cloud_cover || 0) / 100));
+    const cat = detail.category || "clear";
+    const rain = cat === "storm" ? 1 : cat === "rain" ? 0.75 : 0;
+    const windMs = Number.isFinite(detail.windMs) ? detail.windMs : Number(detail.wind_speed_10m || 0) / 3.6;
+    const toward = ((Number(detail.wind_direction_10m || 0) + 180) * Math.PI) / 180;
+    const speed = 0.004 + windMs * 0.0012;
+    weather.target.cover = Math.max(cover, rain > 0 ? 0.8 : 0);
+    weather.target.rain = rain;
+    weather.target.day = detail.daypart === "day" ? 1 : 0;
+    weather.target.driftX = Math.cos(toward) * speed;
+    weather.target.driftY = Math.sin(toward) * speed * 0.35;
+    weather.target.storm = cat === "storm";
+    weather.storm = cat === "storm";
+    if (Number.isFinite(detail.sunAzimuthDeg)) weather.sunAzimuthDeg = detail.sunAzimuthDeg;
+  }
+
+  const cloudUniforms = {
+    time: { value: 0 },
+    cover: { value: 0 },
+    rain: { value: 0 },
+    lightning: { value: 0 },
+    flashPos: { value: new THREE_NS.Vector3(0, 1, 0) },
+    drift: { value: new THREE_NS.Vector2(0.004, 0) },
+    lightTheme: { value: 0 },
+  };
+
+  const cloudVertexShader = `
+    varying vec3 vNormal;
+    varying vec3 vPos;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      vPos = position;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `;
+
+  const cloudFragmentShader = `
+    uniform float time;
+    uniform float cover;
+    uniform float rain;
+    uniform float lightning;
+    uniform vec3 flashPos;
+    uniform vec2 drift;
+    uniform float lightTheme;
+    varying vec3 vNormal;
+    varying vec3 vPos;
+
+    float hash(vec3 p) {
+      p = fract(p * 0.3183099 + vec3(0.1, 0.2, 0.3));
+      p *= 17.0;
+      return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+    }
+    float noise(vec3 x) {
+      vec3 i = floor(x);
+      vec3 f = fract(x);
+      f = f * f * (3.0 - 2.0 * f);
+      return mix(
+        mix(mix(hash(i + vec3(0, 0, 0)), hash(i + vec3(1, 0, 0)), f.x),
+            mix(hash(i + vec3(0, 1, 0)), hash(i + vec3(1, 1, 0)), f.x), f.y),
+        mix(mix(hash(i + vec3(0, 0, 1)), hash(i + vec3(1, 0, 1)), f.x),
+            mix(hash(i + vec3(0, 1, 1)), hash(i + vec3(1, 1, 1)), f.x), f.y),
+        f.z);
+    }
+    float fbm(vec3 p) {
+      float v = 0.0;
+      float a = 0.5;
+      for (int i = 0; i < 3; i++) {
+        v += a * noise(p);
+        p = p * 2.1 + vec3(1.7, 9.2, 3.1);
+        a *= 0.5;
+      }
+      return v;
+    }
+
+    void main() {
+      vec3 p = normalize(vPos);
+      vec3 shift = vec3(drift.x * time, drift.y * time, drift.x * time * 0.3);
+      float n = fbm(p * 9.0 + shift * 2.5);
+      float systems = smoothstep(0.34, 0.70, fbm(p * 2.2 + shift));
+      float band = smoothstep(0.50 - cover * 0.22, 0.80, n) * mix(systems, 1.0, cover * 0.55);
+      float facing = smoothstep(0.10, 0.55, dot(vNormal, vec3(0.0, 0.0, 1.0)));
+
+      vec3 col = mix(vec3(0.50, 0.56, 0.64), vec3(0.26, 0.29, 0.34), rain);
+      float flash = lightning * exp(-distance(p, flashPos) * 7.0);
+      col += vec3(0.92, 0.95, 1.0) * flash * 1.8;
+
+      float alpha = band * cover * (0.50 + 0.28 * rain) * facing;
+      alpha += flash * 0.9 * facing;
+      alpha *= mix(1.0, 0.55, lightTheme);
+      gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
+    }
+  `;
+
+  const cloudSegments = window.innerWidth <= 760 ? 48 : 72;
+  const cloudGeometry = new THREE_NS.SphereGeometry(earthRadius * 1.012, cloudSegments, cloudSegments);
+  const cloudMaterial = new THREE_NS.ShaderMaterial({
+    uniforms: cloudUniforms,
+    vertexShader: cloudVertexShader,
+    fragmentShader: cloudFragmentShader,
+    transparent: true,
+    depthWrite: false,
+  });
+  const cloudMesh = new THREE_NS.Mesh(cloudGeometry, cloudMaterial);
+  cloudMesh.renderOrder = 2;
+  earthGroup.add(cloudMesh);
+
+  if (window.__HK_WEATHER__) setWeather(window.__HK_WEATHER__);
+  window.addEventListener("hk-weather", (event) => setWeather(event.detail));
+
+  function easeWeather(frameScale) {
+    const k = Math.min(0.2, 0.02 * frameScale);
+    weather.cover += (weather.target.cover - weather.cover) * k;
+    weather.rain += (weather.target.rain - weather.rain) * k;
+    weather.day += (weather.target.day - weather.day) * k;
+    weather.driftX += (weather.target.driftX - weather.driftX) * k;
+    weather.driftY += (weather.target.driftY - weather.driftY) * k;
+    cloudUniforms.cover.value = weather.cover;
+    cloudUniforms.rain.value = weather.rain;
+    cloudUniforms.drift.value.set(weather.driftX, weather.driftY);
+    cloudUniforms.lightTheme.value = isDarkTheme() ? 0 : 1;
+  }
+
   function createSoftPointTexture(size = 64) {
     const textureCanvas = document.createElement("canvas");
     textureCanvas.width = size;
@@ -403,6 +545,8 @@
 
     auroraUniforms.time.value = sceneTime;
     cityLightsUniforms.time.value = sceneTime;
+    cloudUniforms.time.value = sceneTime;
+    easeWeather(frameScale);
 
     earthGroup.rotation.y += 0.0003 * motion * frameScale;
     starsPrimary.rotation.y += 0.0001 * motion * frameScale;
