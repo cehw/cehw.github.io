@@ -339,11 +339,11 @@
     typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const weather = {
-    target: { cover: 0, rain: 0, day: 0, driftX: 0.004, driftY: 0, storm: false },
+    target: { cover: 0, rain: 0, day: 0, driftX: 0.0003, driftY: 0, storm: false },
     cover: 0,
     rain: 0,
     day: 0,
-    driftX: 0.004,
+    driftX: 0.0003,
     driftY: 0,
     storm: false,
     sunAzimuthDeg: 0,
@@ -356,12 +356,12 @@
     const rain = cat === "storm" ? 1 : cat === "rain" ? 0.75 : 0;
     const windMs = Number.isFinite(detail.windMs) ? detail.windMs : Number(detail.wind_speed_10m || 0) / 3.6;
     const toward = ((Number(detail.wind_direction_10m || 0) + 180) * Math.PI) / 180;
-    const speed = 0.004 + windMs * 0.0012;
+    const speed = 0.00025 + windMs * 0.00006;
     weather.target.cover = Math.max(cover, rain > 0 ? 0.8 : 0);
     weather.target.rain = rain;
     weather.target.day = detail.daypart === "day" ? 1 : 0;
     weather.target.driftX = Math.cos(toward) * speed;
-    weather.target.driftY = Math.sin(toward) * speed * 0.35;
+    weather.target.driftY = Math.sin(toward) * speed * 0.25;
     weather.target.storm = cat === "storm";
     weather.storm = cat === "storm";
     if (Number.isFinite(detail.sunAzimuthDeg)) weather.sunAzimuthDeg = detail.sunAzimuthDeg;
@@ -369,26 +369,32 @@
   }
 
   const cloudUniforms = {
+    cloudMap: { value: null },
+    hasMap: { value: 0 },
     time: { value: 0 },
     cover: { value: 0 },
     rain: { value: 0 },
     lightning: { value: 0 },
     flashPos: { value: new THREE_NS.Vector3(0, 1, 0) },
-    drift: { value: new THREE_NS.Vector2(0.004, 0) },
+    drift: { value: new THREE_NS.Vector2(0.0003, 0) },
     lightTheme: { value: 0 },
   };
 
   const cloudVertexShader = `
     varying vec3 vNormal;
     varying vec3 vPos;
+    varying vec2 vUv;
     void main() {
       vNormal = normalize(normalMatrix * normal);
       vPos = position;
+      vUv = uv;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `;
 
   const cloudFragmentShader = `
+    uniform sampler2D cloudMap;
+    uniform float hasMap;
     uniform float time;
     uniform float cover;
     uniform float rain;
@@ -398,47 +404,32 @@
     uniform float lightTheme;
     varying vec3 vNormal;
     varying vec3 vPos;
-
-    float hash(vec3 p) {
-      p = fract(p * 0.3183099 + vec3(0.1, 0.2, 0.3));
-      p *= 17.0;
-      return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
-    }
-    float noise(vec3 x) {
-      vec3 i = floor(x);
-      vec3 f = fract(x);
-      f = f * f * (3.0 - 2.0 * f);
-      return mix(
-        mix(mix(hash(i + vec3(0, 0, 0)), hash(i + vec3(1, 0, 0)), f.x),
-            mix(hash(i + vec3(0, 1, 0)), hash(i + vec3(1, 1, 0)), f.x), f.y),
-        mix(mix(hash(i + vec3(0, 0, 1)), hash(i + vec3(1, 0, 1)), f.x),
-            mix(hash(i + vec3(0, 1, 1)), hash(i + vec3(1, 1, 1)), f.x), f.y),
-        f.z);
-    }
-    float fbm(vec3 p) {
-      float v = 0.0;
-      float a = 0.5;
-      for (int i = 0; i < 3; i++) {
-        v += a * noise(p);
-        p = p * 2.1 + vec3(1.7, 9.2, 3.1);
-        a *= 0.5;
-      }
-      return v;
-    }
+    varying vec2 vUv;
 
     void main() {
-      vec3 p = normalize(vPos);
-      vec3 shift = vec3(drift.x * time, drift.y * time, drift.x * time * 0.3);
-      float n = fbm(p * 9.0 + shift * 2.5);
-      float systems = smoothstep(0.34, 0.70, fbm(p * 2.2 + shift));
-      float band = smoothstep(0.50 - cover * 0.22, 0.80, n) * mix(systems, 1.0, cover * 0.55);
-      float facing = smoothstep(0.10, 0.55, dot(vNormal, vec3(0.0, 0.0, 1.0)));
+      if (hasMap < 0.5) discard;
+      // SphereGeometry UVs are mirrored relative to the city-light sampler:
+      // sample at (1 - u, 1 - v) so the cloud map lines up with the lights.
+      vec2 uv = vec2(1.0 - vUv.x + drift.x * time, 1.0 - vUv.y + drift.y * time);
+      float base = texture2D(cloudMap, uv).r;
+      // A second, slower-moving layer at double frequency adds slow evolution
+      // without any visible repetition.
+      float detail = texture2D(cloudMap, uv * vec2(2.0, 2.0) + vec2(0.37, 0.11) + drift * time * 0.6).r;
+      float density = base * (0.72 + 0.56 * detail);
 
-      vec3 col = mix(vec3(0.50, 0.56, 0.64), vec3(0.26, 0.29, 0.34), rain);
+      // Low cover keeps only the densest cores; high cover reveals the thin veils too.
+      float lo = mix(0.62, 0.10, cover);
+      float hi = mix(1.05, 0.62, cover);
+      float cloud = smoothstep(lo, hi, density);
+
+      float facing = smoothstep(0.08, 0.5, dot(vNormal, vec3(0.0, 0.0, 1.0)));
+
+      vec3 col = mix(vec3(0.56, 0.61, 0.69), vec3(0.30, 0.33, 0.38), rain);
+      vec3 p = normalize(vPos);
       float flash = lightning * exp(-distance(p, flashPos) * 5.0);
       col += vec3(0.92, 0.95, 1.0) * flash * 2.2;
 
-      float alpha = band * cover * (0.50 + 0.28 * rain) * facing;
+      float alpha = cloud * (0.30 + 0.42 * cover) * (1.0 + 0.25 * rain) * facing;
       alpha += flash * 0.9 * facing;
       alpha *= mix(1.0, 0.55, lightTheme);
       gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
@@ -457,6 +448,21 @@
   const cloudMesh = new THREE_NS.Mesh(cloudGeometry, cloudMaterial);
   cloudMesh.renderOrder = 2;
   earthGroup.add(cloudMesh);
+
+  new THREE_NS.TextureLoader().load(
+    "./assets/textures/earth_clouds_2048.jpg",
+    (texture) => {
+      texture.wrapS = THREE_NS.RepeatWrapping;
+      texture.wrapT = THREE_NS.ClampToEdgeWrapping;
+      texture.minFilter = THREE_NS.LinearMipmapLinearFilter;
+      texture.magFilter = THREE_NS.LinearFilter;
+      texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+      cloudUniforms.cloudMap.value = texture;
+      cloudUniforms.hasMap.value = 1;
+    },
+    undefined,
+    () => console.warn("Cloud texture unavailable; clouds disabled.")
+  );
 
   if (window.__HK_WEATHER__) setWeather(window.__HK_WEATHER__);
   window.addEventListener("hk-weather", (event) => setWeather(event.detail));
