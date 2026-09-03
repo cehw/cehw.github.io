@@ -757,38 +757,70 @@ footer {
   font-size: 0.9rem;
 }
 
-.reveal {
+/* Sections fade up once as they scroll into view. Without JS (or when the
+   observer is unavailable) everything stays visible. */
+html.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 560ms ease, transform 560ms ease;
+}
+
+html.js-reveal .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
-  animation: reveal-up 620ms ease forwards;
 }
 
-.reveal:nth-child(2) {
-  animation-delay: 80ms;
+/* Links inside panels: underline slides in from the left. */
+.panel p a,
+.contact-list a,
+.pub-doi {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 220ms ease, color 160ms ease;
 }
 
-.reveal:nth-child(3) {
-  animation-delay: 120ms;
+.panel p a:hover,
+.contact-list a:hover,
+.pub-doi:hover,
+.panel p a:focus-visible,
+.contact-list a:focus-visible,
+.pub-doi:focus-visible {
+  background-size: 100% 1px;
 }
 
-.reveal:nth-child(4) {
-  animation-delay: 160ms;
+.contact-list {
+  list-style: none;
+  padding-left: 0;
 }
 
-.reveal:nth-child(5) {
-  animation-delay: 200ms;
+.contact-list li {
+  margin-bottom: 6px;
 }
 
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
+/* Portrait micro-parallax on pointer devices (driven by script.js). */
+@media (hover: hover) and (pointer: fine) {
+  .portrait-card {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 260ms ease, box-shadow 260ms ease;
+    will-change: transform;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .portrait-card.is-tilting {
+    transition: transform 80ms linear;
   }
+}
+
+::selection {
+  background: rgba(36, 83, 95, 0.22);
+  color: #14262a;
+}
+
+html[data-theme="dark"] ::selection {
+  background: rgba(212, 188, 140, 0.35);
+  color: #f4f1ea;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -796,8 +828,21 @@ footer {
     scroll-behavior: auto;
   }
 
-  .reveal {
-    animation: none;
+  html.js-reveal .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .portrait-card {
+    transform: none !important;
+  }
+
+  .gallery-card img,
+  .gallery-caption,
+  .site-nav a::after,
+  .site-header {
+    transition: none !important;
   }
 
   .btn,
@@ -1562,4 +1607,19 @@ html[data-theme="dark"].has-cinematic-earth-bg .bg-planet {
 
 html.qa-bg-only :is(.site-header, main, footer) {
   visibility: hidden;
+}
+
+@media print {
+  html.js-reveal .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .space-earth-canvas,
+  .bg-orb,
+  .bg-grid,
+  .bg-flow,
+  .bg-planet {
+    display: none !important;
+  }
 }

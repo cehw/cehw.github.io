@@ -93,3 +93,57 @@ if (siteHeader && headerSentinel && "IntersectionObserver" in window) {
   stuckObserver.observe(headerSentinel);
 }
 if (siteHeader && pageQuery.get("stuck") === "1") siteHeader.classList.add("is-stuck");
+
+// Scroll reveal: sections fade up once when they enter the viewport.
+const reduceMotion =
+  typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const revealTargets = [...document.querySelectorAll(".reveal")];
+if (revealTargets.length && !reduceMotion && "IntersectionObserver" in window) {
+  document.documentElement.classList.add("js-reveal");
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
+  );
+  revealTargets.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      el.classList.add("is-visible");
+    } else {
+      revealObserver.observe(el);
+    }
+  });
+}
+
+// Portrait micro-parallax (<= 3 degrees) on pointer devices.
+const portrait = document.querySelector(".portrait-card");
+const heroWrap = document.querySelector(".hero-wrap");
+const finePointer =
+  typeof window.matchMedia === "function" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+if (portrait && heroWrap && finePointer && !reduceMotion) {
+  const MAX_DEG = 3;
+  heroWrap.addEventListener(
+    "pointermove",
+    (event) => {
+      const rect = portrait.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = Math.max(-1, Math.min(1, (event.clientX - cx) / (rect.width || 1)));
+      const dy = Math.max(-1, Math.min(1, (event.clientY - cy) / (rect.height || 1)));
+      portrait.classList.add("is-tilting");
+      portrait.style.setProperty("--ry", `${(dx * MAX_DEG).toFixed(2)}deg`);
+      portrait.style.setProperty("--rx", `${(-dy * MAX_DEG).toFixed(2)}deg`);
+    },
+    { passive: true }
+  );
+  heroWrap.addEventListener("pointerleave", () => {
+    portrait.classList.remove("is-tilting");
+    portrait.style.setProperty("--rx", "0deg");
+    portrait.style.setProperty("--ry", "0deg");
+  });
+}
