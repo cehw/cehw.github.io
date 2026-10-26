@@ -24,31 +24,31 @@
 
   host.innerHTML = `
     <div class="wx-heading">
-      <div><p class="wx-kicker">HONG KONG · 香港天氣</p><h1>Local Weather Prediction Playground</h1></div>
+      <div><p class="wx-location">Hong Kong</p><h1>Local weather prediction playground</h1></div>
       <button class="wx-button" id="wx-refresh" type="button">Refresh weather</button>
     </div>
-    <p class="wx-intro">Explore station observations and daily forecasts. Forecasts provided by the Hong Kong Observatory; refreshed every three hours.</p>
+    <p class="wx-intro">Station observations and daily forecasts from the Hong Kong Observatory.</p>
     <p class="wx-status" id="wx-status" role="status">Loading the latest available weather…</p>
     <div id="wx-content" hidden>
       <div class="wx-overview">
         <div class="wx-map-panel">
-          <div class="wx-map-heading"><h2>Temperature around Hong Kong</h2><span class="wx-badge">OBSERVATIONS</span></div>
+          <div class="wx-map-heading"><h2>Station observations</h2></div>
           <div id="wx-map" class="wx-map" aria-label="Map of observed station temperatures in Hong Kong"></div>
           <p class="wx-map-notice" id="wx-map-notice" hidden></p>
           <div class="wx-map-footer"><div class="wx-legend" aria-label="Temperature colour scale"><span id="wx-legend-min"></span><span class="wx-gradient"></span><span id="wx-legend-max"></span></div><button type="button" class="wx-text-button" id="wx-reset-map">Show all stations</button></div>
-          <div class="wx-station-row"><div class="wx-station-picker"><label for="wx-station">Explore a station</label><select id="wx-station"></select></div><div class="wx-station-reading"><span class="wx-temperature" id="wx-station-value"></span><span>observed temperature</span></div></div>
+          <div class="wx-station-row"><div class="wx-station-picker"><label for="wx-station">Station</label><select id="wx-station"></select></div><div class="wx-station-reading"><span class="wx-temperature" id="wx-station-value"></span><span>Temperature</span></div></div>
           <p class="wx-note" id="wx-observed-at"></p>
-          <p class="wx-note">Click a temperature marker or choose a station. Drag to pan; scroll over the map or use + / − to zoom.</p>
+          <p class="wx-note">Select a station for details. Drag to pan and scroll to zoom.</p>
         </div>
         <article class="wx-today">
-          <p class="wx-kicker">LOCAL WEATHER FORECAST</p><h2 id="wx-period">Today in Hong Kong</h2>
+          <h2>Local forecast</h2><p class="wx-note wx-period" id="wx-period"></p>
           <p id="wx-local-forecast"></p>
           <details class="wx-outlook"><summary>Outlook</summary><p id="wx-outlook"></p></details>
           <p class="wx-note" id="wx-local-issued"></p>
           <a class="wx-source-link" href="https://www.hko.gov.hk/en/wxinfo/currwx/flw.htm" target="_blank" rel="noreferrer">Full Observatory forecast ↗</a>
         </article>
       </div>
-      <div class="wx-daily-heading"><h2>Hong Kong outlook</h2><p class="wx-note" id="wx-daily-issued"></p></div>
+      <div class="wx-daily-heading"><h2>Daily forecast</h2><p class="wx-note" id="wx-daily-issued"></p></div>
       <div class="wx-days" id="wx-days" aria-label="Choose a forecast date"></div>
       <article class="wx-day-detail" id="wx-day-detail" aria-live="polite"></article>
       <div class="wx-attribution"><p class="wx-note" id="wx-fetched-at"></p><p class="wx-note">Source: <a href="https://www.hko.gov.hk/en/abouthko/opendata_intro.htm" target="_blank" rel="noreferrer">Hong Kong Observatory open data</a> · All times HKT (UTC+8).</p></div>
@@ -68,7 +68,7 @@
     if (refreshError) set("wx-status", `Refresh unavailable — showing the last successful snapshot.${oldData}`);
     else if (fallback) set("wx-status", `Scheduled feed unavailable — showing the saved site snapshot.${oldData}`);
     else if (stale) set("wx-status", "Update delayed — this snapshot or its observations are more than six hours old.");
-    else set("wx-status", "Updated every three hours · Select a station to explore local conditions.");
+    else set("wx-status", "Updates every three hours.");
   }
 
   function selectStation(name, focusMap = false) {
@@ -197,7 +197,7 @@
     set("wx-outlook", forecast.outlook || "No outlook available.");
     set("wx-local-issued", `Issued ${core.timestamp(forecast.updateTime)}`);
     set("wx-daily-issued", `Issued ${core.timestamp(snapshot.dailyForecast.updateTime)}`);
-    set("wx-fetched-at", `Website snapshot: ${core.timestamp(snapshot.fetchedAt)} · Scheduled every 3 hours`);
+    set("wx-fetched-at", `Last retrieved ${core.timestamp(snapshot.fetchedAt)}`);
     stationData = core.stations(snapshot, coordinates);
     const select = el("wx-station"); select.replaceChildren();
     stationData.forEach((station) => {
