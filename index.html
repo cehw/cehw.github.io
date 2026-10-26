@@ -28,6 +28,15 @@
       content="Han Wang is a Postdoctoral Researcher at HKUST working on scientific machine learning, urban climate, wind energy, and renewable energy forecasting."
     />
     <title>Han Wang | HKUST Postdoctoral Researcher | Scientific ML and Renewable Energy Forecasting</title>
+    <script>
+      (() => {
+        const openWeatherPage = () => {
+          if (location.hash === "#weather") location.replace("./weather.html" + location.search);
+        };
+        openWeatherPage();
+        window.addEventListener("hashchange", openWeatherPage);
+      })();
+    </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -77,8 +86,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=20260222-fav1" />
     <link rel="shortcut icon" href="./favicon.ico?v=20260222-fav1" />
     <link rel="stylesheet" href="./styles.css?v=20260903-wx3" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="./weather-dashboard.css?v=20261026-wx3" />
   </head>
   <body>
     <div id="canvas-container" class="space-earth-canvas" aria-hidden="true"></div>
@@ -102,7 +109,7 @@
           <a href="#research">Research</a>
           <a href="#publications">Publications</a>
           <a href="#service">Referee Service</a>
-          <a href="#weather">Weather</a>
+          <a href="./weather.html">Weather</a>
           <a href="#contact">Contact</a>
           <a href="./gallery.html">Gallery</a>
         </nav>
@@ -118,10 +125,6 @@
             <p class="subtitle">
               Building scientific machine learning tools for climate and atmospheric science. 🌍🌎🌏
             </p>
-            <div class="weather-slot">
-              <p class="weather-line" id="weather-line" hidden></p>
-            </div>
-            <a class="weather-jump" href="#weather">Explore the local weather playground &rarr;</a>
             <div class="field-tags">
               <span>Atmosphere</span>
               <span>Wind Power</span>
@@ -302,15 +305,6 @@
         </p>
       </section>
 
-      <section class="panel reveal weather-dashboard" id="weather" aria-label="Local Weather Prediction Playground">
-        <div id="weather-dashboard">
-          <h2>Local Weather Prediction Playground</h2>
-          <p>Loading Hong Kong station observations and daily forecasts…</p>
-        </div>
-        <noscript><p>Enable JavaScript to explore the map, or read the
-          <a href="https://www.hko.gov.hk/en/wxinfo/currwx/flw.htm">Hong Kong Observatory forecast</a>.</p></noscript>
-      </section>
-
       <section class="panel reveal" id="contact">
         <h2>Contact</h2>
         <ul class="contact-list">
@@ -342,10 +336,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./weather-core.js?v=20260903-wx1"></script>
     <script src="./weather.js?v=20260903-wx1"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="./weather-stations.js?v=20261026-wx1"></script>
-    <script src="./weather-dashboard-core.js?v=20261026-wx1"></script>
-    <script src="./weather-dashboard.js?v=20261026-wx4"></script>
     <script src="./space-earth-bg.js?v=20260903-wx3"></script>
     <script src="./script.js?v=20260903-wx1"></script>
   </body>

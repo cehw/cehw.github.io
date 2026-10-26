@@ -1,10 +1,7 @@
-.weather-jump { display: inline-block; color: var(--accent); font-size: .85rem; text-decoration: none; border-bottom: 1px solid var(--line); margin: 3px 0 12px; }
-.weather-jump:hover { border-color: var(--accent); }
-.weather-jump:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .weather-dashboard { overflow: hidden; }
 .weather-dashboard [hidden] { display: none !important; }
 .wx-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.wx-heading h2 { margin: 2px 0 0; }
+.wx-heading h1 { margin: 2px 0 0; font-size: clamp(2rem, 4.2vw, 3rem); line-height: 1.1; }
 .weather-dashboard .wx-kicker { margin: 0; color: var(--accent); font-size: .73rem; letter-spacing: .15em; font-weight: 700; }
 .weather-dashboard .wx-intro { max-width: 670px; margin: 18px 0 12px; color: var(--muted); font-size: .98rem; }
 .weather-dashboard .wx-status { display: flex; align-items: center; gap: 9px; font-size: .82rem; margin: 0 0 24px; color: var(--muted); }
@@ -17,7 +14,8 @@
 .wx-button:focus-visible, .wx-text-button:focus-visible, .wx-day:focus-visible, .wx-station-picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .wx-overview { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 26px; }
 .wx-map-heading { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-.weather-dashboard h3 { font-size: 1.1rem; line-height: 1.4; margin: 0; font-weight: 600; }
+.weather-dashboard h2 { font-size: 1.1rem; line-height: 1.4; margin: 0; font-weight: 600; }
+.weather-dashboard h2::after { display: none; }
 .wx-badge { font-size: .62rem; letter-spacing: .1em; color: var(--muted); }
 .wx-map { position: relative; height: 460px; width: 100%; z-index: 0; border: 1px solid var(--line); border-radius: 12px; background: #e9ece6; }
 .wx-map .leaflet-control-attribution { font: 10px/1.5 "Source Sans 3", sans-serif; max-width: 85%; }
@@ -44,7 +42,7 @@
 .wx-station-reading span:last-child { font-size: .63rem; color: var(--muted); }
 .weather-dashboard .wx-note { color: var(--muted); font-size: .75rem; line-height: 1.5; margin: 9px 0 0; }
 .wx-today { padding-left: 24px; border-left: 1px solid var(--line); }
-.wx-today h3 { margin: 8px 0 14px; font-size: 1.3rem; }
+.wx-today h2 { margin: 8px 0 14px; font-size: 1.3rem; }
 .weather-dashboard .wx-today > p:not(.wx-note):not(.wx-kicker), .wx-outlook p { font-size: .96rem; line-height: 1.72; margin: 0 0 14px; }
 .wx-outlook { padding: 12px 0; border-top: 1px solid var(--line); }
 .wx-outlook summary { cursor: pointer; font-size: .88rem; color: var(--accent); }
@@ -60,7 +58,7 @@
 .wx-day img { object-fit: contain; margin: 7px 0 3px; }
 .wx-day strong { font-size: .95rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 .wx-day-detail { border-top: 1px solid var(--line); padding-top: 16px; }
-.wx-day-detail h4 { margin: 0 0 6px; font-size: 1rem; font-weight: 600; }
+.wx-day-detail h3 { margin: 0 0 6px; font-size: 1rem; font-weight: 600; }
 .weather-dashboard .wx-day-detail > p { margin: 0; font-size: .94rem; line-height: 1.6; }
 .wx-day-facts { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 20px; margin-top: 16px; }
 .weather-dashboard .wx-day-facts p { margin: 0; display: flex; flex-direction: column; gap: 4px; font-size: .85rem; }

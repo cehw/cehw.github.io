@@ -24,7 +24,7 @@
 
   host.innerHTML = `
     <div class="wx-heading">
-      <div><p class="wx-kicker">HONG KONG · 香港天氣</p><h2>Local Weather Prediction Playground</h2></div>
+      <div><p class="wx-kicker">HONG KONG · 香港天氣</p><h1>Local Weather Prediction Playground</h1></div>
       <button class="wx-button" id="wx-refresh" type="button">Refresh weather</button>
     </div>
     <p class="wx-intro">Explore station observations and daily forecasts. Forecasts provided by the Hong Kong Observatory; refreshed every three hours.</p>
@@ -32,7 +32,7 @@
     <div id="wx-content" hidden>
       <div class="wx-overview">
         <div class="wx-map-panel">
-          <div class="wx-map-heading"><h3>Temperature around Hong Kong</h3><span class="wx-badge">OBSERVATIONS</span></div>
+          <div class="wx-map-heading"><h2>Temperature around Hong Kong</h2><span class="wx-badge">OBSERVATIONS</span></div>
           <div id="wx-map" class="wx-map" aria-label="Map of observed station temperatures in Hong Kong"></div>
           <p class="wx-map-notice" id="wx-map-notice" hidden></p>
           <div class="wx-map-footer"><div class="wx-legend" aria-label="Temperature colour scale"><span id="wx-legend-min"></span><span class="wx-gradient"></span><span id="wx-legend-max"></span></div><button type="button" class="wx-text-button" id="wx-reset-map">Show all stations</button></div>
@@ -41,14 +41,14 @@
           <p class="wx-note">Click a temperature marker or choose a station. Drag to pan; scroll over the map or use + / − to zoom.</p>
         </div>
         <article class="wx-today">
-          <p class="wx-kicker">LOCAL WEATHER FORECAST</p><h3 id="wx-period">Today in Hong Kong</h3>
+          <p class="wx-kicker">LOCAL WEATHER FORECAST</p><h2 id="wx-period">Today in Hong Kong</h2>
           <p id="wx-local-forecast"></p>
           <details class="wx-outlook"><summary>Outlook</summary><p id="wx-outlook"></p></details>
           <p class="wx-note" id="wx-local-issued"></p>
           <a class="wx-source-link" href="https://www.hko.gov.hk/en/wxinfo/currwx/flw.htm" target="_blank" rel="noreferrer">Full Observatory forecast ↗</a>
         </article>
       </div>
-      <div class="wx-daily-heading"><h3>Hong Kong outlook</h3><p class="wx-note" id="wx-daily-issued"></p></div>
+      <div class="wx-daily-heading"><h2>Hong Kong outlook</h2><p class="wx-note" id="wx-daily-issued"></p></div>
       <div class="wx-days" id="wx-days" aria-label="Choose a forecast date"></div>
       <article class="wx-day-detail" id="wx-day-detail" aria-live="polite"></article>
       <div class="wx-attribution"><p class="wx-note" id="wx-fetched-at"></p><p class="wx-note">Source: <a href="https://www.hko.gov.hk/en/abouthko/opendata_intro.htm" target="_blank" rel="noreferrer">Hong Kong Observatory open data</a> · All times HKT (UTC+8).</p></div>
@@ -146,7 +146,7 @@
       detail.textContent = "No upcoming daily forecast is available in this snapshot. Please refresh for an update.";
       return;
     }
-    const heading = document.createElement("h4"); heading.textContent = core.dateLabel(day.forecastDate, { weekday: "long", month: "long", day: "numeric" });
+    const heading = document.createElement("h3"); heading.textContent = core.dateLabel(day.forecastDate, { weekday: "long", month: "long", day: "numeric" });
     const weather = document.createElement("p"); weather.textContent = day.forecastWeather || "Forecast description unavailable.";
     const facts = document.createElement("div"); facts.className = "wx-day-facts";
     [
