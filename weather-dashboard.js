@@ -38,7 +38,7 @@
           <div class="wx-map-footer"><div class="wx-legend" aria-label="Temperature colour scale"><span id="wx-legend-min"></span><span class="wx-gradient"></span><span id="wx-legend-max"></span></div><button type="button" class="wx-text-button" id="wx-reset-map">Show all stations</button></div>
           <div class="wx-station-row"><div class="wx-station-picker"><label for="wx-station">Explore a station</label><select id="wx-station"></select></div><div class="wx-station-reading"><span class="wx-temperature" id="wx-station-value"></span><span>observed temperature</span></div></div>
           <p class="wx-note" id="wx-observed-at"></p>
-          <p class="wx-note">Click a temperature marker or choose a station. Drag to pan; use + / − to zoom.</p>
+          <p class="wx-note">Click a temperature marker or choose a station. Drag to pan; scroll over the map or use + / − to zoom.</p>
         </div>
         <article class="wx-today">
           <p class="wx-kicker">LOCAL WEATHER FORECAST</p><h3 id="wx-period">Today in Hong Kong</h3>
@@ -107,7 +107,7 @@
       return;
     }
     if (!map) {
-      map = L.map("wx-map", { scrollWheelZoom: false, zoomControl: true, minZoom: 9, maxZoom: 15, attributionControl: true });
+      map = L.map("wx-map", { scrollWheelZoom: true, zoomControl: true, minZoom: 9, maxZoom: 15, attributionControl: true });
       map.attributionControl.setPrefix(false);
       const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom: 15,
