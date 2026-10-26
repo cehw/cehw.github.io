@@ -35,7 +35,7 @@ html {
 
 body {
   font-family: "Source Sans 3", "Avenir Next", "Helvetica Neue", sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   color: var(--ink);
   line-height: 1.64;
   min-height: 100vh;
@@ -212,7 +212,7 @@ body.is-lightbox-open {
   text-decoration: none;
   color: #1f2b2f;
   font-family: "Source Sans 3", "Avenir Next", "Helvetica Neue", sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
@@ -342,28 +342,29 @@ section[id],
   border: 1px solid rgba(133, 98, 52, 0.35);
   background: rgba(133, 98, 52, 0.12);
   color: #6d5028;
-  font-size: 0.84rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
+/* Shared type scale: title 32px, sections 20px, body 16px, metadata 14px. */
 h1,
 h2,
 h3 {
   margin: 0;
-  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-family: inherit;
   font-weight: 600;
-  letter-spacing: 0.015em;
+  letter-spacing: 0;
 }
 
 h1 {
-  font-size: clamp(2rem, 4.2vw, 3.75rem);
-  line-height: 1.04;
+  font-size: 2rem;
+  line-height: 1.25;
 }
 
 .subtitle {
   margin: 14px 0 0;
   max-width: 670px;
-  font-size: clamp(1.02rem, 2vw, 1.22rem);
+  font-size: 1rem;
   color: var(--muted);
 }
 
@@ -420,7 +421,7 @@ html[data-weather="storm"] { --wx-dot: #b48ce6; }
   color: #35545b;
   padding: 5px 10px;
   border-radius: 999px;
-  font-size: 0.84rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
@@ -536,26 +537,17 @@ html[data-weather="storm"] { --wx-dot: #b48ce6; }
 }
 
 h2 {
-  font-size: clamp(1.42rem, 2.7vw, 1.9rem);
-  margin-bottom: 18px;
-  color: #24383c;
-}
-
-h2::after {
-  content: "";
-  display: block;
-  width: 28px;
-  height: 2px;
-  margin-top: 8px;
-  border-radius: 2px;
-  background: var(--accent-2);
-  opacity: 0.9;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  color: var(--ink);
 }
 
 h3 {
-  font-size: 1.14rem;
-  margin-bottom: 6px;
-  color: #2a4247;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  color: var(--ink);
 }
 
 .card h3 {
@@ -602,17 +594,17 @@ h3 {
 .panel p,
 .card p {
   margin: 0 0 10px;
-  font-size: 1.02rem;
+  font-size: 1rem;
   color: var(--muted);
 }
 
-.facts {
+.panel .facts {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 0;
-  margin: -6px 0 var(--s2);
-  font-size: 0.9rem;
-  letter-spacing: 0.01em;
+  margin: 0 0 var(--s2);
+  font-size: 0.875rem;
+  letter-spacing: 0;
   color: var(--muted);
 }
 
@@ -677,9 +669,9 @@ ol li {
 }
 
 .pub-year {
-  font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
   line-height: 1.3;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
@@ -699,12 +691,12 @@ ol li {
 
 .pub-meta {
   color: var(--muted);
-  font-size: 0.96rem;
+  font-size: 0.875rem;
 }
 
 .pub-doi {
   align-self: flex-start;
-  font-size: 0.82rem;
+  font-size: 0.875rem;
   color: var(--accent);
   text-decoration: none;
   border-bottom: 1px solid transparent;
@@ -722,10 +714,10 @@ em {
 #publications em,
 #service em {
   color: #2f5c66;
-  font-family: "Source Sans 3", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-weight: 600;
+  font-family: inherit;
+  font-weight: 400;
   font-style: normal;
-  letter-spacing: 0.005em;
+  letter-spacing: 0;
   font-size: 1em;
 }
 
@@ -765,7 +757,7 @@ footer {
   width: min(1080px, 92vw);
   margin: 0 auto 32px;
   color: #6d7f83;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 /* Sections fade up once as they scroll into view. Without JS (or when the
@@ -919,7 +911,7 @@ html[data-theme="dark"] ::selection {
   }
 
   .site-nav a {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   .site-header.is-stuck .header-inner {
@@ -964,7 +956,7 @@ html[data-theme="dark"] ::selection {
   }
 
   .pub-year {
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
 
   .hero {
@@ -1476,13 +1468,13 @@ html[data-theme="dark"] .eyebrow {
 }
 
 html[data-theme="dark"] h2 {
-  color: #dcecef;
+  color: var(--ink);
 }
 
 html[data-theme="dark"] h3,
 html[data-theme="dark"] .gallery-group-title,
 html[data-theme="dark"] .gallery-year-title {
-  color: #d6e8ed;
+  color: var(--ink);
 }
 
 html[data-theme="dark"] .field-tags span {
