@@ -24,7 +24,7 @@
 
   host.innerHTML = `
     <div class="wx-heading">
-      <div><p class="wx-kicker">HONG KONG · 香港天氣</p><h1>Local Weather Prediction Playground</h1></div>
+      <div><p class="wx-kicker">HONG KONG · 香港天氣</p><h2>Local Weather Prediction Playground</h2></div>
       <button class="wx-button" id="wx-refresh" type="button">Refresh weather</button>
     </div>
     <p class="wx-intro">Explore station observations and daily forecasts. Forecasts provided by the Hong Kong Observatory; refreshed every three hours.</p>
@@ -108,6 +108,7 @@
     }
     if (!map) {
       map = L.map("wx-map", { scrollWheelZoom: false, zoomControl: true, minZoom: 9, maxZoom: 15, attributionControl: true });
+      map.attributionControl.setPrefix(false);
       const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom: 15,
       });

@@ -1,6 +1,6 @@
 # Hong Kong weather
 
-The homepage links to the **Local Weather Prediction Playground** at `weather.html`, which presents Hong Kong Observatory local and daily forecasts alongside an interactive map of station temperature observations. The map shows observations, not a spatial forecast. A GNN six-hour forecast is deferred until a trained model and its inference inputs are available.
+The homepage's **Weather** section (`index.html#weather`) contains the **Local Weather Prediction Playground**, with Hong Kong Observatory local and daily forecasts alongside an interactive map of station temperature observations. It shares the homepage navigation, animated background, panel width and heading styles. The previously published `weather.html` link redirects to this section. The map shows observations, not a spatial forecast. A GNN six-hour forecast is deferred until a trained model and its inference inputs are available.
 
 ## Interface
 
