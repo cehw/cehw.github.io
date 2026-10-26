@@ -108,8 +108,8 @@
     }
     if (!map) {
       map = L.map("wx-map", { scrollWheelZoom: false, zoomControl: true, minZoom: 9, maxZoom: 15, attributionControl: true });
-      const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>', maxZoom: 15,
+      const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom: 15,
       });
       tiles.on("tileerror", () => {
         set("wx-map-notice", "The basemap is unavailable. Station markers and the station selector still show the observations.");
