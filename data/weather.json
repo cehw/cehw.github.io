@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "fetchedAt": "2026-10-26T13:09:14.119Z",
+  "fetchedAt": "2026-10-26T20:31:37.497Z",
   "updateIntervalHours": 3,
   "current": {
     "rainfall": {
@@ -8,25 +8,29 @@
         {
           "unit": "mm",
           "place": "Central & Western District",
-          "max": 0,
+          "max": 1,
+          "min": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Eastern District",
-          "max": 0,
+          "max": 37,
+          "min": 7,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Kwai Tsing",
-          "max": 0,
+          "max": 2,
+          "min": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Islands District",
-          "max": 0,
+          "max": 2,
+          "min": 0,
           "main": "FALSE"
         },
         {
@@ -38,31 +42,36 @@
         {
           "unit": "mm",
           "place": "Sai Kung",
-          "max": 0,
+          "max": 8,
+          "min": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Sha Tin",
-          "max": 0,
+          "max": 18,
+          "min": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Southern District",
-          "max": 0,
+          "max": 24,
+          "min": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Tai Po",
-          "max": 0,
+          "max": 1,
+          "min": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Tsuen Wan",
-          "max": 0,
+          "max": 2,
+          "min": 0,
           "main": "FALSE"
         },
         {
@@ -74,7 +83,8 @@
         {
           "unit": "mm",
           "place": "Wan Chai",
-          "max": 0,
+          "max": 4,
+          "min": 2,
           "main": "FALSE"
         },
         {
@@ -86,63 +96,67 @@
         {
           "unit": "mm",
           "place": "Yau Tsim Mong",
-          "max": 0,
+          "max": 1,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Sham Shui Po",
-          "max": 0,
+          "max": 12,
+          "min": 1,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Kowloon City",
-          "max": 0,
+          "max": 6,
+          "min": 1,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Wong Tai Sin",
-          "max": 0,
+          "max": 3,
+          "min": 1,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Kwun Tong",
-          "max": 0,
+          "max": 7,
+          "min": 0,
           "main": "FALSE"
         }
       ],
-      "startTime": "2026-10-26T19:45:00+08:00",
-      "endTime": "2026-10-26T20:45:00+08:00"
+      "startTime": "2026-10-27T02:45:00+08:00",
+      "endTime": "2026-10-27T03:45:00+08:00"
     },
     "icon": [
-      77
+      62
     ],
-    "iconUpdateTime": "2026-10-26T18:00:00+08:00",
+    "iconUpdateTime": "2026-10-26T23:05:00+08:00",
     "uvindex": "",
-    "updateTime": "2026-10-26T21:02:00+08:00",
+    "updateTime": "2026-10-27T04:02:00+08:00",
     "temperature": {
       "data": [
         {
           "place": "King's Park",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Hong Kong Observatory",
-          "value": 27,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Wong Chuk Hang",
-          "value": 27,
+          "value": 23,
           "unit": "C"
         },
         {
           "place": "Ta Kwu Ling",
-          "value": 25,
+          "value": 24,
           "unit": "C"
         },
         {
@@ -152,42 +166,42 @@
         },
         {
           "place": "Tai Po",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Sha Tin",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Tuen Mun",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Tseung Kwan O",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Sai Kung",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Cheung Chau",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Chek Lap Kok",
-          "value": 28,
+          "value": 26,
           "unit": "C"
         },
         {
           "place": "Tsing Yi",
-          "value": 27,
+          "value": 24,
           "unit": "C"
         },
         {
@@ -197,62 +211,62 @@
         },
         {
           "place": "Tsuen Wan Ho Koon",
-          "value": 24,
+          "value": 23,
           "unit": "C"
         },
         {
           "place": "Tsuen Wan Shing Mun Valley",
-          "value": 25,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Hong Kong Park",
-          "value": 27,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Shau Kei Wan",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Kowloon City",
-          "value": 26,
+          "value": 23,
           "unit": "C"
         },
         {
           "place": "Happy Valley",
-          "value": 27,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Wong Tai Sin",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Stanley",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Kwun Tong",
-          "value": 26,
+          "value": 23,
           "unit": "C"
         },
         {
           "place": "Sham Shui Po",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Kai Tak Runway Park",
-          "value": 27,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Yuen Long Park",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -261,7 +275,7 @@
           "unit": "C"
         }
       ],
-      "recordTime": "2026-10-26T21:00:00+08:00"
+      "recordTime": "2026-10-27T04:00:00+08:00"
     },
     "warningMessage": "",
     "mintempFrom00To09": "",
@@ -270,43 +284,43 @@
     "rainfallJanuaryToLastMonth": "",
     "tcmessage": "",
     "humidity": {
-      "recordTime": "2026-10-26T21:00:00+08:00",
+      "recordTime": "2026-10-27T04:00:00+08:00",
       "data": [
         {
           "unit": "percent",
-          "value": 75,
+          "value": 89,
           "place": "Hong Kong Observatory"
         }
       ]
     }
   },
   "localForecast": {
-    "generalSituation": "The northeast monsoon is bringing mainly fine weather to the coast of Guangdong.",
+    "generalSituation": "The northeast monsoon is affecting the coast of Guangdong. Meanwhile, a band of rain and clouds is covering the region.",
     "tcInfo": "",
     "fireDangerWarning": "",
-    "forecastPeriod": "Weather forecast for tonight and tomorrow",
-    "forecastDesc": "Cloudy periods and one or two light rain patches in the morning and at night. The minimum temperature tomorrow morning will be about 25 degrees in the urban areas, and a couple of degrees lower in the New Territories. Mainly fine during the day with a maximum temperature of around 30 degrees. Moderate to fresh east to northeasterly winds, occasionally strong offshore tomorrow night.",
+    "forecastPeriod": "Weather forecast for today",
+    "forecastDesc": "Cloudy periods and a few rain patches in the morning and at night. Rain patches will be heavier in some areas at first. The minimum temperature in the morning will be about 24 degrees in the urban areas, and a couple of degrees lower in the New Territories. Mainly fine during the day with a maximum temperature of around 30 degrees. Moderate to fresh east to northeasterly winds, occasionally strong offshore at night.",
     "outlook": "Mainly fine in the following few days. Windier on Wednesday and at first on Thursday.",
-    "updateTime": "2026-10-26T20:45:00+08:00"
+    "updateTime": "2026-10-27T04:15:00+08:00"
   },
   "dailyForecast": {
-    "generalSituation": "A fresh to strong replenishment of the northeast monsoon will reach the coast of Guangdong tomorrow night. It will be windier over the region in the following couple of days. With an anticyclone aloft strengthening, the weather will be generally fine over Guangdong in the latter part of this week. The temperature difference between day and night will be rather large over inland areas. Another surge of the northeast monsoon is expected to affect southern China early to midweek next week.",
+    "generalSituation": "A fresh to strong replenishment of the northeast monsoon will reach the coast of Guangdong tonight. It will be windier over the region in the next couple of days. With an anticyclone aloft strengthening, the weather will be generally fine over Guangdong in the latter part of this week. The temperature difference between day and night will be rather large over inland areas. Another surge of the northeast monsoon is expected to affect southern China early to midweek next week.",
     "weatherForecast": [
       {
         "forecastDate": "20261027",
         "week": "Tuesday",
         "forecastWind": "East to northeast force 4 to 5, occasionally force 6 offshore at night.",
-        "forecastWeather": "Cloudy periods and one or two light rain patches in the morning and at night. Mainly fine during the day.",
+        "forecastWeather": "Cloudy periods and a few rain patches in the morning and at night. Rain patches will be heavier in some areas at first. Mainly fine during the day.",
         "forecastMaxtemp": {
           "value": 30,
           "unit": "C"
         },
         "forecastMintemp": {
-          "value": 25,
+          "value": 24,
           "unit": "C"
         },
         "forecastMaxrh": {
-          "value": 85,
+          "value": 95,
           "unit": "percent"
         },
         "forecastMinrh": {
@@ -314,7 +328,7 @@
           "unit": "percent"
         },
         "ForecastIcon": 51,
-        "PSR": "Low"
+        "PSR": "Medium Low"
       },
       {
         "forecastDate": "20261028",
@@ -509,7 +523,7 @@
         "PSR": "Low"
       }
     ],
-    "updateTime": "2026-10-26T16:30:00+08:00",
+    "updateTime": "2026-10-27T04:20:00+08:00",
     "seaTemp": {
       "place": "North Point",
       "value": 29,
