@@ -1,0 +1,66 @@
+name: Update Hong Kong weather
+
+on:
+  schedule:
+    - cron: '17 */3 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/update-weather.mjs
+      - .github/workflows/update-weather.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-weather
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            scripts
+            data
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Fetch and validate Observatory data
+        run: node scripts/update-weather.mjs
+      - name: Publish weather snapshot
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require('node:fs/promises');
+            const { owner, repo } = context.repo;
+            const branch = 'weather-data';
+            const path = 'data/weather.json';
+            try {
+              await github.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              const base = await github.rest.git.getRef({ owner, repo, ref: 'heads/main' });
+              await github.rest.git.createRef({ owner, repo, ref: `refs/heads/${branch}`, sha: base.data.object.sha });
+            }
+            let sha;
+            try {
+              const existing = await github.rest.repos.getContent({ owner, repo, path, ref: branch });
+              sha = existing.data.sha;
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            const content = await fs.readFile(path, 'utf8');
+            const snapshot = JSON.parse(content);
+            await github.rest.repos.createOrUpdateFileContents({
+              owner, repo, branch, path, sha,
+              message: `Update Hong Kong weather (${snapshot.fetchedAt})`,
+              content: Buffer.from(content).toString('base64'),
+            });
+            core.info(`Published weather snapshot from ${snapshot.fetchedAt}`);

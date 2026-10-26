@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Han Wang" />
+    <meta name="description" content="Explore Hong Kong weather with an interactive station temperature map and daily forecasts from the Hong Kong Observatory, updated every three hours." />
+    <link rel="canonical" href="https://cehw.github.io/weather.html" />
+    <meta property="og:title" content="Local Weather Prediction Playground | Han Wang" />
+    <meta property="og:description" content="Hong Kong station observations and daily forecasts. Explore the map, choose a station, and browse the outlook." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cehw.github.io/weather.html" />
+    <title>Local Weather Prediction Playground | Han Wang</title>
+    <script>
+      (() => {
+        try {
+          const query = new URLSearchParams(location.search).get("theme");
+          const saved = query === "dark" || query === "light" ? query : localStorage.getItem("site-theme");
+          document.documentElement.setAttribute("data-theme", saved === "light" ? "light" : "dark");
+        } catch (_) { document.documentElement.setAttribute("data-theme", "dark"); }
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./styles.css?v=20260903-wx3" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="./weather-dashboard.css?v=20261026-wx1" />
+  </head>
+  <body>
+    <div class="header-sentinel" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-top"><div class="header-brand">
+          <a class="log-title" href="./index.html">Han's Homepage</a>
+          <button class="theme-toggle" type="button" aria-label="Switch color theme">&#9790;</button>
+        </div></div>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a href="./index.html">Home</a>
+          <a href="./weather.html" aria-current="page">Weather playground</a>
+          <a href="./gallery.html">Gallery</a>
+        </nav>
+      </div>
+    </header>
+    <main class="weather-playground">
+      <section class="panel weather-dashboard" aria-label="Local Weather Prediction Playground">
+        <div id="weather-dashboard">
+          <h1>Local Weather Prediction Playground</h1>
+          <p>Loading Hong Kong station observations and daily forecasts…</p>
+        </div>
+        <noscript><p>Enable JavaScript to explore the map, or read the
+          <a href="https://www.hko.gov.hk/en/wxinfo/currwx/flw.htm">Hong Kong Observatory forecast</a>.</p></noscript>
+      </section>
+    </main>
+    <footer><p>&copy; <span id="year"></span> Han Wang · Hong Kong weather</p></footer>
+    <script src="./script.js?v=20260903-wx1"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./weather-stations.js?v=20261026-wx1"></script>
+    <script src="./weather-dashboard-core.js?v=20261026-wx1"></script>
+    <script src="./weather-dashboard.js?v=20261026-wx1"></script>
+  </body>
+</html>

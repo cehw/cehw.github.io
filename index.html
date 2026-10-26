@@ -77,6 +77,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=20260222-fav1" />
     <link rel="shortcut icon" href="./favicon.ico?v=20260222-fav1" />
     <link rel="stylesheet" href="./styles.css?v=20260903-wx3" />
+    <link rel="stylesheet" href="./weather-dashboard.css?v=20261026-wx1" />
   </head>
   <body>
     <div id="canvas-container" class="space-earth-canvas" aria-hidden="true"></div>
@@ -100,6 +101,7 @@
           <a href="#research">Research</a>
           <a href="#publications">Publications</a>
           <a href="#service">Referee Service</a>
+          <a href="#weather">Weather</a>
           <a href="#contact">Contact</a>
           <a href="./gallery.html">Gallery</a>
         </nav>
@@ -118,6 +120,7 @@
             <div class="weather-slot">
               <p class="weather-line" id="weather-line" hidden></p>
             </div>
+            <a class="weather-jump" href="./weather.html">Explore the local weather playground &rarr;</a>
             <div class="field-tags">
               <span>Atmosphere</span>
               <span>Wind Power</span>
@@ -296,6 +299,15 @@
             rel="noreferrer"
           >IOP Trusted Reviewer</a>, IOP Publishing (2026).
         </p>
+      </section>
+
+      <section class="panel reveal" id="weather" aria-label="Local Weather Prediction Playground">
+        <h2>Local Weather Prediction Playground</h2>
+        <p>Explore Hong Kong's local weather: select a station on the interactive temperature map,
+          compare conditions across the city, and browse the daily forecast.</p>
+        <p class="facts"><span>27 observation stations</span><span>9-day outlook</span><span>Updated every 3 hours</span></p>
+        <p>Observations and forecasts from the Hong Kong Observatory.</p>
+        <a class="btn" href="./weather.html">Open weather playground &rarr;</a>
       </section>
 
       <section class="panel reveal" id="contact">
