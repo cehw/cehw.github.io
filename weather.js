@@ -1,6 +1,6 @@
 /* Live HKUST weather: fetches Open-Meteo, tags <html> with data-weather /
    data-daypart, fills the hero weather line, and dispatches "hk-weather".
-   Any failure leaves the page exactly as it would be without this script. */
+   Failures retain the last weather timestamp or show an unavailable message. */
 (() => {
   const core = window.WeatherCore;
   if (!core) return;
@@ -47,22 +47,24 @@
 
   function renderLine() {
     if (!line || !current) return;
-    const clock = core.hkClock(new Date());
-    line.textContent = core.formatLine(current, clock);
+    const dataTime = core.currentTime(current);
+    const clock = dataTime ? core.hkClock(dataTime) : "—";
+    const delayed = dataTime && Date.now() - dataTime.getTime() > 60 * 60 * 1000;
+    line.textContent = `${isOverride ? "Preview · " : ""}${core.formatLine(current, clock)}${!isOverride && delayed ? " · Update delayed" : ""}`;
     line.setAttribute(
       "title",
       isOverride
         ? "Preview mode (synthetic data)"
-        : `Open-Meteo · updated ${updatedAt ? core.hkClock(updatedAt) : clock} HKT`
+        : `Open-Meteo model estimate · Data time ${current.time} HKT · Retrieved ${core.hkClock(updatedAt)} HKT`
     );
     line.hidden = false;
   }
 
-  function apply(data, source) {
+  function apply(data, source, retrievedAt = Date.now()) {
     const category = core.classify(data);
     const daypart = Number(data.is_day) ? "day" : "night";
     current = data;
-    updatedAt = new Date();
+    updatedAt = new Date(retrievedAt);
     root.dataset.weather = category;
     root.dataset.daypart = daypart;
     const detail = {
@@ -88,11 +90,12 @@
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
-      if (!json || !json.current) throw new Error("No current block");
+      if (!core.usableCurrent(json?.current)) throw new Error("Current weather is incomplete");
       writeCache(json.current);
       apply(json.current, "open-meteo");
     } catch (err) {
       console.debug("[weather] unavailable:", err && err.message ? err.message : err);
+      if (line && !current) line.textContent = "Clear Water Bay · Weather temporarily unavailable";
     } finally {
       if (timer) clearTimeout(timer);
     }
@@ -106,8 +109,8 @@
       return;
     }
     const cached = readCache();
-    if (cached) {
-      apply(cached.data, "cache");
+    if (cached && core.usableCurrent(cached.data)) {
+      apply(cached.data, "cache", cached.t);
       return;
     }
     fetchLive();

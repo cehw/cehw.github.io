@@ -81,6 +81,18 @@
     )} · ${clock} HKT`;
   }
 
+  // The API is requested in Asia/Hong_Kong and returns local ISO times without an offset.
+  function currentTime(d) {
+    if (typeof d?.time !== "string") return null;
+    const date = new Date(`${d.time}+08:00`);
+    return Number.isFinite(date.getTime()) ? date : null;
+  }
+
+  function usableCurrent(d) {
+    return Boolean(currentTime(d)) && ["temperature_2m", "weather_code", "wind_speed_10m", "wind_direction_10m"]
+      .every(key => typeof d[key] === "number" && Number.isFinite(d[key]));
+  }
+
   function hkParts(date) {
     const fmt = new Intl.DateTimeFormat("en-GB", {
       timeZone: HK_TZ,
@@ -133,5 +145,5 @@
     }
   }
 
-  return { PLACE, classify, describe, compass, windMs, formatLine, hkClock, sunAzimuthDeg, synthetic };
+  return { PLACE, classify, describe, compass, windMs, formatLine, currentTime, usableCurrent, hkClock, sunAzimuthDeg, synthetic };
 });

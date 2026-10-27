@@ -1,6 +1,6 @@
 # Hong Kong weather
 
-The standalone **Weather** page (`weather.html`) contains the **Local weather prediction playground**, with Hong Kong Observatory local and daily forecasts and a map that switches between station observations and experimental six-hour GNN forecasts. Like Gallery, it uses the shared navigation, background, width, fonts and themes. The homepage does not display weather readings. Legacy `index.html#weather` links redirect to the dedicated page, preserving query parameters.
+The standalone **Weather** page (`weather.html`) contains the **Local weather prediction playground**, with Hong Kong Observatory local and daily forecasts and a map that switches between station observations and experimental six-hour GNN forecasts. Like Gallery, it uses the shared navigation, background, width, fonts and themes. At the user's request, the homepage also shows a compact Clear Water Bay current-weather estimate and a link to the playground. This uses the existing Open-Meteo request at 22.336°N, 114.265°E, not an HKO station observation. The source is credited beside the link; the displayed time is the API data time in HKT. Requests refresh every 15 minutes while visible. Missing readings produce an unavailable state; readings over one hour old are marked delayed. Background preview overrides are visibly labeled Preview. The full HKO and GNN dashboard remains on the standalone page. Legacy `index.html#weather` links redirect to the dedicated page, preserving query parameters.
 
 ## Observation-only GNN
 

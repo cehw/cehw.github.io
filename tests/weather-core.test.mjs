@@ -43,6 +43,16 @@ test("hkClock formats HKT from a UTC date", () => {
   assert.equal(core.hkClock(new Date(Date.UTC(2026, 8, 3, 16, 0))), "00:00");
 });
 
+test("current weather uses the API's HKT timestamp and rejects missing readings", () => {
+  const data = { time: "2026-10-27T00:15", temperature_2m: 26.7, weather_code: 1, wind_speed_10m: 12.1, wind_direction_10m: 96 };
+  assert.equal(core.currentTime(data).toISOString(), "2026-10-26T16:15:00.000Z");
+  assert.equal(core.hkClock(core.currentTime(data)), "00:15");
+  assert.equal(core.usableCurrent(data), true);
+  assert.equal(core.usableCurrent({ ...data, temperature_2m: null }), false);
+  assert.equal(core.usableCurrent({ ...data, wind_speed_10m: undefined }), false);
+  assert.equal(core.usableCurrent({ ...data, time: "invalid" }), false);
+});
+
 test("sunAzimuthDeg: noon HKT -> 180, midnight -> 0", () => {
   assert.equal(core.sunAzimuthDeg(new Date(Date.UTC(2026, 8, 3, 4, 0))), 180);
   assert.equal(core.sunAzimuthDeg(new Date(Date.UTC(2026, 8, 3, 16, 0))), 0);
