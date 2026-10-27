@@ -7,7 +7,7 @@ on:
   push:
     branches: [main]
     paths:
-      - scripts/update-weather.mjs
+      - scripts/weather/update-weather.mjs
       - .github/workflows/update-weather.yml
 
 permissions:
@@ -33,7 +33,7 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Fetch and validate Observatory data
-        run: node scripts/update-weather.mjs
+        run: node scripts/weather/update-weather.mjs
       - name: Publish weather snapshot
         uses: actions/github-script@v9
         with:

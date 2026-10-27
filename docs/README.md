@@ -1,5 +1,7 @@
 # Project documentation
 
+- [Maintenance](maintenance.md) — directory ownership, management commands, gallery workflow, publishing and analytics.
 - [Weather](weather.md) — HKO forecasts, station observations, observation-only GNN and server updates.
-- [September 2026 design](plans/2026-09-03-redesign-weather-design.md) — frozen record of the homepage and animated weather background redesign.
-- [September 2026 implementation plan](plans/2026-09-03-redesign-weather.md) — frozen implementation record for that redesign.
+- [Illustration](illustration.md) — current homepage artwork and editing requirements.
+
+Historical records are under `archive/`; they are not current operating instructions.

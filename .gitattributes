@@ -1,1 +1,1 @@
-scripts/personal/*.sh text eol=lf
+scripts/weather/gnn/*.sh text eol=lf

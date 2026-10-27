@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 from collections import Counter
 from datetime import datetime
@@ -35,6 +36,9 @@ def read_json(path: Path) -> list[dict[str, Any]]:
 
 
 def mdls_creation_date(path: Path) -> str:
+    # Spotlight is optional; preserve an unknown date on Windows/Linux.
+    if shutil.which("mdls") is None:
+        return ""
     cmd = ["mdls", "-name", "kMDItemContentCreationDate", str(path)]
     result = subprocess.run(cmd, check=False, capture_output=True, text=True)
     if result.returncode != 0:
@@ -129,7 +133,7 @@ def find_full_variant(gallery_dir: Path, thumb_rel: str) -> str:
 
 
 def main() -> None:
-    root = Path(__file__).resolve().parents[1]
+    root = Path(__file__).resolve().parents[2]
     assets_gallery = root / "assets" / "gallery"
     legacy_gallery = root / "materials" / "gallery"
     if assets_gallery.exists():
@@ -141,6 +145,13 @@ def main() -> None:
     meta_path = gallery_dir / "meta.json"
 
     existing = read_json(meta_path)
+    missing = [item["full"] for item in existing
+               if item.get("full") and not (gallery_dir / item["full"]).is_file()]
+    if missing:
+        raise FileNotFoundError(
+            f"{len(missing)} gallery originals are missing. Restore the full gallery "
+            "checkout before rebuilding metadata; no metadata was changed."
+        )
     existing_by_thumb = {
         str(item.get("thumb", "")).strip(): item
         for item in existing

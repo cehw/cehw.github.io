@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import json
+import shutil
 import warnings
+from datetime import datetime
 from pathlib import Path
 
 from PIL import Image, ImageOps
@@ -16,15 +18,23 @@ WEBP_QUALITY = 76
 
 def main() -> None:
     warnings.simplefilter("ignore", Image.DecompressionBombWarning)
-    root = Path(__file__).resolve().parents[1]
+    root = Path(__file__).resolve().parents[2]
     gallery_dir = root / "assets" / "gallery"
     meta_path = gallery_dir / "meta.json"
     thumbs_root = gallery_dir / "thumbs"
-    thumbs_root.mkdir(parents=True, exist_ok=True)
 
     items = json.loads(meta_path.read_text(encoding="utf-8"))
     if not isinstance(items, list):
         raise ValueError("meta.json must contain an array")
+    missing = [str(item.get("full") or item.get("thumb") or "")
+               for item in items if isinstance(item, dict)
+               and not (gallery_dir / str(item.get("full") or item.get("thumb") or "")).is_file()]
+    if missing:
+        raise FileNotFoundError(
+            f"{len(missing)} gallery originals are missing. Restore the full gallery "
+            "checkout before rebuilding thumbnails; no files were changed."
+        )
+    thumbs_root.mkdir(parents=True, exist_ok=True)
 
     generated = 0
     skipped_missing = 0
@@ -71,20 +81,23 @@ def main() -> None:
 
         item["thumb"] = thumb_rel.as_posix()
 
-    removed = 0
+    archived = 0
+    archive_root = root / "_trash" / (datetime.now().strftime("%Y%m%d-%H%M%S") + "-gallery-thumbs")
     for old_thumb in thumbs_root.rglob("*"):
         if not old_thumb.is_file():
             continue
         old_rel = old_thumb.relative_to(gallery_dir).as_posix()
         if old_rel not in expected_rel_paths:
-            old_thumb.unlink()
-            removed += 1
+            destination = archive_root / old_thumb.relative_to(thumbs_root)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(old_thumb), str(destination))
+            archived += 1
 
     meta_path.write_text(json.dumps(items, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(f"Updated {meta_path}")
     print(f"Generated/updated thumbs: {generated}")
-    print(f"Removed stale thumbs: {removed}")
+    print(f"Archived stale thumbs: {archived}")
     if skipped_missing:
         print(f"Missing source images skipped: {skipped_missing}")
 

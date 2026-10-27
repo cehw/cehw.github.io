@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { getSnapshot, updateWeather } from "../scripts/update-weather.mjs";
+import { getSnapshot, updateWeather } from "../scripts/weather/update-weather.mjs";
 
 function fixtures() {
   return {

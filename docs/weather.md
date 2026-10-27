@@ -10,7 +10,7 @@ Inputs are 72 hours of ten-minute HKO temperature, humidity, pressure, wind spee
 
 The map retains 12 distinct physical nodes: ten temperature/humidity sites and eight wind sites. TY1 and SHL are distinct Tsing Yi sites; TU1 and TUN are distinct Tuen Mun sites. The Tai Po temperature/humidity point is YCT. HKO and YCT have no substituted wind forecast. Changing variable changes the displayed point set. The slider selects any ten-minute lead; each selected station also offers six hourly values. HKO official forecasts and GNN outputs are explicitly distinguished, and HKO receives credit for input observations.
 
-Local deployment sources live under `scripts/personal/`. On climet3, the runtime is `/workspace/wanghan/personal/weather/`, with the existing `han-fdn` Python environment. CLP code, checkpoints and frozen builds are read from their existing authorities and never copied into GitHub. Official past-day archives are cached in `personal/weather/archives`; live observations come from `HKO_API_ingestion`. API observations are already the calibration target domain and must not receive the historical HKO2025 correction a second time.
+Local deployment sources live under `scripts/weather/gnn/`. On climet3, the runtime is `/workspace/wanghan/personal/weather/`, with the existing `han-fdn` Python environment. CLP code, checkpoints and frozen builds are read from their existing authorities and never copied into GitHub. Official past-day archives are cached in `personal/weather/archives`; live observations come from `HKO_API_ingestion`. API observations are already the calibration target domain and must not receive the historical HKO2025 correction a second time.
 
 The existing CLP ten-minute collector is retained. Its missing owner execute permission was repaired on 2026-10-27, and both a manual fetch and a subsequent cron fetch succeeded. A separate cron entry runs `run.sh` at `27 */3 * * *` in server HKT (00:27, 03:27, …, 21:27). It fetches inputs, backfills available archives, predicts on CPU, and publishes `data/gnn.json` to `weather-data` using the server's existing GitHub SSH connection. The isolated sparse checkout preserves the HKO updater's `data/weather.json`; push conflicts rebase and retry. No credentials are copied into the website. Runtime logs are `logs/run.log`; `install_schedule.py` preserves all other cron jobs and saves a prior crontab in `_tmp/`.
 
@@ -57,7 +57,7 @@ In public repositories, GitHub can disable schedules after 60 days without repos
 Use Node.js 24 or later. No npm dependencies are required.
 
 ```sh
-node scripts/update-weather.mjs
+node scripts/weather/update-weather.mjs
 node --test tests/update-weather.test.mjs
 ```
 

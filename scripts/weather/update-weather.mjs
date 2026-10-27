@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const API = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
-const DEFAULT_OUTPUT = fileURLToPath(new URL("../data/weather.json", import.meta.url));
+const DEFAULT_OUTPUT = fileURLToPath(new URL("../../data/weather.json", import.meta.url));
 
 function hasText(value) {
   return typeof value === "string" && value.trim().length > 0;
@@ -78,7 +78,7 @@ export async function updateWeather(output = DEFAULT_OUTPUT, options) {
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const args = process.argv.slice(2);
   if (args.length && (args.length !== 2 || args[0] !== "--output")) {
-    console.error("Usage: node scripts/update-weather.mjs [--output /absolute/path/weather.json]");
+    console.error("Usage: node scripts/weather/update-weather.mjs [--output /absolute/path/weather.json]");
     process.exitCode = 1;
   } else {
     try {

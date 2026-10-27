@@ -20,7 +20,7 @@ def resolve_gallery_dir(root: Path) -> Path:
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parents[1]
+    root = Path(__file__).resolve().parents[2]
     gallery_dir = resolve_gallery_dir(root)
     meta_path = gallery_dir / "meta.json"
     if not meta_path.exists():
