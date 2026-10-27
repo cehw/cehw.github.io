@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "fetchedAt": "2026-10-27T15:23:40.956Z",
+  "fetchedAt": "2026-10-27T22:18:43.783Z",
   "updateIntervalHours": 3,
   "current": {
     "rainfall": {
@@ -38,8 +38,7 @@
         {
           "unit": "mm",
           "place": "Sai Kung",
-          "max": 1,
-          "min": 0,
+          "max": 0,
           "main": "FALSE"
         },
         {
@@ -51,8 +50,7 @@
         {
           "unit": "mm",
           "place": "Southern District",
-          "max": 1,
-          "min": 0,
+          "max": 0,
           "main": "FALSE"
         },
         {
@@ -88,8 +86,7 @@
         {
           "unit": "mm",
           "place": "Yau Tsim Mong",
-          "max": 3,
-          "min": 1,
+          "max": 0,
           "main": "FALSE"
         },
         {
@@ -101,34 +98,31 @@
         {
           "unit": "mm",
           "place": "Kowloon City",
-          "max": 2,
-          "min": 0,
+          "max": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Wong Tai Sin",
-          "max": 1,
-          "min": 0,
+          "max": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Kwun Tong",
-          "max": 6,
-          "min": 0,
+          "max": 0,
           "main": "FALSE"
         }
       ],
-      "startTime": "2026-10-27T21:45:00+08:00",
-      "endTime": "2026-10-27T22:45:00+08:00"
+      "startTime": "2026-10-28T04:45:00+08:00",
+      "endTime": "2026-10-28T05:45:00+08:00"
     },
     "icon": [
       62
     ],
-    "iconUpdateTime": "2026-10-27T21:40:00+08:00",
+    "iconUpdateTime": "2026-10-28T06:00:00+08:00",
     "uvindex": "",
-    "updateTime": "2026-10-27T23:02:00+08:00",
+    "updateTime": "2026-10-28T06:02:00+08:00",
     "temperature": {
       "data": [
         {
@@ -138,12 +132,12 @@
         },
         {
           "place": "Hong Kong Observatory",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Wong Chuk Hang",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -158,12 +152,12 @@
         },
         {
           "place": "Tai Po",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
           "place": "Sha Tin",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -178,17 +172,17 @@
         },
         {
           "place": "Sai Kung",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
           "place": "Cheung Chau",
-          "value": 24,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Chek Lap Kok",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
@@ -198,12 +192,12 @@
         },
         {
           "place": "Shek Kong",
-          "value": 24,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Tsuen Wan Ho Koon",
-          "value": 23,
+          "value": 24,
           "unit": "C"
         },
         {
@@ -218,7 +212,7 @@
         },
         {
           "place": "Shau Kei Wan",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -228,17 +222,17 @@
         },
         {
           "place": "Happy Valley",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Wong Tai Sin",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Stanley",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -253,7 +247,7 @@
         },
         {
           "place": "Kai Tak Runway Park",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
@@ -263,45 +257,47 @@
         },
         {
           "place": "Tai Mei Tuk",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         }
       ],
-      "recordTime": "2026-10-27T23:00:00+08:00"
+      "recordTime": "2026-10-28T06:00:00+08:00"
     },
-    "warningMessage": "",
+    "warningMessage": [
+      "The Strong Monsoon Signal has been issued."
+    ],
     "mintempFrom00To09": "",
     "rainfallFrom00To12": "",
     "rainfallLastMonth": "",
     "rainfallJanuaryToLastMonth": "",
     "tcmessage": "",
     "humidity": {
-      "recordTime": "2026-10-27T23:00:00+08:00",
+      "recordTime": "2026-10-28T06:00:00+08:00",
       "data": [
         {
           "unit": "percent",
-          "value": 80,
+          "value": 63,
           "place": "Hong Kong Observatory"
         }
       ]
     }
   },
   "localForecast": {
-    "generalSituation": "The northeast monsoon affected the coast of Guangdong today, a band of clouds also covered the region. Locally, it was mainly cloudy. There were sunny periods during the day, and a few rain patches in the morning and at night. Besides, pressure rose over southeastern China today. A fresh to strong replenishment of the northeast monsoon is expected to reach the coast of southern China tomorrow morning. Under the influence of the replenishment of the monsoon, it will be windier over the coast of Guangdong in the next couple of days.",
+    "generalSituation": "A strong northeast monsoon is affecting the coast of Guangdong. Under the influence of the northeast monsoon and the astronomical high tide, the sea level of Hong Kong is expected to be slightly higher than normal tonight. Minor flooding may occur in individual low-lying coastal areas.",
     "tcInfo": "",
     "fireDangerWarning": "",
-    "forecastPeriod": "Weather forecast for Hong Kong (Wednesday, 28 Oct 2026)",
-    "forecastDesc": "Mainly cloudy. One or two rain patches in the morning and at night. The minimum temperature will be about 24 degrees. Sunny periods during the day with a maximum temperature of around 28 degrees. Moderate to fresh easterly winds, occasionally strong offshore and on high ground.",
-    "outlook": "Mainly fine and dry during the day in the following couple of days. Cloudier on Sunday.",
-    "updateTime": "2026-10-27T23:15:00+08:00"
+    "forecastPeriod": "Weather forecast for today",
+    "forecastDesc": "Mainly cloudy. One or two rain patches in the morning and at night. Sunny periods during the day with a maximum temperature of around 28 degrees. Moderate to fresh easterly winds, strong offshore and on high ground.",
+    "outlook": "Mainly fine and dry during the day in the next couple of days. Cloudier on Sunday.",
+    "updateTime": "2026-10-28T05:45:00+08:00"
   },
   "dailyForecast": {
-    "generalSituation": "Under the influence of a fresh to strong replenishment of the northeast monsoon, it will be windier over the coast of Guangdong in the next couple of days. With an anticyclone aloft strengthening, the weather will be generally fine over Guangdong in the latter part of this week. The temperature difference between day and night will be rather large over inland areas. An easterly airstream is expected to affect the coast of southern China over the weekend, it will be cloudier over the region. Another surge of the northeast monsoon will affect southern China early to midweek next week.",
+    "generalSituation": "Under the influence of the northeast monsoon, it will be windier over the coast of Guangdong today and tomorrow. With an anticyclone aloft strengthening, the weather will be generally fine over Guangdong in the latter part of this week. The temperature difference between day and night will be rather large over inland areas. An easterly airstream is expected to affect the coast of southern China over the weekend, it will be cloudier over the region. Another surge of the northeast monsoon will affect southern China early to midweek next week.",
     "weatherForecast": [
       {
         "forecastDate": "20261028",
         "week": "Wednesday",
-        "forecastWind": "East force 4 to 5, occasionally force 6 offshore and on high ground.",
+        "forecastWind": "East force 4 to 5, force 6 offshore and on high ground.",
         "forecastWeather": "Sunny periods. One or two rain patches in the morning and at night.",
         "forecastMaxtemp": {
           "value": 28,
@@ -515,7 +511,7 @@
         "PSR": "Low"
       }
     ],
-    "updateTime": "2026-10-27T16:30:00+08:00",
+    "updateTime": "2026-10-28T04:10:00+08:00",
     "seaTemp": {
       "place": "North Point",
       "value": 27,
