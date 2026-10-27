@@ -60,6 +60,9 @@ footer { margin-bottom: 32px; font-size: var(--meta); color: var(--muted); }
 .cta-row { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 16px; }
 .btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--accent); font-size: var(--meta); text-decoration: none; }
 .btn:hover { text-decoration: underline; }
+.btn-icon-only { width: 44px; height: 44px; padding: 0; justify-content: center; border: 1px solid var(--line); border-radius: 50%; background: var(--accent-tint); }
+.btn-icon-only:hover { border-color: var(--accent); background: var(--panel); text-decoration: none; }
+.btn-icon-only .social-icon { width: 20px; height: 20px; flex-basis: 20px; }
 .social-icon { display: inline-block; width: 18px; height: 18px; flex: 0 0 18px; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
 .social-icon--scholar { --icon: url("./assets/icons/google-scholar.svg"); }
 .social-icon--orcid { --icon: url("./assets/icons/orcid.svg"); }
@@ -70,6 +73,9 @@ footer { margin-bottom: 32px; font-size: var(--meta); color: var(--muted); }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 32px; margin-top: 24px; }
 .panel p, .card p { color: var(--ink-soft); }
 .panel > p:last-child, .card p:last-child { margin-bottom: 0; }
+.profile-fields { margin: 12px 0 0; color: var(--muted); font-size: var(--meta); }
+.profile-education { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 8px; color: var(--muted); font-size: var(--meta); }
+.profile-education span { white-space: nowrap; }
 .hero-bio { margin-top: 20px; color: var(--ink-soft); }
 .hero-bio p { margin-bottom: 16px; }
 .hero-bio p:last-child { margin-bottom: 0; }
