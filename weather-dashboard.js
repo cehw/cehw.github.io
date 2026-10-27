@@ -52,7 +52,7 @@
           <div id="wx-station-hours" class="wx-hours" hidden></div>
           <p class="wx-note" id="wx-observed-at"></p>
           <p class="wx-note" id="wx-map-help">Select any point for details. Zoom in for more labels; scroll over the map to zoom.</p>
-          <p class="wx-note" id="wx-model-credit" hidden>Experimental CLP observation-only GNN · HKO input observations. This is not an official HKO forecast. Only model-supported physical stations are shown; temperature and wind sites can differ.</p>
+          <p class="wx-note" id="wx-model-credit" hidden>Input observations: Hong Kong Observatory. This is not an official HKO forecast. Only model-supported physical stations are shown; temperature and wind sites can differ.</p>
         </div>
         <article class="wx-today">
           <h2>HKO local forecast</h2><p class="wx-note wx-period" id="wx-period"></p>
