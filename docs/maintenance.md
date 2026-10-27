@@ -33,7 +33,7 @@ Start with [the documentation index](README.md). Commands below run from this re
 
 Requirements: Node.js 24+, Python 3, PowerShell for the entry point; Pillow for thumbnails. GNN inference uses its existing server environment. Underlying scripts can also run directly on Linux/macOS. Tests require no network and do not retrain the model.
 
-For screenshots, use the connected browser preview and save to `_tmp/`. The machine-specific `qa_shot.sh` is retired to the local archive. Preview themes with `?theme=dark|light`. Without an explicit choice, the site follows the system theme; a manual choice is remembered. The background is static. Former animated-background parameters are no longer active.
+For screenshots, use the connected browser preview and save to `_tmp/`. The machine-specific `qa_shot.sh` is retired to the local archive. Preview themes with `?theme=dark|light`. Without an explicit choice, the site follows the system theme; a manual choice is remembered. The original Earth/weather background is active again. Its preview parameters include `?weather=clear|cloudy|overcast|rain|storm`, `?day=0|1` and `?hour=0-23`; these change background conditions, not official forecasts.
 
 ## Gallery
 

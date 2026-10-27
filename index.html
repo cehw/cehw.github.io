@@ -85,9 +85,16 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png?v=20260222-fav1" />
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=20260222-fav1" />
     <link rel="shortcut icon" href="./favicon.ico?v=20260222-fav1" />
-    <link rel="stylesheet" href="./styles.css?v=20261027-studio1" />
+    <link rel="stylesheet" href="./styles.css?v=20261027-desktop2" />
+    <link rel="stylesheet" href="./background.css?v=20261027-desktop2" />
   </head>
   <body>
+    <div id="canvas-container" class="space-earth-canvas" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-flow" aria-hidden="true"></div>
+    <div class="bg-planet" aria-hidden="true"></div>
 
     <div class="header-sentinel" aria-hidden="true"></div>
     <header class="site-header">
@@ -124,12 +131,6 @@
               <span>Wind Power</span>
               <span>Scientific ML</span>
             </div>
-            <p class="facts">
-              <span>Postdoctoral Researcher, HKUST</span>
-              <span>Ph.D. HKUST 2025</span>
-              <span>BSc HHU 2021</span>
-              <span>Scientific machine learning</span>
-            </p>
             <div class="cta-row">
               <a
                 class="btn btn-icon"
@@ -179,6 +180,12 @@
 
       <section class="panel reveal" id="about">
         <h2>About</h2>
+            <p class="facts">
+              <span>Postdoctoral Researcher, HKUST</span>
+              <span>Ph.D. HKUST 2025</span>
+              <span>BSc HHU 2021</span>
+              <span>Scientific machine learning</span>
+            </p>
         <p>
           Hi, I'm Han! &#128075;
         </p>
@@ -327,6 +334,10 @@
 
     <script src="./assets/private-analytics-config.js?v=20260224-analytics4"></script>
     <script src="./private-analytics.js?v=20260224-analytics4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./weather-core.js?v=20260903-wx1"></script>
+    <script src="./weather.js?v=20260903-wx1"></script>
+    <script src="./space-earth-bg.js?v=20260903-wx3"></script>
     <script src="./script.js?v=20261027-studio1"></script>
   </body>
 </html>

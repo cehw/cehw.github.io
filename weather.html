@@ -29,11 +29,18 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png?v=20260222-fav1" />
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=20260222-fav1" />
     <link rel="shortcut icon" href="./favicon.ico?v=20260222-fav1" />
-    <link rel="stylesheet" href="./styles.css?v=20261027-studio1" />
+    <link rel="stylesheet" href="./styles.css?v=20261027-desktop2" />
+    <link rel="stylesheet" href="./background.css?v=20261027-desktop2" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="./weather-dashboard.css?v=20261027-studio1" />
   </head>
   <body>
+    <div id="canvas-container" class="space-earth-canvas" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-flow" aria-hidden="true"></div>
+    <div class="bg-planet" aria-hidden="true"></div>
 
     <div class="header-sentinel" aria-hidden="true"></div>
     <header class="site-header">
@@ -77,6 +84,10 @@
     <script src="./weather-stations.js?v=20261026-wx1"></script>
     <script src="./weather-dashboard-core.js?v=20261027-studio1"></script>
     <script src="./weather-dashboard.js?v=20261027-studio1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./weather-core.js?v=20260903-wx1"></script>
+    <script src="./weather.js?v=20260903-wx1"></script>
+    <script src="./space-earth-bg.js?v=20260903-wx3"></script>
     <script src="./script.js?v=20261027-studio1"></script>
   </body>
 </html>
