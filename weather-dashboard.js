@@ -32,6 +32,7 @@
       <div><p class="wx-location">Hong Kong</p><h1>Local weather prediction playground</h1></div>
     </div>
     <p class="wx-intro">Hong Kong Observatory observations and daily forecasts, alongside experimental six-hour GNN predictions.</p>
+    <p class="wx-note wx-research-reference">Our related GNN research: <a href="https://doi.org/10.5194/acp-26-947-2026" target="_blank" rel="noreferrer">Intra-city scale graph neural networks enhance short-term air temperature forecasting</a> · Wang et al., <em>Atmospheric Chemistry and Physics</em>, 26, 947–961 (2026).</p>
     <div class="wx-update-row"><p class="wx-status" id="wx-status" role="status">Loading the latest available weather…</p><button class="wx-button" id="wx-refresh" type="button">Refresh weather</button></div>
     <div id="wx-content" hidden>
       <div class="wx-overview">
