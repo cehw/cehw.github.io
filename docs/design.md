@@ -9,7 +9,7 @@ Desktop is the primary design target. The site combines the original animated Ea
 - The original Three.js Earth and weather-reactive background are active across all three pages. Light mode keeps a subtle Earth outline; dark mode shows the illuminated globe. Panels retain translucent backgrounds.
 - The homepage illustration remains `assets/gh_photo-v10.png`, square and uncropped. Its content and colors are unchanged by the design update.
 - Navigation wraps to expose every destination on small screens. The 44px theme button follows the system until a user makes an explicit choice. Sticky navigation keeps its height; anchor offsets follow its measured height.
-- Desktop hero columns use a 3:2 ratio with a 24px gap: the left introduction card stretches to the height of the square image on the right. About paragraphs use the full panel content width; education facts sit under About. Research uses simple dividers. Publications retain the year/title/source structure. Referee service and Contact remain separate.
+- Desktop hero columns use a 3:2 ratio with a 24px gap: the left introduction card stretches to the height of the square image on the right. About uses the full panel with two desktop columns: a research narrative on the left and role/education details on the right. Personal interests run across the bottom. The columns stack on narrow screens. Research uses simple dividers. Publications retain the year/title/source structure. Referee service and Contact remain separate.
 - Gallery captions appear below thumbnails on both desktop and mobile. The grid uses three columns on desktop and two on phones; panoramas span two columns. Original photos remain available in the keyboard-accessible lightbox.
 
 ## Fable review adoption
