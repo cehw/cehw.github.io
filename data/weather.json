@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "fetchedAt": "2026-10-27T09:04:02.825Z",
+  "fetchedAt": "2026-10-27T15:23:40.956Z",
   "updateIntervalHours": 3,
   "current": {
     "rainfall": {
@@ -38,7 +38,8 @@
         {
           "unit": "mm",
           "place": "Sai Kung",
-          "max": 0,
+          "max": 1,
+          "min": 0,
           "main": "FALSE"
         },
         {
@@ -50,7 +51,8 @@
         {
           "unit": "mm",
           "place": "Southern District",
-          "max": 0,
+          "max": 1,
+          "min": 0,
           "main": "FALSE"
         },
         {
@@ -86,7 +88,8 @@
         {
           "unit": "mm",
           "place": "Yau Tsim Mong",
-          "max": 0,
+          "max": 3,
+          "min": 1,
           "main": "FALSE"
         },
         {
@@ -98,85 +101,79 @@
         {
           "unit": "mm",
           "place": "Kowloon City",
-          "max": 0,
+          "max": 2,
+          "min": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Wong Tai Sin",
-          "max": 0,
+          "max": 1,
+          "min": 0,
           "main": "FALSE"
         },
         {
           "unit": "mm",
           "place": "Kwun Tong",
-          "max": 0,
+          "max": 6,
+          "min": 0,
           "main": "FALSE"
         }
       ],
-      "startTime": "2026-10-27T15:45:00+08:00",
-      "endTime": "2026-10-27T16:45:00+08:00"
+      "startTime": "2026-10-27T21:45:00+08:00",
+      "endTime": "2026-10-27T22:45:00+08:00"
     },
     "icon": [
-      51
+      62
     ],
-    "iconUpdateTime": "2026-10-27T07:45:00+08:00",
-    "uvindex": {
-      "data": [
-        {
-          "place": "King's Park",
-          "value": 0.6,
-          "desc": "low"
-        }
-      ],
-      "recordDesc": "During the past hour"
-    },
-    "updateTime": "2026-10-27T17:02:00+08:00",
+    "iconUpdateTime": "2026-10-27T21:40:00+08:00",
+    "uvindex": "",
+    "updateTime": "2026-10-27T23:02:00+08:00",
     "temperature": {
       "data": [
         {
           "place": "King's Park",
-          "value": 27,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Hong Kong Observatory",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
           "place": "Wong Chuk Hang",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
           "place": "Ta Kwu Ling",
-          "value": 28,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Lau Fau Shan",
-          "value": 28,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Tai Po",
-          "value": 28,
-          "unit": "C"
-        },
-        {
-          "place": "Sha Tin",
           "value": 27,
           "unit": "C"
         },
         {
+          "place": "Sha Tin",
+          "value": 26,
+          "unit": "C"
+        },
+        {
           "place": "Tuen Mun",
-          "value": 28,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Tseung Kwan O",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
@@ -186,37 +183,37 @@
         },
         {
           "place": "Cheung Chau",
-          "value": 26,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Chek Lap Kok",
-          "value": 29,
+          "value": 27,
           "unit": "C"
         },
         {
           "place": "Tsing Yi",
-          "value": 28,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Shek Kong",
-          "value": 29,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Tsuen Wan Ho Koon",
-          "value": 27,
+          "value": 23,
           "unit": "C"
         },
         {
           "place": "Tsuen Wan Shing Mun Valley",
-          "value": 28,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Hong Kong Park",
-          "value": 27,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -226,17 +223,17 @@
         },
         {
           "place": "Kowloon City",
-          "value": 27,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Happy Valley",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
           "place": "Wong Tai Sin",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
@@ -246,12 +243,12 @@
         },
         {
           "place": "Kwun Tong",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Sham Shui Po",
-          "value": 28,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -261,7 +258,7 @@
         },
         {
           "place": "Yuen Long Park",
-          "value": 29,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -270,7 +267,7 @@
           "unit": "C"
         }
       ],
-      "recordTime": "2026-10-27T17:00:00+08:00"
+      "recordTime": "2026-10-27T23:00:00+08:00"
     },
     "warningMessage": "",
     "mintempFrom00To09": "",
@@ -279,24 +276,24 @@
     "rainfallJanuaryToLastMonth": "",
     "tcmessage": "",
     "humidity": {
-      "recordTime": "2026-10-27T17:00:00+08:00",
+      "recordTime": "2026-10-27T23:00:00+08:00",
       "data": [
         {
           "unit": "percent",
-          "value": 72,
+          "value": 80,
           "place": "Hong Kong Observatory"
         }
       ]
     }
   },
   "localForecast": {
-    "generalSituation": "Pressure is rising over southeastern China. A replenishment of the northeast monsoon is expected to reach the coast of southern China overnight.",
+    "generalSituation": "The northeast monsoon affected the coast of Guangdong today, a band of clouds also covered the region. Locally, it was mainly cloudy. There were sunny periods during the day, and a few rain patches in the morning and at night. Besides, pressure rose over southeastern China today. A fresh to strong replenishment of the northeast monsoon is expected to reach the coast of southern China tomorrow morning. Under the influence of the replenishment of the monsoon, it will be windier over the coast of Guangdong in the next couple of days.",
     "tcInfo": "",
     "fireDangerWarning": "",
-    "forecastPeriod": "Weather forecast for tonight and tomorrow",
-    "forecastDesc": "Becoming cloudy. One or two rain patches in the morning and at night. The minimum temperature will be about 24 degrees. Sunny periods during the day with a maximum temperature of around 28 degrees. Moderate to fresh easterly winds, occasionally strong offshore and on high ground tomorrow.",
+    "forecastPeriod": "Weather forecast for Hong Kong (Wednesday, 28 Oct 2026)",
+    "forecastDesc": "Mainly cloudy. One or two rain patches in the morning and at night. The minimum temperature will be about 24 degrees. Sunny periods during the day with a maximum temperature of around 28 degrees. Moderate to fresh easterly winds, occasionally strong offshore and on high ground.",
     "outlook": "Mainly fine and dry during the day in the following couple of days. Cloudier on Sunday.",
-    "updateTime": "2026-10-27T16:45:00+08:00"
+    "updateTime": "2026-10-27T23:15:00+08:00"
   },
   "dailyForecast": {
     "generalSituation": "Under the influence of a fresh to strong replenishment of the northeast monsoon, it will be windier over the coast of Guangdong in the next couple of days. With an anticyclone aloft strengthening, the weather will be generally fine over Guangdong in the latter part of this week. The temperature difference between day and night will be rather large over inland areas. An easterly airstream is expected to affect the coast of southern China over the weekend, it will be cloudier over the region. Another surge of the northeast monsoon will affect southern China early to midweek next week.",
