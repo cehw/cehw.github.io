@@ -85,7 +85,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png?v=20260222-fav1" />
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=20260222-fav1" />
     <link rel="shortcut icon" href="./favicon.ico?v=20260222-fav1" />
-    <link rel="stylesheet" href="./styles.css?v=20261027-about3" />
+    <link rel="stylesheet" href="./styles.css?v=20261027-profile4" />
     <link rel="stylesheet" href="./background.css?v=20261027-desktop2" />
   </head>
   <body>
@@ -118,18 +118,17 @@
     </header>
 
     <main id="top">
-      <section class="hero reveal">
+      <section class="hero reveal" id="about" aria-labelledby="profile-name">
         <div class="hero-wrap">
           <div class="hero-main">
-            <p class="eyebrow">Postdoctoral Fellow · HKUST</p>
-            <h1>Han Wang</h1>
-            <p class="subtitle">
-              Building scientific machine learning tools for climate and atmospheric science.
-            </p>
-            <div class="field-tags">
-              <span>Atmosphere</span>
-              <span>Wind Power</span>
-              <span>Scientific ML</span>
+            <h1 id="profile-name">Han Wang</h1>
+            <div class="hero-bio">
+              <p>I'm a Postdoctoral Researcher and CORE Fellowship awardee at HKUST,
+                working with Prof. Hui Su at the intersection of AI and Earth science.</p>
+              <p>Before this, I completed my Ph.D. at HKUST in 2025 with
+                Prof. Jiachuan Yang, following a BSc at HHU in 2021.</p>
+              <p>Outside research, I enjoy hiking, photography, time by the sea
+                and scuba diving.</p>
             </div>
             <div class="cta-row">
               <a
@@ -178,41 +177,12 @@
         </div>
       </section>
 
-      <section class="panel reveal" id="about">
-        <h2>About</h2>
-        <div class="about-layout">
-          <div class="about-story">
-            <p>Hi, I'm Han. I work at the intersection of AI and Earth science,
-              building scientific machine learning models for complex environmental systems.</p>
-            <p>My research began with urban climate prediction. I now bring
-              spatiotemporal modeling and Graph Neural Networks (GNNs) to wind energy
-              and renewable energy forecasting.</p>
-            <p>I believe AI will reshape how we conduct science and understand the world.</p>
-          </div>
-          <div class="about-background">
-            <h3>Background</h3>
-            <dl class="about-history">
-              <div>
-                <dt>Postdoctoral Researcher · HKUST</dt>
-                <dd>CORE Fellowship awardee<br>Advisor: Prof. Hui Su</dd>
-              </div>
-              <div>
-                <dt>Ph.D. · HKUST</dt>
-                <dd>2025 · Supervisor: Prof. Jiachuan Yang</dd>
-              </div>
-              <div>
-                <dt>BSc · HHU</dt>
-                <dd>2021</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-        <p class="about-personal"><strong>Beyond research</strong>
-          I enjoy hiking, photography, time by the sea and scuba diving.</p>
-      </section>
-
       <section class="panel reveal" id="research">
         <h2>Research focus</h2>
+        <p class="research-intro">I build scientific machine learning models for complex environmental systems.
+          My work began with urban climate prediction and now brings spatiotemporal modeling
+          and Graph Neural Networks (GNNs) to wind and renewable energy forecasting.
+          I believe AI will reshape how we conduct science and understand the world.</p>
         <div class="grid">
           <article class="card">
             <h3>
