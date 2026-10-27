@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "status": "warming_up",
+  "generatedAt": "2026-10-27T12:53:14.722384+08:00",
+  "originTime": "2026-10-27T11:50:00+08:00",
+  "lastObservationTime": "2026-10-27T12:40:00+08:00",
+  "updateIntervalHours": 3,
+  "stepMinutes": 10,
+  "horizonHours": 6,
+  "model": {
+    "name": "CLP observation-only GNN",
+    "version": "pilot3y_joint4_e10e5_cal20260826",
+    "architecture": "Temporal GRU · GraphSAGE-style aggregation · autoregressive GRU",
+    "historyHours": 72.0,
+    "experimental": true,
+    "usesAurora": false
+  },
+  "sources": [
+    {
+      "name": "Hong Kong Observatory",
+      "url": "https://www.hko.gov.hk/en/abouthko/opendata_intro.htm"
+    },
+    {
+      "name": "DATA.GOV.HK historical archive",
+      "url": "https://data.gov.hk/en/"
+    }
+  ],
+  "inputCoverage": {
+    "temperature": 0.8333,
+    "humidity": 0.8333,
+    "pressure": 0.8333,
+    "wind": 0.8333
+  },
+  "longestInputGapMinutes": 720,
+  "validTimes": [],
+  "stations": [],
+  "message": "Collecting the 72-hour observation history required by the model. Forecast values are not yet available."
+}
