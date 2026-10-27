@@ -1,0 +1,21 @@
+Provider: official Anthropic Messages API
+Model: claude-fable-5-1
+Billing: API
+Effort: xhigh (API model capability has no ultracode)
+Images: nine anonymous screenshots
+Source files:
+index.html
+gallery.html
+weather.html
+styles.css
+weather-dashboard.css
+script.js
+gallery.js
+gallery-core.js
+weather-dashboard.js
+weather-dashboard-core.js
+weather-stations.js
+weather-core.js
+weather.js
+space-earth-bg.js
+No original images, analytics, repository URLs, server files, credentials or identifying biography supplied.

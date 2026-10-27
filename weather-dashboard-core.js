@@ -73,11 +73,32 @@
   }
 
   function temperatureColor(value, range) {
-    const colors = [[255, 247, 188], [254, 196, 79], [217, 95, 14], [153, 52, 4]];
+    const colors = [[239, 232, 216], [201, 162, 122], [143, 79, 60], [74, 42, 40]];
     const position = Math.max(0, Math.min(1, (value - range[0]) / (range[1] - range[0]))) * 3;
     const index = Math.min(2, Math.floor(position));
     const amount = position - index;
     return `rgb(${colors[index].map((part, channel) => Math.round(part + (colors[index + 1][channel] - part) * amount)).join(", ")})`;
+  }
+
+  function temperatureTextColor(value, range) {
+    const rgb = temperatureColor(value, range).match(/\d+/g).map(Number);
+    const linear = rgb.map(c => c / 255 <= .04045 ? c / 255 / 12.92 : ((c / 255 + .055) / 1.055) ** 2.4);
+    const luminance = linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
+    return luminance > .179 ? '#000' : '#fff';
+  }
+
+  // Keep every point interactive while choosing non-overlapping numeric labels.
+  function visibleLabelNames(points, selectedName, gap = 6) {
+    const placed = [];
+    const names = new Set();
+    const ordered = [...points].sort((a, b) => Number(b.name === selectedName) - Number(a.name === selectedName));
+    for (const point of ordered) {
+      if (placed.some(other => Math.abs(point.x - other.x) < (point.width + other.width) / 2 + gap
+          && Math.abs(point.y - other.y) < (point.height + other.height) / 2 + gap)) continue;
+      placed.push(point);
+      names.add(point.name);
+    }
+    return names;
   }
 
   function usableGnn(data) {
@@ -96,5 +117,5 @@
     return data?.status !== 'ready' || !data.validTimes?.length || Date.parse(data.validTimes.at(-1)) <= now;
   }
 
-  return { number, hkDate, dateFromKey, dateLabel, timestamp, forecasts, stations, isStale, usable, temperatureRange, temperatureColor, usableGnn, gnnExpired };
+  return { number, hkDate, dateFromKey, dateLabel, timestamp, forecasts, stations, isStale, usable, temperatureRange, temperatureColor, temperatureTextColor, visibleLabelNames, usableGnn, gnnExpired };
 });

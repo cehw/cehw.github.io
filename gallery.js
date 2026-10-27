@@ -487,7 +487,7 @@ async function renderGallery() {
           <section class="gallery-year" id="${yearAnchorId}">
             <header class="gallery-year-head">
               <h2 class="gallery-year-title">${yearLabel}</h2>
-              <span class="gallery-year-count">${yearCountLabel}</span>
+              ${yearBucket.sortedGroups.length > 1 ? `<span class="gallery-year-count">${yearCountLabel}</span>` : ""}
             </header>
             <div class="gallery-year-groups">
               ${groupsHtml}

@@ -13,7 +13,7 @@
         try {
           const q = new URLSearchParams(window.location.search).get("theme");
           const saved = q === "dark" || q === "light" ? q : localStorage.getItem("site-theme");
-          const theme = saved === "dark" || saved === "light" ? saved : "dark";
+          const theme = saved === "dark" || saved === "light" ? saved : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
           document.documentElement.setAttribute("data-theme", theme);
         } catch (_) {}
       })();
@@ -21,22 +21,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32x32.png?v=20260222-fav1" />
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png?v=20260222-fav1" />
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=20260222-fav1" />
     <link rel="shortcut icon" href="./favicon.ico?v=20260222-fav1" />
-    <link rel="stylesheet" href="./styles.css?v=20261026-type1" />
+    <link rel="stylesheet" href="./styles.css?v=20261027-studio1" />
   </head>
   <body>
-    <div id="canvas-container" class="space-earth-canvas" aria-hidden="true"></div>
-    <div class="bg-orb orb-a"></div>
-    <div class="bg-orb orb-b"></div>
-    <div class="bg-grid"></div>
-    <div class="bg-flow"></div>
-    <div class="bg-planet" aria-hidden="true"></div>
 
     <div class="header-sentinel" aria-hidden="true"></div>
     <header class="site-header">
@@ -47,25 +41,25 @@
             <button class="theme-toggle" type="button" aria-label="Switch color theme">&#9790;</button>
           </div>
         </div>
-        <nav class="site-nav">
+        <nav class="site-nav" aria-label="Main navigation">
           <a href="./index.html#about">About</a>
           <a href="./index.html#research">Research</a>
           <a href="./index.html#publications">Publications</a>
-          <a href="./index.html#service">Referee service</a>
           <a href="./weather.html">Weather</a>
+          <a class="is-active" href="./gallery.html" aria-current="page">Gallery</a>
+          <a href="./index.html#service">Referee service</a>
           <a href="./index.html#contact">Contact</a>
-          <a class="is-active" href="./gallery.html">Gallery</a>
         </nav>
       </div>
     </header>
 
     <main class="gallery-main">
-      <section class="panel reveal gallery-hero">
-        <p class="eyebrow">Visual Archive</p>
+      <section class="page-heading gallery-hero">
         <h1>Gallery</h1>
+        <p>Photographs and visual notes.</p>
       </section>
 
-      <section class="panel reveal">
+      <section class="gallery-content" aria-label="Photo collections">
         <div class="gallery-index" id="gallery-index"></div>
         <div class="gallery-groups" id="gallery-groups"></div>
         <p class="gallery-empty" id="gallery-empty" hidden>
@@ -102,12 +96,8 @@
 
     <script src="./assets/private-analytics-config.js?v=20260224-analytics4"></script>
     <script src="./private-analytics.js?v=20260224-analytics4"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./weather-core.js?v=20260903-wx1"></script>
-    <script src="./weather.js?v=20260903-wx1"></script>
-    <script src="./space-earth-bg.js?v=20260903-wx3"></script>
-    <script src="./script.js?v=20260903-wx1"></script>
-    <script src="./gallery-core.js?v=20260903-wx1"></script>
-    <script src="./gallery.js?v=20260903-wx1"></script>
+    <script src="./script.js?v=20261027-studio1"></script>
+    <script src="./gallery-core.js?v=20261027-studio1"></script>
+    <script src="./gallery.js?v=20261027-studio1"></script>
   </body>
 </html>

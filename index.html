@@ -70,7 +70,7 @@
         try {
           const q = new URLSearchParams(window.location.search).get("theme");
           const saved = q === "dark" || q === "light" ? q : localStorage.getItem("site-theme");
-          const theme = saved === "dark" || saved === "light" ? saved : "dark";
+          const theme = saved === "dark" || saved === "light" ? saved : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
           document.documentElement.setAttribute("data-theme", theme);
         } catch (_) {}
       })();
@@ -78,22 +78,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32x32.png?v=20260222-fav1" />
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png?v=20260222-fav1" />
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=20260222-fav1" />
     <link rel="shortcut icon" href="./favicon.ico?v=20260222-fav1" />
-    <link rel="stylesheet" href="./styles.css?v=20261026-type1" />
+    <link rel="stylesheet" href="./styles.css?v=20261027-studio1" />
   </head>
   <body>
-    <div id="canvas-container" class="space-earth-canvas" aria-hidden="true"></div>
-    <div class="bg-orb orb-a"></div>
-    <div class="bg-orb orb-b"></div>
-    <div class="bg-grid"></div>
-    <div class="bg-flow"></div>
-    <div class="bg-planet" aria-hidden="true"></div>
 
     <div class="header-sentinel" aria-hidden="true"></div>
     <header class="site-header">
@@ -104,14 +98,14 @@
             <button class="theme-toggle" type="button" aria-label="Switch color theme">&#9790;</button>
           </div>
         </div>
-        <nav class="site-nav">
+        <nav class="site-nav" aria-label="Main navigation">
           <a href="#about">About</a>
           <a href="#research">Research</a>
           <a href="#publications">Publications</a>
-          <a href="#service">Referee service</a>
           <a href="./weather.html">Weather</a>
-          <a href="#contact">Contact</a>
           <a href="./gallery.html">Gallery</a>
+          <a href="#service">Referee service</a>
+          <a href="#contact">Contact</a>
         </nav>
       </div>
     </header>
@@ -123,51 +117,57 @@
             <p class="eyebrow">Postdoctoral Fellow · HKUST</p>
             <h1>Han Wang</h1>
             <p class="subtitle">
-              Building scientific machine learning tools for climate and atmospheric science. 🌍🌎🌏
+              Building scientific machine learning tools for climate and atmospheric science.
             </p>
             <div class="field-tags">
               <span>Atmosphere</span>
               <span>Wind Power</span>
               <span>Scientific ML</span>
             </div>
+            <p class="facts">
+              <span>Postdoctoral Researcher, HKUST</span>
+              <span>Ph.D. HKUST 2025</span>
+              <span>BSc HHU 2021</span>
+              <span>Scientific machine learning</span>
+            </p>
             <div class="cta-row">
               <a
-                class="btn btn-ghost btn-icon btn-icon-only"
+                class="btn btn-icon"
                 href="https://scholar.google.com/citations?user=T-SLdgwAAAAJ&amp;hl=en&amp;inst=1381320739207392350"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Google Scholar"
                 title="Google Scholar"
               >
-                <span class="social-icon social-icon--scholar" aria-hidden="true"></span>
+                <span class="social-icon social-icon--scholar" aria-hidden="true"></span><span>Scholar</span>
               </a>
               <a
-                class="btn btn-ghost btn-icon btn-icon-only"
+                class="btn btn-icon"
                 href="https://orcid.org/0000-0001-9771-1324"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="ORCID"
                 title="ORCID"
               >
-                <span class="social-icon social-icon--orcid" aria-hidden="true"></span>
+                <span class="social-icon social-icon--orcid" aria-hidden="true"></span><span>ORCID</span>
               </a>
               <a
-                class="btn btn-ghost btn-icon btn-icon-only"
+                class="btn btn-icon"
                 href="https://www.researchgate.net/profile/Han-Wang-164"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="ResearchGate"
                 title="ResearchGate"
               >
-                <span class="social-icon social-icon--researchgate" aria-hidden="true"></span>
+                <span class="social-icon social-icon--researchgate" aria-hidden="true"></span><span>ResearchGate</span>
               </a>
               <a
-                class="btn btn-ghost btn-icon btn-icon-only"
+                class="btn btn-icon"
                 href="mailto:cehwang@ust.hk,tohanwang@gmail.com"
                 aria-label="Email"
                 title="Email"
               >
-                <span class="social-icon social-icon--mail" aria-hidden="true"></span>
+                <span class="social-icon social-icon--mail" aria-hidden="true"></span><span>Email</span>
               </a>
             </div>
           </div>
@@ -179,12 +179,6 @@
 
       <section class="panel reveal" id="about">
         <h2>About</h2>
-        <p class="facts">
-          <span>Postdoctoral Researcher, HKUST</span>
-          <span>Ph.D. HKUST 2025</span>
-          <span>BSc HHU 2021</span>
-          <span>Scientific machine learning</span>
-        </p>
         <p>
           Hi, I'm Han! &#128075;
         </p>
@@ -228,7 +222,7 @@
             </p>
           </article>
           <article class="card">
-            <h3>Urban climate &#127961;&#65039;</h3>
+            <h3>Urban climate</h3>
             <p>
               Tracing how urban form, vegetation, and synoptic forcing shape
               canopy-layer temperature dynamics, the physical foundation of my
@@ -333,10 +327,6 @@
 
     <script src="./assets/private-analytics-config.js?v=20260224-analytics4"></script>
     <script src="./private-analytics.js?v=20260224-analytics4"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="./weather-core.js?v=20260903-wx1"></script>
-    <script src="./weather.js?v=20260903-wx1"></script>
-    <script src="./space-earth-bg.js?v=20260903-wx3"></script>
-    <script src="./script.js?v=20260903-wx1"></script>
+    <script src="./script.js?v=20261027-studio1"></script>
   </body>
 </html>

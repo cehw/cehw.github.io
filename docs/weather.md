@@ -22,7 +22,11 @@ Manual update: `bash /workspace/wanghan/personal/weather/run.sh`. A validation r
 
 ## Interface
 
-The dashboard uses Source Sans 3 throughout, sentence-case headings and four text levels: 32px page title and current reading, 20px section headings, 16px body and primary controls, and 14px supporting text. Map attribution retains a compact 11px size. Shared site navigation keeps its existing styling. Spacing follows an 8px rhythm; dates, temperatures and station controls remain readable on mobile without shrinking their text.
+The dashboard uses Source Sans 3 throughout, sentence-case headings and four text levels: 32px page title and current reading, 20px section headings, 16px body and primary controls, and 14px supporting text. Map attribution retains a compact 12px size. Shared navigation and themes follow [the design system](design.md). Spacing follows an 8px rhythm; dates, temperatures and station controls remain readable on mobile without shrinking their text.
+
+All station markers remain available. Labels that would overlap are hidden at the current zoom, with the selected station taking priority; hovering, focusing or zooming reveals details. The station selector provides access to every point. Numeric labels use a muted sequential palette with contrasting text. Changing the layer or variable closes the previous popup so an observation cannot remain visible over an unavailable forecast layer.
+
+When the GNN has insufficient observations, a prominent status states that no forecast is available. A meter shows the minimum reported input-feed coverage over the 72-hour window. This is data coverage, not task progress or an estimate of when forecasts will arrive. Variable and time controls appear only for a ready, unexpired forecast. The empty map remains smaller; official HKO forecasts remain readable alongside it.
 
 The map uses temperature labels, clickable station details, a station selector and a reset view. Scrolling over the map zooms it; scrolling outside the map moves the page. Selecting a date updates the Hong Kong daily forecast below the map; it does not change the observation map into a forecast map. Desktop and mobile layouts follow the homepage's light and dark themes. The interaction references are [Windy](https://www.windy.com/) (map, location selection and date browsing) and the [Observatory's regional forecast map](https://maps.weather.gov.hk/ocf/index_e.html) (numeric station labels and a time control).
 
