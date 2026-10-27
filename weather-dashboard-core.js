@@ -80,5 +80,21 @@
     return `rgb(${colors[index].map((part, channel) => Math.round(part + (colors[index + 1][channel] - part) * amount)).join(", ")})`;
   }
 
-  return { number, hkDate, dateFromKey, dateLabel, timestamp, forecasts, stations, isStale, usable, temperatureRange, temperatureColor };
+  function usableGnn(data) {
+    if (data?.schemaVersion !== 1 || !Number.isFinite(Date.parse(data.generatedAt))
+      || !['ready', 'warming_up', 'unavailable'].includes(data.status)) return false;
+    if (data.status !== 'ready') return typeof data.message === 'string';
+    if (data.historicalReplay || data.model?.usesAurora !== false || !Number.isFinite(Date.parse(data.originTime))
+      || data.validTimes?.length !== 36 || !data.stations?.length) return false;
+    if (!data.validTimes.every((t, i) => Date.parse(t) - Date.parse(data.originTime) === (i + 1) * 600000)) return false;
+    return data.stations.every((s) => typeof s.name === 'string' && Number.isFinite(s.lat) && Number.isFinite(s.lon)
+      && s.forecasts && Object.keys(s.forecasts).length > 0 && Object.entries(s.forecasts).every(([key, values]) => ['temperature', 'humidity', 'wind'].includes(key)
+        && Array.isArray(values) && values.length === 36 && values.every(Number.isFinite)));
+  }
+
+  function gnnExpired(data, now = Date.now()) {
+    return data?.status !== 'ready' || !data.validTimes?.length || Date.parse(data.validTimes.at(-1)) <= now;
+  }
+
+  return { number, hkDate, dateFromKey, dateLabel, timestamp, forecasts, stations, isStale, usable, temperatureRange, temperatureColor, usableGnn, gnnExpired };
 });

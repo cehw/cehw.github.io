@@ -33,7 +33,17 @@
 .wx-button:disabled { cursor: wait; opacity: .65; }
 .wx-button:focus-visible, .wx-text-button:focus-visible, .wx-day:focus-visible, .wx-station-picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .wx-overview { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 32px; }
+.wx-map-panel, .wx-today { min-width: 0; }
 .wx-map-heading { margin-bottom: 16px; }
+.wx-layers { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.wx-layers .wx-button { font-weight: 400; white-space: normal; }
+.wx-layers [aria-pressed="true"] { border-color: var(--accent); background: var(--panel); }
+#wx-gnn-controls { margin-bottom: 24px; }
+.wx-time-label { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 16px; font-size: var(--wx-meta); color: var(--muted); }
+#wx-lead { width: 100%; accent-color: var(--accent); min-height: 36px; cursor: pointer; }
+.wx-hours { display: grid; grid-template-columns: repeat(6, minmax(72px, 1fr)); overflow-x: auto; margin-top: 16px; gap: 4px; }
+.wx-hours .wx-day { padding: 8px 4px; font-size: var(--wx-meta); }
+.wx-hours .wx-day strong { white-space: nowrap; }
 .weather-dashboard h2 { font-size: var(--wx-section); margin: 0; }
 .wx-map { position: relative; height: 460px; width: 100%; z-index: 0; border: 1px solid var(--line); border-radius: 12px; background: #e9ece6; }
 /* Map labels and attribution have their own compact scale. */
@@ -88,7 +98,7 @@
 .weather-dashboard .wx-map-notice { font-size: var(--wx-meta); color: var(--muted); }
 html[data-theme="dark"] .wx-day img { filter: drop-shadow(0 1px 2px #fff5); }
 @media (max-width: 760px) {
-  .wx-overview { grid-template-columns: 1fr; gap: 32px; }
+  .wx-overview { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .wx-today { padding: 24px 0 0; border-left: 0; border-top: 1px solid var(--line); }
   .wx-map { height: 360px; }
   .wx-daily-heading { align-items: start; flex-direction: column; gap: 0; }

@@ -21,37 +21,51 @@
   let fallback = false;
   let refreshError = false;
   let renderedDate = null;
+  let gnn = null;
+  let layer = 'observations';
+  let variable = 'temperature';
+  let lead = 5;
+  const variables = { temperature: ['Temperature', '°C'], humidity: ['Humidity', '%'], wind: ['Wind speed', 'm/s'] };
 
   host.innerHTML = `
     <div class="wx-heading">
       <div><p class="wx-location">Hong Kong</p><h1>Local weather prediction playground</h1></div>
       <button class="wx-button" id="wx-refresh" type="button">Refresh weather</button>
     </div>
-    <p class="wx-intro">Station observations and daily forecasts from the Hong Kong Observatory.</p>
+    <p class="wx-intro">Hong Kong Observatory observations and daily forecasts, alongside experimental six-hour GNN predictions.</p>
     <p class="wx-status" id="wx-status" role="status">Loading the latest available weather…</p>
     <div id="wx-content" hidden>
       <div class="wx-overview">
         <div class="wx-map-panel">
-          <div class="wx-map-heading"><h2>Station observations</h2></div>
+          <div class="wx-map-heading"><h2 id="wx-map-title">Station observations</h2></div>
+          <div class="wx-layers" role="group" aria-label="Map data"><button class="wx-button" id="wx-layer-observed" aria-pressed="true">Observations</button><button class="wx-button" id="wx-layer-gnn" aria-pressed="false">GNN · next six hours</button></div>
+          <div id="wx-gnn-controls" hidden>
+            <div class="wx-station-picker"><label for="wx-variable">Forecast variable</label><select id="wx-variable"><option value="temperature">Temperature · °C</option><option value="humidity">Humidity · %</option><option value="wind">Wind speed · m/s</option></select></div>
+            <label class="wx-time-label" for="wx-lead">Forecast time <output id="wx-valid-time"></output></label>
+            <input id="wx-lead" type="range" min="0" max="35" step="1" value="5" aria-label="Forecast time in ten-minute steps">
+            <p class="wx-note" id="wx-gnn-status" role="status"></p>
+          </div>
           <div id="wx-map" class="wx-map" aria-label="Map of observed station temperatures in Hong Kong"></div>
           <p class="wx-map-notice" id="wx-map-notice" hidden></p>
           <div class="wx-map-footer"><div class="wx-legend" aria-label="Temperature colour scale"><span id="wx-legend-min"></span><span class="wx-gradient"></span><span id="wx-legend-max"></span></div><button type="button" class="wx-text-button" id="wx-reset-map">Show all stations</button></div>
-          <div class="wx-station-row"><div class="wx-station-picker"><label for="wx-station">Station</label><select id="wx-station"></select></div><div class="wx-station-reading"><span class="wx-temperature" id="wx-station-value"></span><span>Temperature</span></div></div>
+          <div class="wx-station-row"><div class="wx-station-picker"><label for="wx-station">Station</label><select id="wx-station"></select></div><div class="wx-station-reading"><span class="wx-temperature" id="wx-station-value"></span><span id="wx-value-label">Temperature</span></div></div>
+          <div id="wx-station-hours" class="wx-hours" hidden></div>
           <p class="wx-note" id="wx-observed-at"></p>
           <p class="wx-note">Select a station for details. Drag to pan and scroll to zoom.</p>
+          <p class="wx-note" id="wx-model-credit" hidden>Experimental CLP observation-only GNN · HKO input observations. This is not an official HKO forecast. Only model-supported physical stations are shown; temperature and wind sites can differ.</p>
         </div>
         <article class="wx-today">
-          <h2>Local forecast</h2><p class="wx-note wx-period" id="wx-period"></p>
+          <h2>HKO local forecast</h2><p class="wx-note wx-period" id="wx-period"></p>
           <p id="wx-local-forecast"></p>
           <details class="wx-outlook"><summary>Outlook</summary><p id="wx-outlook"></p></details>
           <p class="wx-note" id="wx-local-issued"></p>
           <a class="wx-source-link" href="https://www.hko.gov.hk/en/wxinfo/currwx/flw.htm" target="_blank" rel="noreferrer">Full Observatory forecast ↗</a>
         </article>
       </div>
-      <div class="wx-daily-heading"><h2>Daily forecast</h2><p class="wx-note" id="wx-daily-issued"></p></div>
+      <div class="wx-daily-heading"><h2>HKO daily forecast</h2><p class="wx-note" id="wx-daily-issued"></p></div>
       <div class="wx-days" id="wx-days" aria-label="Choose a forecast date"></div>
       <article class="wx-day-detail" id="wx-day-detail" aria-live="polite"></article>
-      <div class="wx-attribution"><p class="wx-note" id="wx-fetched-at"></p><p class="wx-note">Source: <a href="https://www.hko.gov.hk/en/abouthko/opendata_intro.htm" target="_blank" rel="noreferrer">Hong Kong Observatory open data</a> · All times HKT (UTC+8).</p></div>
+      <div class="wx-attribution"><p class="wx-note" id="wx-fetched-at"></p><p class="wx-note">Observations and official forecasts: <a href="https://www.hko.gov.hk/en/abouthko/opendata_intro.htm" target="_blank" rel="noreferrer">Hong Kong Observatory open data</a>. Experimental GNN forecasts are generated independently using HKO observations. All times HKT (UTC+8).</p></div>
     </div>
     <p class="wx-note" id="wx-error-link" hidden>Weather is temporarily unavailable. <a href="https://www.hko.gov.hk/en/index.html" target="_blank" rel="noreferrer">Visit the Hong Kong Observatory ↗</a></p>`;
 
@@ -59,6 +73,9 @@
   const set = (id, text) => { el(id).textContent = text; };
   const observationTime = () => snapshot.current.temperature.recordTime || snapshot.current.updateTime;
   const temperature = (value) => core.number(value) === null ? "—" : `${core.number(value)}°C`;
+  const mapReading = (value) => core.number(value) === null ? '—' : `${core.number(value)}${layer === 'observations' ? '°C' : variables[variable][1]}`;
+  const mapTime = () => layer === 'observations' ? observationTime() : gnn?.validTimes?.[lead];
+  const mapKind = () => layer === 'observations' ? 'Observed temperature' : `GNN ${variables[variable][0].toLowerCase()}`;
 
   function renderStatus() {
     if (!snapshot) return;
@@ -76,8 +93,21 @@
     if (!station) return;
     selectedStation = name;
     el("wx-station").value = name;
-    set("wx-station-value", temperature(station.temperature));
-    set("wx-observed-at", `${name} · Observed ${core.timestamp(observationTime())}`);
+    set("wx-station-value", mapReading(station.temperature));
+    set("wx-observed-at", `${name} · ${layer === 'observations' ? 'Observed' : 'Valid'} ${core.timestamp(mapTime())}`);
+    const hours = el('wx-station-hours'); hours.replaceChildren();
+    hours.hidden = layer !== 'gnn';
+    if (layer === 'gnn') {
+      for (let hour = 1; hour <= 6; hour++) {
+        const index = hour * 6 - 1;
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'wx-day';
+        button.setAttribute('aria-pressed', String(index === lead));
+        const label = document.createElement('span'); label.textContent = `+${hour} h`;
+        const value = document.createElement('strong'); value.textContent = mapReading(station.series[index]);
+        button.title = core.timestamp(gnn.validTimes[index]); button.append(label, value);
+        button.addEventListener('click', () => { lead = index; renderStations(); }); hours.append(button);
+      }
+    }
     for (const [markerName, marker] of markers) {
       marker.getElement()?.classList.toggle("wx-marker--selected", markerName === name);
       marker.setZIndexOffset(markerName === name ? 1000 : 0);
@@ -97,8 +127,8 @@
     const L = window.L;
     const firstMap = !map;
     const range = core.temperatureRange(stationData);
-    set("wx-legend-min", temperature(range[0]));
-    set("wx-legend-max", temperature(range[1]));
+    set("wx-legend-min", mapReading(range[0]));
+    set("wx-legend-max", mapReading(range[1]));
     if (!L) {
       set("wx-map-notice", "The map could not load. All station readings remain available in the selector below.");
       el("wx-map-notice").hidden = false;
@@ -125,14 +155,15 @@
     stationData.forEach((station) => {
       if (!Number.isFinite(station.lat) || !Number.isFinite(station.lon)) return;
       const position = (station.temperature - range[0]) / (range[1] - range[0]);
-      const icon = L.divIcon({ className: "wx-marker", html: `<span style="background:${core.temperatureColor(station.temperature, range)};color:${position > 0.58 ? "#fff" : "#392f14"}">${station.temperature}°</span>`, iconSize: [38, 28], iconAnchor: [19, 14] });
+      const suffix = layer === 'observations' || variable === 'temperature' ? '°' : variable === 'humidity' ? '%' : '';
+      const icon = L.divIcon({ className: "wx-marker", html: `<span style="background:${core.temperatureColor(station.temperature, range)};color:${position > 0.58 ? "#fff" : "#392f14"}">${station.temperature}${suffix}</span>`, iconSize: [38, 28], iconAnchor: [19, 14] });
       const popup = document.createElement("div");
       popup.className = "wx-popup";
       const name = document.createElement("strong"); name.textContent = station.name;
-      const reading = document.createElement("p"); reading.textContent = `${temperature(station.temperature)} · Observed temperature`;
-      const time = document.createElement("small"); time.textContent = core.timestamp(observationTime());
+      const reading = document.createElement("p"); reading.textContent = `${mapReading(station.temperature)} · ${mapKind()}`;
+      const time = document.createElement("small"); time.textContent = core.timestamp(mapTime());
       popup.append(name, reading, time);
-      const marker = L.marker([station.lat, station.lon], { icon, title: `${station.name}: ${temperature(station.temperature)}`, alt: `${station.name}: ${temperature(station.temperature)}`, keyboard: true })
+      const marker = L.marker([station.lat, station.lon], { icon, title: `${station.name}: ${mapReading(station.temperature)}`, alt: `${station.name}: ${mapReading(station.temperature)}`, keyboard: true })
         .bindPopup(popup).on("click", () => selectStation(station.name)).addTo(markerLayer);
       markers.set(station.name, marker);
     });
@@ -198,16 +229,61 @@
     set("wx-local-issued", `Issued ${core.timestamp(forecast.updateTime)}`);
     set("wx-daily-issued", `Issued ${core.timestamp(snapshot.dailyForecast.updateTime)}`);
     set("wx-fetched-at", `Last retrieved ${core.timestamp(snapshot.fetchedAt)}`);
-    stationData = core.stations(snapshot, coordinates);
+    renderStations();
+    renderDays();
+    renderStatus();
+  }
+
+  function renderStations() {
+    if (!snapshot) return;
+    const predicted = layer === 'gnn';
+    const ready = gnn?.status === 'ready' && !core.gnnExpired(gnn);
+    set('wx-map-title', predicted ? 'Six-hour GNN forecast' : 'Station observations');
+    set('wx-value-label', predicted ? variables[variable][0] : 'Temperature');
+    el('wx-layer-observed').setAttribute('aria-pressed', String(!predicted));
+    el('wx-layer-gnn').setAttribute('aria-pressed', String(predicted));
+    el('wx-gnn-controls').hidden = !predicted;
+    el('wx-model-credit').hidden = !predicted;
+    el('wx-variable').disabled = !ready;
+    el('wx-lead').disabled = !ready;
+    el('wx-lead').value = String(lead);
+    set('wx-valid-time', ready ? `${core.timestamp(gnn.validTimes[lead])} · +${(lead + 1) * 10} min` : 'Awaiting forecast');
+    set('wx-gnn-status', !gnn ? 'The model feed is temporarily unavailable. HKO observations remain available.'
+      : gnn.status !== 'ready' ? gnn.message
+      : !ready ? 'This forecast has expired. Waiting for a new model run.'
+      : `Issued ${core.timestamp(gnn.originTime)} · Observation-only GNN · 10-minute steps · Updates every three hours.`);
+    if (gnn?.inputCoverage && !ready) {
+      el('wx-gnn-status').append(` Input history: ${Math.round(Math.min(...Object.values(gnn.inputCoverage)) * 100)}% of ${gnn.model?.historyHours || 72} hours. Last checked ${core.timestamp(gnn.generatedAt)}.`);
+    }
+    stationData = predicted ? (ready ? gnn.stations.filter(s => s.forecasts[variable]).map(s => ({...s, temperature: s.forecasts[variable][lead], series: s.forecasts[variable]})) : [])
+      : core.stations(snapshot, coordinates);
+    host.querySelector('.wx-legend').hidden = !stationData.length;
+    host.querySelector('.wx-legend').setAttribute('aria-label', `${predicted ? variables[variable][0] : 'Temperature'} colour scale`);
+    el('wx-map').setAttribute('aria-label', predicted ? `Map of GNN ${variables[variable][0].toLowerCase()} forecasts in Hong Kong` : 'Map of observed station temperatures in Hong Kong');
+    el('wx-station').disabled = !stationData.length;
+    set('wx-station-value', '—'); set('wx-observed-at', '');
+    el('wx-station-hours').hidden = !predicted || !ready;
+    if (!stationData.length) el('wx-station-hours').replaceChildren();
     const select = el("wx-station"); select.replaceChildren();
     stationData.forEach((station) => {
-      const option = document.createElement("option"); option.value = station.name; option.textContent = `${station.name} · ${temperature(station.temperature)}`; select.append(option);
+      const option = document.createElement("option"); option.value = station.name; option.textContent = `${station.name} · ${mapReading(station.temperature)}`; select.append(option);
     });
     renderMap();
     if (!stationData.some((station) => station.name === selectedStation)) selectedStation = stationData[0]?.name;
     selectStation(selectedStation);
-    renderDays();
-    renderStatus();
+  }
+
+  async function refreshGnn() {
+    try {
+      const url = isLocal ? './data/gnn.json' : 'https://raw.githubusercontent.com/cehw/cehw.github.io/weather-data/data/gnn.json';
+      const response = await fetch(url, {cache: 'no-store', signal: AbortSignal.timeout(15000)});
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (!core.usableGnn(data)) throw new Error('Invalid GNN snapshot');
+      gnn = data;
+      if (gnn.status === 'ready') lead = Math.max(0, gnn.validTimes.findIndex(t => Date.parse(t) > Date.now()));
+    } catch (e) { console.debug('[weather-gnn]', e.message); }
+    renderStations();
   }
 
   async function getSnapshot(url) {
@@ -225,6 +301,7 @@
   async function refresh() {
     if (busy) return;
     busy = true; lastAttempt = Date.now();
+    refreshGnn();
     el("wx-refresh").disabled = true; set("wx-refresh", "Refreshing…");
     try {
       let data;
@@ -253,6 +330,10 @@
   el("wx-refresh").addEventListener("click", refresh);
   el("wx-station").addEventListener("change", (event) => selectStation(event.target.value, true));
   el("wx-reset-map").addEventListener("click", showAllStations);
+  el('wx-layer-observed').addEventListener('click', () => { layer = 'observations'; renderStations(); });
+  el('wx-layer-gnn').addEventListener('click', () => { layer = 'gnn'; renderStations(); });
+  el('wx-variable').addEventListener('change', (event) => { variable = event.target.value; renderStations(); });
+  el('wx-lead').addEventListener('input', (event) => { lead = Number(event.target.value); renderStations(); });
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden && Date.now() - lastAttempt >= THREE_HOURS) refresh();
     else if (!document.hidden && snapshot) { renderStatus(); renderDays(); }
@@ -262,6 +343,7 @@
     if (Date.now() - lastAttempt >= THREE_HOURS) refresh();
     else if (snapshot) {
       renderStatus();
+      if (layer === 'gnn' && core.gnnExpired(gnn)) renderStations();
       if (renderedDate !== core.hkDate()) renderDays();
     }
   }, 60 * 1000);
