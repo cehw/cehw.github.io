@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "status": "warming_up",
-  "generatedAt": "2026-10-27T12:57:08.226903+08:00",
-  "originTime": "2026-10-27T11:50:00+08:00",
-  "lastObservationTime": "2026-10-27T12:40:00+08:00",
+  "generatedAt": "2026-10-27T15:27:03.337438+08:00",
+  "originTime": "2026-10-27T14:50:00+08:00",
+  "lastObservationTime": "2026-10-27T15:10:00+08:00",
   "updateIntervalHours": 3,
   "stepMinutes": 10,
   "horizonHours": 6,
@@ -26,12 +26,12 @@
     }
   ],
   "inputCoverage": {
-    "temperature": 0.8333,
-    "humidity": 0.8333,
-    "pressure": 0.8333,
-    "wind": 0.8333
+    "temperature": 0.8264,
+    "humidity": 0.8264,
+    "pressure": 0.8264,
+    "wind": 0.8264
   },
-  "longestInputGapMinutes": 720,
+  "longestInputGapMinutes": 750,
   "validTimes": [],
   "stations": [],
   "message": "Collecting the 72-hour observation history required by the model. Forecast values are not yet available."
