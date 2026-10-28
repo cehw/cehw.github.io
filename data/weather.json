@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "fetchedAt": "2026-10-28T13:00:07.940Z",
+  "fetchedAt": "2026-10-28T20:18:46.263Z",
   "updateIntervalHours": 3,
   "current": {
     "rainfall": {
@@ -114,15 +114,15 @@
           "main": "FALSE"
         }
       ],
-      "startTime": "2026-10-28T18:45:00+08:00",
-      "endTime": "2026-10-28T19:45:00+08:00"
+      "startTime": "2026-10-29T02:45:00+08:00",
+      "endTime": "2026-10-29T03:45:00+08:00"
     },
     "icon": [
-      60
+      62
     ],
-    "iconUpdateTime": "2026-10-28T18:00:00+08:00",
+    "iconUpdateTime": "2026-10-29T01:25:00+08:00",
     "uvindex": "",
-    "updateTime": "2026-10-28T20:02:00+08:00",
+    "updateTime": "2026-10-29T04:02:00+08:00",
     "temperature": {
       "data": [
         {
@@ -142,7 +142,7 @@
         },
         {
           "place": "Ta Kwu Ling",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -152,12 +152,12 @@
         },
         {
           "place": "Tai Po",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Sha Tin",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -172,7 +172,7 @@
         },
         {
           "place": "Sai Kung",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -182,17 +182,17 @@
         },
         {
           "place": "Chek Lap Kok",
-          "value": 27,
+          "value": 26,
           "unit": "C"
         },
         {
           "place": "Tsing Yi",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Shek Kong",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -207,7 +207,7 @@
         },
         {
           "place": "Hong Kong Park",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -237,12 +237,12 @@
         },
         {
           "place": "Kwun Tong",
-          "value": 25,
+          "value": 24,
           "unit": "C"
         },
         {
           "place": "Sham Shui Po",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -257,11 +257,11 @@
         },
         {
           "place": "Tai Mei Tuk",
-          "value": 25,
+          "value": 24,
           "unit": "C"
         }
       ],
-      "recordTime": "2026-10-28T20:00:00+08:00"
+      "recordTime": "2026-10-29T04:00:00+08:00"
     },
     "warningMessage": "",
     "mintempFrom00To09": "",
@@ -270,27 +270,27 @@
     "rainfallJanuaryToLastMonth": "",
     "tcmessage": "",
     "humidity": {
-      "recordTime": "2026-10-28T20:00:00+08:00",
+      "recordTime": "2026-10-29T04:00:00+08:00",
       "data": [
         {
           "unit": "percent",
-          "value": 73,
+          "value": 75,
           "place": "Hong Kong Observatory"
         }
       ]
     }
   },
   "localForecast": {
-    "generalSituation": "A fresh to strong northeast monsoon is affecting the coast of Guangdong. Under the influence of the monsoon and spring tide, the sea level of Hong Kong will be slightly higher than normal in the next couple of hours. Minor flooding may occur in individual low-lying coastal areas.",
+    "generalSituation": "A fresh to strong northeast monsoon is affecting the coast of Guangdong.",
     "tcInfo": "",
     "fireDangerWarning": "",
-    "forecastPeriod": "Weather forecast for tonight and tomorrow",
-    "forecastDesc": "Mainly cloudy. One or two light rain patches at first. The minimum temperature will be about 25 degrees tomorrow morning. Becoming fine and dry with a maximum temperature of around 29 degrees during the day. Moderate to fresh easterly winds, occasionally strong offshore and on high ground at first.",
+    "forecastPeriod": "Weather forecast for today",
+    "forecastDesc": "Mainly cloudy. One or two light rain patches at first. The minimum temperature will be about 25 degrees in the morning. Becoming fine and dry with a maximum temperature of around 29 degrees during the day. Moderate to fresh easterly winds, occasionally strong offshore and on high ground at first.",
     "outlook": "Mainly fine and dry during the day in the following couple of days. Cloudier on Sunday.",
-    "updateTime": "2026-10-28T20:45:00+08:00"
+    "updateTime": "2026-10-29T03:45:00+08:00"
   },
   "dailyForecast": {
-    "generalSituation": "With the northeast monsoon moderating gradually and an anticyclone aloft strengthening, the weather will be generally fine over Guangdong in the next couple of days. An easterly airstream is expected to affect the coast of southern China over the weekend. It will become cloudier gradually over the region. Another surge of the northeast monsoon will affect southern China early to midweek next week.",
+    "generalSituation": "With the northeast monsoon moderating gradually and an anticyclone aloft strengthening, the weather will be generally fine over Guangdong today and tomorrow. An easterly airstream is expected to affect the coast of southern China over the weekend. It will become cloudier gradually over the region. Another surge of the northeast monsoon will affect southern China early to midweek next week.",
     "weatherForecast": [
       {
         "forecastDate": "20261029",
@@ -509,7 +509,7 @@
         "PSR": "Low"
       }
     ],
-    "updateTime": "2026-10-28T16:30:00+08:00",
+    "updateTime": "2026-10-29T00:00:00+08:00",
     "seaTemp": {
       "place": "North Point",
       "value": 29,
