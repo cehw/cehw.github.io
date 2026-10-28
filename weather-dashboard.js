@@ -25,11 +25,13 @@
   let layer = 'observations';
   let variable = 'temperature';
   let lead = 5;
+  let playbackRequested = false;
+  let playbackTimer = null;
   const variables = { temperature: ['Temperature', '°C'], humidity: ['Humidity', '%'], wind: ['Wind speed', 'm/s'] };
 
   host.innerHTML = `
     <div class="wx-heading">
-      <div><p class="wx-location">Hong Kong</p><h1>Local weather prediction playground</h1></div>
+      <div><p class="wx-location">Hong Kong</p><h1>Local weather prediction playground <span aria-hidden="true">🌤️</span></h1></div>
     </div>
     <p class="wx-intro">Hong Kong Observatory observations and daily forecasts, alongside experimental six-hour GNN predictions.</p>
     <p class="wx-note wx-research-reference">Our related GNN research: <a href="https://doi.org/10.5194/acp-26-947-2026" target="_blank" rel="noreferrer">Intra-city scale graph neural networks enhance short-term air temperature forecasting</a> · Wang et al., <em>Atmospheric Chemistry and Physics</em>, 26, 947–961 (2026).</p>
@@ -42,6 +44,7 @@
           <div id="wx-model-state" class="wx-model-state" role="status" hidden><strong id="wx-model-state-title"></strong><p id="wx-gnn-status"></p><div id="wx-coverage" hidden><label for="wx-coverage-meter" id="wx-coverage-label"></label><meter id="wx-coverage-meter" min="0" max="100"></meter></div></div>
           <div id="wx-gnn-controls" hidden>
             <div class="wx-station-picker"><label for="wx-variable">Forecast variable</label><select id="wx-variable"><option value="temperature">Temperature · °C</option><option value="humidity">Humidity · %</option><option value="wind">Wind speed · m/s</option></select></div>
+            <div class="wx-playback"><button type="button" class="wx-button" id="wx-play" aria-pressed="false">▶ Play</button><span class="wx-note">Watch the next six hours unfold.</span></div>
             <label class="wx-time-label" for="wx-lead">Forecast time <output id="wx-valid-time"></output></label>
             <input id="wx-lead" type="range" min="0" max="35" step="1" value="5" aria-label="Forecast time in ten-minute steps">
           </div>
@@ -105,7 +108,7 @@
         const label = document.createElement('span'); label.textContent = `+${hour} h`;
         const value = document.createElement('strong'); value.textContent = mapReading(station.series[index]);
         button.title = core.timestamp(gnn.validTimes[index]); button.append(label, value);
-        button.addEventListener('click', () => { lead = index; renderStations(); }); hours.append(button);
+        button.addEventListener('click', () => { playbackRequested = false; lead = index; renderStations(); }); hours.append(button);
       }
     }
     for (const [markerName, marker] of markers) {
@@ -141,7 +144,7 @@
   function renderMap() {
     const L = window.L;
     const firstMap = !map;
-    const range = core.temperatureRange(stationData);
+    const range = layer === 'gnn' && stationData.length ? core.forecastRange(gnn.stations, variable) : core.temperatureRange(stationData);
     set("wx-legend-min", mapReading(range[0]));
     set("wx-legend-max", mapReading(range[1]));
     if (!L) {
@@ -154,14 +157,17 @@
     if (!map) {
       map = L.map("wx-map", { scrollWheelZoom: true, zoomControl: true, minZoom: 9, maxZoom: 15, attributionControl: true });
       map.attributionControl.setPrefix(false);
-      const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom: 15,
+      const tiles = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+        attribution: 'Tiles © <a href="https://www.esri.com/">Esri</a> · HERE, Garmin, <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors & GIS community', maxZoom: 15, maxNativeZoom: 16,
       });
       tiles.on("tileerror", () => {
         set("wx-map-notice", "The basemap is unavailable. Station markers and the station selector still show the observations.");
         el("wx-map-notice").hidden = false;
       });
       tiles.addTo(map);
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 15, maxNativeZoom: 16, zIndex: 250,
+      }).addTo(map);
       markerLayer = L.layerGroup().addTo(map);
       map.on('zoomend moveend resize', updateMarkerLabels);
       if (window.ResizeObserver) new ResizeObserver(() => map.invalidateSize({ pan: false })).observe(el("wx-map"));
@@ -181,7 +187,7 @@
       const time = document.createElement("small"); time.textContent = core.timestamp(mapTime());
       popup.append(name, reading, time);
       const marker = L.marker([station.lat, station.lon], { icon, title: `${station.name}: ${mapReading(station.temperature)}`, alt: `${station.name}: ${mapReading(station.temperature)}`, keyboard: true, riseOnHover: true })
-        .bindPopup(popup).on("click", () => selectStation(station.name)).addTo(markerLayer);
+        .bindPopup(popup).on("click", () => { playbackRequested = false; syncPlayback(); selectStation(station.name); }).addTo(markerLayer);
       markers.set(station.name, marker);
     });
     if (firstMap) showAllStations();
@@ -252,6 +258,25 @@
     renderStatus();
   }
 
+  function syncPlayback() {
+    const available = layer === 'gnn' && gnn?.status === 'ready' && !core.gnnExpired(gnn);
+    const running = available && playbackRequested && !document.hidden;
+    el('wx-play').disabled = !available;
+    el('wx-play').setAttribute('aria-pressed', String(running));
+    set('wx-play', running ? 'Ⅱ Pause' : '▶ Play');
+    if (!running && playbackTimer !== null) {
+      clearInterval(playbackTimer); playbackTimer = null;
+    }
+    if (running && playbackTimer === null) {
+      playbackTimer = setInterval(() => {
+        const next = core.nextForecastLead(gnn.validTimes, lead);
+        if (next < 0) { renderStations(); return; }
+        lead = next;
+        renderStations();
+      }, 1200);
+    }
+  }
+
   function renderStations() {
     if (!snapshot) return;
     const predicted = layer === 'gnn';
@@ -300,6 +325,7 @@
     renderMap();
     if (!stationData.some((station) => station.name === selectedStation)) selectedStation = stationData[0]?.name;
     selectStation(selectedStation);
+    syncPlayback();
   }
 
   async function refreshGnn() {
@@ -357,13 +383,16 @@
   }
 
   el("wx-refresh").addEventListener("click", refresh);
-  el("wx-station").addEventListener("change", (event) => selectStation(event.target.value, true));
+  el("wx-station").addEventListener("focus", () => { playbackRequested = false; syncPlayback(); });
+  el("wx-station").addEventListener("change", (event) => { playbackRequested = false; syncPlayback(); selectStation(event.target.value, true); });
   el("wx-reset-map").addEventListener("click", showAllStations);
-  el('wx-layer-observed').addEventListener('click', () => { layer = 'observations'; renderStations(); });
-  el('wx-layer-gnn').addEventListener('click', () => { layer = 'gnn'; renderStations(); });
+  el('wx-layer-observed').addEventListener('click', () => { layer = 'observations'; playbackRequested = false; renderStations(); });
+  el('wx-layer-gnn').addEventListener('click', () => { layer = 'gnn'; playbackRequested = true; renderStations(); });
+  el('wx-play').addEventListener('click', () => { playbackRequested = !playbackRequested; syncPlayback(); });
   el('wx-variable').addEventListener('change', (event) => { variable = event.target.value; renderStations(); });
-  el('wx-lead').addEventListener('input', (event) => { lead = Number(event.target.value); renderStations(); });
+  el('wx-lead').addEventListener('input', (event) => { playbackRequested = false; lead = Number(event.target.value); renderStations(); });
   document.addEventListener("visibilitychange", () => {
+    syncPlayback();
     if (!document.hidden && Date.now() - lastAttempt >= THREE_HOURS) refresh();
     else if (!document.hidden && snapshot) { renderStatus(); renderDays(); }
   });

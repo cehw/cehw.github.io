@@ -42,8 +42,8 @@ test("staleness considers both website fetch and source observation times", () =
 
 test("constant-temperature observations still have a usable legend", () => {
   assert.deepEqual(core.temperatureRange([{ temperature: 24 }, { temperature: 24 }]), [24, 25]);
-  assert.equal(core.temperatureColor(24, [24, 25]), "rgb(239, 232, 216)");
-  assert.equal(core.temperatureColor(25, [24, 25]), "rgb(74, 42, 40)");
+  assert.equal(core.temperatureColor(24, [24, 25]), "rgb(33, 102, 172)");
+  assert.equal(core.temperatureColor(25, [24, 25]), "rgb(178, 24, 43)");
 });
 
 test('overlapping labels prioritize the selected station without dropping point data', () => {
@@ -58,14 +58,11 @@ test('overlapping labels prioritize the selected station without dropping point 
   assert.equal(core.visibleLabelNames(zoomed, 'B').size, 3);
 });
 
-test('map palette has a decreasing luminance and readable numeric labels', () => {
-  let previous = Infinity;
+test('blue-red map palette keeps readable numeric labels', () => {
   for (let value = 0; value <= 100; value++) {
     const rgb = core.temperatureColor(value, [0, 100]).match(/\d+/g).map(Number);
     const linear = rgb.map(c => c / 255 <= .04045 ? c / 255 / 12.92 : ((c / 255 + .055) / 1.055) ** 2.4);
     const luminance = linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
-    assert.ok(luminance <= previous);
-    previous = luminance;
     const foreground = core.temperatureTextColor(value, [0, 100]);
     const contrast = foreground === '#fff' ? 1.05 / (luminance + .05) : (luminance + .05) / .05;
     assert.ok(contrast >= 4.5);

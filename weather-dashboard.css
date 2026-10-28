@@ -39,6 +39,9 @@
 .wx-layers .wx-button { font-weight: 400; white-space: normal; }
 .wx-layers [aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
 #wx-gnn-controls { margin-bottom: 24px; }
+.wx-playback { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; }
+.wx-playback .wx-note { margin: 0; }
+#wx-play { min-width: 100px; }
 .wx-time-label { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 16px; font-size: var(--wx-meta); color: var(--muted); }
 #wx-lead { width: 100%; accent-color: var(--accent); min-height: 36px; cursor: pointer; }
 .wx-hours { display: grid; grid-template-columns: repeat(6, minmax(72px, 1fr)); overflow-x: auto; margin-top: 16px; gap: 4px; }
@@ -60,7 +63,7 @@
 .wx-popup small { font-size: var(--wx-meta); color: #52666d; }
 .wx-map-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 8px 0 16px; }
 .wx-legend { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: var(--wx-meta); }
-.wx-gradient { display: block; width: 80px; height: 7px; border-radius: 999px; background: linear-gradient(to right, #efe8d8, #c9a27a, #8f4f3c, #4a2a28); }
+.wx-gradient { display: block; width: 80px; height: 7px; border-radius: 999px; background: linear-gradient(to right, #2166ac, #67a9cf, #f7f7f7, #ef8a62, #b2182b); }
 .wx-text-button { border: 0; cursor: pointer; padding: 8px 0; min-height: 44px; background: transparent; font-size: var(--wx-meta); text-decoration: underline; text-underline-offset: 4px; }
 .wx-station-row { display: flex; align-items: end; gap: 24px; justify-content: space-between; }
 .wx-station-picker { min-width: 0; flex: 1; }
@@ -123,7 +126,7 @@ html[data-theme="dark"] .wx-day img { filter: drop-shadow(0 1px 2px #fff5); }
 #wx-coverage-label { display: block; margin-top: 12px; font-size: var(--meta); color: var(--ink-soft); }
 #wx-coverage-meter { display: block; width: 100%; height: 16px; accent-color: var(--accent); }
 .wx-map.wx-map--empty { height: 240px; }
-.wx-map .leaflet-tile-pane { filter: saturate(.5) contrast(.95); }
+
 .wx-marker-dot { position: absolute; left: 14px; top: 13px; width: 10px; height: 10px; border-radius: 50%; border: 1px solid #243236; box-shadow: 0 0 0 2px #fff9; }
 .wx-marker--label .wx-marker-value, .wx-marker--selected .wx-marker-value, .wx-marker:hover .wx-marker-value, .wx-marker:focus-visible .wx-marker-value { opacity: 1; }
 .wx-marker:focus-visible { z-index: 2000 !important; }

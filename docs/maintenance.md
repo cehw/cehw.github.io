@@ -51,7 +51,7 @@ Do not replace the `weather-data` branch with the website branch. Weather schedu
 
 ## Analytics
 
-`assets/private-analytics-config.js` is the configuration authority; `private-analytics.js` reads it. Statcounter uses `enabled`, `onlyOnDomains`, `statcounter.project`, `statcounter.security`, and optional `invisible`/`removeLink`. Optional webhook logging uses `webhook.url`, `includeIp`, `delayMs` and `oncePerSession`. Do not duplicate configuration in HTML.
+`assets/private-analytics-config.js` is the configuration authority; `private-analytics.js` reads it. Statcounter uses `enabled`, `onlyOnDomains`, `statcounter.project`, `statcounter.security`, and optional `invisible`/`removeLink`. Optional webhook logging uses `webhook.url`, `includeIp`, `delayMs` and `oncePerSession`. Do not duplicate configuration in HTML. Statcounter is currently enabled on all three public pages in invisible mode; there is no visible visitor counter. The optional webhook URL is empty, so that separate logging path is inactive.
 
 ## Cleanup
 

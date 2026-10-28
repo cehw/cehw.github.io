@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
-const { usableGnn, gnnExpired } = require('../weather-dashboard-core.js');
+const { usableGnn, gnnExpired, nextForecastLead, forecastRange } = require('../weather-dashboard-core.js');
 const origin = Date.parse('2026-10-27T12:50:00+08:00');
 function fixture() {
   return {schemaVersion: 1, status: 'ready', generatedAt: new Date(origin).toISOString(),
@@ -29,4 +29,24 @@ test('warmup cannot be shown as ready, and six-hour forecasts expire', () => {
   assert.ok(usableGnn(warm)); assert.ok(gnnExpired(warm, origin));
   assert.equal(gnnExpired(fixture(), origin + 359 * 60000), false);
   assert.equal(gnnExpired(fixture(), origin + 360 * 60000), true);
+});
+
+
+test('forecast playback advances, wraps to the first future lead, and stops on expiry', () => {
+  const times = fixture().validTimes;
+  assert.equal(nextForecastLead(times, 0, origin), 1);
+  assert.equal(nextForecastLead(times, 35, origin), 0);
+  assert.equal(nextForecastLead(times, 35, origin + 60 * 60000), 6);
+  assert.equal(nextForecastLead(times, 0, origin + 60 * 60000), 6);
+  assert.equal(nextForecastLead(times, 35, origin + 360 * 60000), -1);
+});
+
+test('forecast color bounds cover all leads and only the selected variable', () => {
+  const stations = [
+    {forecasts: {temperature: [24.4, 29.1], humidity: [60, 90]}},
+    {forecasts: {temperature: [25, 27]}},
+    {forecasts: {wind: [2, 8]}},
+  ];
+  assert.deepEqual(forecastRange(stations, 'temperature'), [24, 30]);
+  assert.deepEqual(forecastRange(stations, 'humidity'), [60, 90]);
 });

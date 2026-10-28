@@ -72,10 +72,21 @@
     return [lo, hi === lo ? lo + 1 : hi];
   }
 
+  function forecastRange(stations, variable) {
+    return temperatureRange(stations.flatMap(station =>
+      (station.forecasts[variable] || []).map(temperature => ({temperature}))));
+  }
+
+  function nextForecastLead(times, current, now = Date.now()) {
+    const first = times.findIndex(time => Date.parse(time) > now);
+    if (first < 0) return -1;
+    return current < first || current >= times.length - 1 ? first : current + 1;
+  }
+
   function temperatureColor(value, range) {
-    const colors = [[239, 232, 216], [201, 162, 122], [143, 79, 60], [74, 42, 40]];
-    const position = Math.max(0, Math.min(1, (value - range[0]) / (range[1] - range[0]))) * 3;
-    const index = Math.min(2, Math.floor(position));
+    const colors = [[33, 102, 172], [103, 169, 207], [247, 247, 247], [239, 138, 98], [178, 24, 43]];
+    const position = Math.max(0, Math.min(1, (value - range[0]) / (range[1] - range[0]))) * (colors.length - 1);
+    const index = Math.min(colors.length - 2, Math.floor(position));
     const amount = position - index;
     return `rgb(${colors[index].map((part, channel) => Math.round(part + (colors[index + 1][channel] - part) * amount)).join(", ")})`;
   }
@@ -117,5 +128,5 @@
     return data?.status !== 'ready' || !data.validTimes?.length || Date.parse(data.validTimes.at(-1)) <= now;
   }
 
-  return { number, hkDate, dateFromKey, dateLabel, timestamp, forecasts, stations, isStale, usable, temperatureRange, temperatureColor, temperatureTextColor, visibleLabelNames, usableGnn, gnnExpired };
+  return { number, hkDate, dateFromKey, dateLabel, timestamp, forecasts, stations, isStale, usable, temperatureRange, forecastRange, nextForecastLead, temperatureColor, temperatureTextColor, visibleLabelNames, usableGnn, gnnExpired };
 });
