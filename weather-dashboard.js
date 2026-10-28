@@ -1,3 +1,5 @@
+import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
+
 /* HKO daily forecasts and station observations, refreshed from a scheduled snapshot. */
 (() => {
   const host = document.getElementById("weather-dashboard");
@@ -47,6 +49,18 @@
             <div class="wx-playback"><button type="button" class="wx-button" id="wx-play" aria-pressed="false">▶ Play</button><span class="wx-note">Watch the next six hours unfold.</span></div>
             <label class="wx-time-label" for="wx-lead">Forecast time <output id="wx-valid-time"></output></label>
             <input id="wx-lead" type="range" min="0" max="35" step="1" value="5" aria-label="Forecast time in ten-minute steps">
+            <div class="wx-solar" id="wx-solar" role="img" aria-label="Hong Kong daylight timeline">
+              <div class="wx-solar-heading"><span>Day & night <span aria-hidden="true">✨</span></span><span id="wx-solar-date"></span></div>
+              <div class="wx-solar-scene" aria-hidden="true">
+                <div class="wx-solar-band" id="wx-solar-band"></div>
+                <svg viewBox="0 0 600 84" preserveAspectRatio="none"><path id="wx-solar-arc" fill="none" stroke="#c89943" stroke-width="2" stroke-dasharray="3 5" vector-effect="non-scaling-stroke"/></svg>
+                <i class="wx-solar-event" id="wx-sunrise-line"></i><i class="wx-solar-event" id="wx-sunset-line"></i>
+                <span class="wx-solar-marker" id="wx-solar-marker">☀️</span>
+              </div>
+              <div class="wx-solar-ticks" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+              <div class="wx-solar-events" aria-hidden="true"><span id="wx-sunrise"></span><span id="wx-sunset"></span></div>
+              <p class="wx-note">Hong Kong · approximate sunrise & sunset · HKT</p>
+            </div>
           </div>
           <div id="wx-map" class="wx-map" aria-label="Map of observed station temperatures in Hong Kong"></div>
           <p class="wx-map-notice" id="wx-map-notice" hidden></p>
@@ -255,6 +269,25 @@
     renderStatus();
   }
 
+  function renderSolarTimeline() {
+    const reference = coordinates['Hong Kong Observatory'];
+    const sun = solarTimeline(gnn.validTimes[lead], reference.lat, reference.lon);
+    const start = sun.sunrisePosition, end = sun.sunsetPosition;
+    const card = el('wx-solar');
+    card.setAttribute('aria-label', `Hong Kong, ${sun.date}: sunrise ${sun.sunrise}, sunset ${sun.sunset}. Selected forecast ${sun.clock} HKT, ${sun.daylight ? 'daytime' : 'nighttime'}. Fixed 00:00 to 24:00 scale.`);
+    set('wx-solar-date', `${core.dateLabel(sun.date.replaceAll('-', ''), {day: 'numeric', month: 'short'})} · ${sun.clock}`);
+    set('wx-sunrise', `🌅 Sunrise ${sun.sunrise}`);
+    set('wx-sunset', `🌇 Sunset ${sun.sunset}`);
+    el('wx-solar-band').style.background = `linear-gradient(to right, #293d61 0%, #536589 ${start - 3}%, #f4c68b ${start}%, #fae9b5 ${(start + end) / 2}%, #efb193 ${end}%, #536589 ${end + 3}%, #293d61 100%)`;
+    el('wx-solar-arc').setAttribute('d', `M ${start * 6} 60 Q ${(start + end) * 3} -16 ${end * 6} 60`);
+    el('wx-sunrise-line').style.left = `${start}%`;
+    el('wx-sunset-line').style.left = `${end}%`;
+    const marker = el('wx-solar-marker');
+    marker.textContent = sun.daylight ? '☀️' : '🌙';
+    marker.style.left = `${sun.position}%`;
+    marker.style.top = `${60 - sun.lift}px`;
+  }
+
   function syncPlayback() {
     const available = layer === 'gnn' && gnn?.status === 'ready' && !core.gnnExpired(gnn);
     const running = available && playbackRequested && !document.hidden;
@@ -293,6 +326,7 @@
     el('wx-variable').disabled = !ready;
     el('wx-lead').disabled = !ready;
     el('wx-lead').value = String(lead);
+    if (predicted && ready) renderSolarTimeline();
     set('wx-valid-time', ready ? `${core.timestamp(gnn.validTimes[lead])} · +${(lead + 1) * 10} min` : 'Awaiting forecast');
     set('wx-gnn-status', !gnn ? 'The model feed is temporarily unavailable. HKO observations remain available.'
       : gnn.status !== 'ready' ? gnn.message
