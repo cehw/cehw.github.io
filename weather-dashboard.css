@@ -40,6 +40,7 @@
 .wx-layers [aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
 #wx-gnn-controls { margin-bottom: 24px; }
 .wx-forecast-time { margin-top: 12px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--accent-tint); }
+.weather-dashboard .wx-forecast-meta { margin: 0 0 8px; color: var(--muted); font-size: var(--wx-meta); line-height: 1.4; }
 .wx-time-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 #wx-play { min-width: 82px; min-height: 36px; padding: 4px 12px; }
 .wx-time-label { display: flex; flex-direction: column; gap: 2px; font-size: var(--wx-meta); color: var(--ink-soft); }

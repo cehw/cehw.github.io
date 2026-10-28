@@ -46,6 +46,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
           <div id="wx-model-state" class="wx-model-state" role="status" hidden><strong id="wx-model-state-title"></strong><p id="wx-gnn-status"></p><div id="wx-coverage" hidden><label for="wx-coverage-meter" id="wx-coverage-label"></label><meter id="wx-coverage-meter" min="0" max="100"></meter></div></div>
           <div id="wx-gnn-controls" hidden>
             <div class="wx-forecast-time" role="group" aria-label="Forecast time and daylight">
+            <p class="wx-forecast-meta" id="wx-forecast-meta"></p>
             <div class="wx-time-heading">
               <label class="wx-time-label" for="wx-lead">Forecast time</label>
               <div class="wx-variable-options" role="group" aria-label="Forecast variable">
@@ -328,8 +329,8 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     el('wx-layer-observed').setAttribute('aria-pressed', String(!predicted));
     el('wx-layer-gnn').setAttribute('aria-pressed', String(predicted));
     el('wx-gnn-controls').hidden = !predicted || !ready;
-    el('wx-model-state').hidden = !predicted;
-    set('wx-model-state-title', ready ? 'Six-hour forecast available' : gnn?.status === 'warming_up' ? 'Collecting observations · no forecast yet' : 'Forecast currently unavailable');
+    el('wx-model-state').hidden = !predicted || ready;
+    set('wx-model-state-title', gnn?.status === 'warming_up' ? 'Collecting observations · no forecast yet' : 'Forecast currently unavailable');
     el('wx-map').classList.toggle('wx-map--empty', predicted && !ready);
     host.querySelector('.wx-station-row').hidden = predicted && !ready;
     host.querySelector('.wx-map-footer').hidden = predicted && !ready;
@@ -343,10 +344,11 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     el('wx-lead').value = String(lead);
     if (predicted && ready) renderSolarTimeline();
     set('wx-valid-time', ready ? `${core.timestamp(gnn.validTimes[lead])} · +${(lead + 1) * 10} min` : 'Awaiting forecast');
+    set('wx-forecast-meta', ready ? `Issued ${core.timestamp(gnn.generatedAt)} · Origin ${core.timestamp(gnn.originTime)}` : '');
     set('wx-gnn-status', !gnn ? 'The model feed is temporarily unavailable. HKO observations remain available.'
       : gnn.status !== 'ready' ? gnn.message
       : !ready ? 'This forecast has expired. Waiting for a new model run.'
-      : `Issued ${core.timestamp(gnn.generatedAt)} · Forecast origin ${core.timestamp(gnn.originTime)} · 10-minute steps.`);
+      : '');
     const coverage = Object.values(gnn?.inputCoverage || {}).filter(Number.isFinite);
     el('wx-coverage').hidden = ready || !coverage.length;
     if (coverage.length && !ready) {
