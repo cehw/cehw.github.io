@@ -39,11 +39,12 @@
 .wx-layers .wx-button { font-weight: 400; white-space: normal; }
 .wx-layers [aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
 #wx-gnn-controls { margin-bottom: 24px; }
-.wx-playback { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; }
-.wx-playback .wx-note { margin: 0; }
-#wx-play { min-width: 100px; }
-.wx-time-label { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 16px; font-size: var(--wx-meta); color: var(--muted); }
-#wx-lead { width: 100%; accent-color: var(--accent); min-height: 36px; cursor: pointer; }
+.wx-forecast-time { margin-top: 12px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--accent-tint); }
+.wx-time-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#wx-play { min-width: 82px; min-height: 36px; padding: 4px 12px; }
+.wx-time-label { display: flex; flex-direction: column; gap: 2px; font-size: var(--wx-meta); color: var(--ink-soft); }
+.wx-time-label output { color: var(--muted); }
+#wx-lead { display: block; width: 100%; margin: 2px 0 6px; accent-color: var(--accent); min-height: 26px; cursor: pointer; }
 .wx-hours { display: grid; grid-template-columns: repeat(6, minmax(72px, 1fr)); overflow-x: auto; margin-top: 16px; gap: 4px; }
 .wx-hours .wx-day { padding: 8px 4px; font-size: var(--wx-meta); }
 .wx-hours .wx-day strong { white-space: nowrap; }
@@ -137,14 +138,12 @@ html[data-theme="dark"] .wx-day img { filter: drop-shadow(0 1px 2px #fff5); }
   .wx-layers .wx-button { padding: 8px 12px; }
 }
 
-/* A stable 24-hour reference, separate from the six-hour forecast slider. */
-.wx-solar { margin-top: 12px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--accent-tint); }
+/* A compact fixed-day reference inside the forecast-time module. */
+.wx-solar { margin: 0; }
 .wx-solar-heading, .wx-solar-events { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; font-size: var(--wx-meta); color: var(--ink-soft); }
-.wx-solar-scene { position: relative; height: 84px; margin: 0 8px; }
-.wx-solar-scene svg { position: absolute; inset: 0; width: 100%; height: 84px; }
-.wx-solar-band { position: absolute; top: 49px; width: 100%; height: 22px; border-radius: 11px; }
-.wx-solar-event { position: absolute; top: 50px; height: 20px; border-left: 1px solid #8b643b; }
-.wx-solar-marker { position: absolute; transform: translate(-50%, -50%); font-size: 24px; line-height: 1; filter: drop-shadow(0 1px 2px #0003); }
+.wx-solar-scene { position: relative; height: 52px; margin: 0 8px; }
+.wx-solar-scene svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wx-solar-band { position: absolute; top: 58.333%; width: 100%; height: 16px; border-radius: 8px; }
+.wx-solar-event { position: absolute; top: 59.524%; height: 14px; border-left: 1px solid #8b643b; }
+.wx-solar-marker { position: absolute; transform: translate(-50%, -50%); font-size: 21px; line-height: 1; filter: drop-shadow(0 1px 2px #0003); }
 .wx-solar-ticks { display: flex; justify-content: space-between; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--muted); }
-.wx-solar-events { margin-top: 8px; }
-.weather-dashboard .wx-solar .wx-note { margin-top: 4px; font-size: 12px; }

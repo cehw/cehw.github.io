@@ -46,11 +46,14 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
           <div id="wx-model-state" class="wx-model-state" role="status" hidden><strong id="wx-model-state-title"></strong><p id="wx-gnn-status"></p><div id="wx-coverage" hidden><label for="wx-coverage-meter" id="wx-coverage-label"></label><meter id="wx-coverage-meter" min="0" max="100"></meter></div></div>
           <div id="wx-gnn-controls" hidden>
             <div class="wx-station-picker"><label for="wx-variable">Forecast variable</label><select id="wx-variable"><option value="temperature">Temperature · °C</option><option value="humidity">Humidity · %</option><option value="wind">Wind speed · m/s</option></select></div>
-            <div class="wx-playback"><button type="button" class="wx-button" id="wx-play" aria-pressed="false">▶ Play</button><span class="wx-note">Watch the next six hours unfold.</span></div>
-            <label class="wx-time-label" for="wx-lead">Forecast time <output id="wx-valid-time"></output></label>
+            <div class="wx-forecast-time" role="group" aria-label="Forecast time and daylight">
+            <div class="wx-time-heading">
+              <label class="wx-time-label" for="wx-lead">Forecast time <output id="wx-valid-time"></output></label>
+              <button type="button" class="wx-button" id="wx-play" aria-pressed="false">▶ Play</button>
+            </div>
             <input id="wx-lead" type="range" min="0" max="35" step="1" value="5" aria-label="Forecast time in ten-minute steps">
             <div class="wx-solar" id="wx-solar" role="img" aria-label="Hong Kong daylight timeline">
-              <div class="wx-solar-heading"><span>Day & night <span aria-hidden="true">✨</span></span><span id="wx-solar-date"></span></div>
+              <div class="wx-solar-heading"><span>Day & night <span aria-hidden="true">✨</span></span><div class="wx-solar-events" aria-hidden="true"><span id="wx-sunrise"></span><span id="wx-sunset"></span></div></div>
               <div class="wx-solar-scene" aria-hidden="true">
                 <div class="wx-solar-band" id="wx-solar-band"></div>
                 <svg viewBox="0 0 600 84" preserveAspectRatio="none"><path id="wx-solar-arc" fill="none" stroke="#c89943" stroke-width="2" stroke-dasharray="3 5" vector-effect="non-scaling-stroke"/></svg>
@@ -58,8 +61,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
                 <span class="wx-solar-marker" id="wx-solar-marker">☀️</span>
               </div>
               <div class="wx-solar-ticks" aria-hidden="true"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
-              <div class="wx-solar-events" aria-hidden="true"><span id="wx-sunrise"></span><span id="wx-sunset"></span></div>
-              <p class="wx-note">Hong Kong · approximate sunrise & sunset · HKT</p>
+            </div>
             </div>
           </div>
           <div id="wx-map" class="wx-map" aria-label="Map of observed station temperatures in Hong Kong"></div>
@@ -281,7 +283,6 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     const start = sun.sunrisePosition, end = sun.sunsetPosition;
     const card = el('wx-solar');
     card.setAttribute('aria-label', `Hong Kong, ${sun.date}: sunrise ${sun.sunrise}, sunset ${sun.sunset}. Selected forecast ${sun.clock} HKT, ${sun.daylight ? 'daytime' : 'nighttime'}. Fixed 00:00 to 24:00 scale.`);
-    set('wx-solar-date', `${core.dateLabel(sun.date.replaceAll('-', ''), {day: 'numeric', month: 'short'})} · ${sun.clock}`);
     set('wx-sunrise', `🌅 Sunrise ${sun.sunrise}`);
     set('wx-sunset', `🌇 Sunset ${sun.sunset}`);
     el('wx-solar-band').style.background = `linear-gradient(to right, #293d61 0%, #536589 ${start - 3}%, #f4c68b ${start}%, #fae9b5 ${(start + end) / 2}%, #efb193 ${end}%, #536589 ${end + 3}%, #293d61 100%)`;
@@ -291,7 +292,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     const marker = el('wx-solar-marker');
     marker.textContent = sun.daylight ? '☀️' : '🌙';
     marker.style.left = `${sun.position}%`;
-    marker.style.top = `${60 - sun.lift}px`;
+    marker.style.top = `${(60 - sun.lift) / 84 * 100}%`;
   }
 
   function syncPlayback() {
