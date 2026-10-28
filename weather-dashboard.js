@@ -157,17 +157,14 @@
     if (!map) {
       map = L.map("wx-map", { scrollWheelZoom: true, zoomControl: true, minZoom: 9, maxZoom: 15, attributionControl: true });
       map.attributionControl.setPrefix(false);
-      const tiles = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-        attribution: 'Tiles © <a href="https://www.esri.com/">Esri</a> · HERE, Garmin, <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors & GIS community', maxZoom: 15, maxNativeZoom: 16,
+      const tiles = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+        attribution: 'Tiles © <a href="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer">Esri & contributors</a> · <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 15,
       });
       tiles.on("tileerror", () => {
         set("wx-map-notice", "The basemap is unavailable. Station markers and the station selector still show the observations.");
         el("wx-map-notice").hidden = false;
       });
       tiles.addTo(map);
-      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
-        maxZoom: 15, maxNativeZoom: 16, zIndex: 250,
-      }).addTo(map);
       markerLayer = L.layerGroup().addTo(map);
       map.on('zoomend moveend resize', updateMarkerLabels);
       if (window.ResizeObserver) new ResizeObserver(() => map.invalidateSize({ pan: false })).observe(el("wx-map"));
