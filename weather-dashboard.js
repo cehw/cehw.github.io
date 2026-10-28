@@ -36,7 +36,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
       <div><p class="wx-location">Hong Kong</p><h1>Local weather prediction playground <span aria-hidden="true">🌤️</span></h1></div>
     </div>
     <p class="wx-intro">Hong Kong Observatory observations and daily forecasts, alongside experimental six-hour GNN predictions.</p>
-    <p class="wx-note wx-research-reference">Our related GNN research: <a href="https://doi.org/10.5194/acp-26-947-2026" target="_blank" rel="noreferrer">Intra-city scale graph neural networks enhance short-term air temperature forecasting</a> · Wang et al., <em>Atmospheric Chemistry and Physics</em>, 26, 947–961 (2026).</p>
+    <p class="wx-note wx-research-reference">Our related GNN research: <a href="https://doi.org/10.5194/acp-26-947-2026" target="_blank" rel="noreferrer">Intra-city scale graph neural networks enhance short-term air temperature forecasting</a> · Wang et al., <em>ACP</em> (2026).</p>
     <div class="wx-update-row"><p class="wx-status" id="wx-status" role="status">Loading the latest available weather…</p><button class="wx-button" id="wx-refresh" type="button">Refresh weather</button></div>
     <div id="wx-content" hidden>
       <div class="wx-overview">
@@ -45,12 +45,17 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
           <div class="wx-layers" role="group" aria-label="Map data"><button class="wx-button" id="wx-layer-observed" aria-pressed="true">Observations</button><button class="wx-button" id="wx-layer-gnn" aria-pressed="false">GNN · next six hours</button></div>
           <div id="wx-model-state" class="wx-model-state" role="status" hidden><strong id="wx-model-state-title"></strong><p id="wx-gnn-status"></p><div id="wx-coverage" hidden><label for="wx-coverage-meter" id="wx-coverage-label"></label><meter id="wx-coverage-meter" min="0" max="100"></meter></div></div>
           <div id="wx-gnn-controls" hidden>
-            <div class="wx-station-picker"><label for="wx-variable">Forecast variable</label><select id="wx-variable"><option value="temperature">Temperature · °C</option><option value="humidity">Humidity · %</option><option value="wind">Wind speed · m/s</option></select></div>
             <div class="wx-forecast-time" role="group" aria-label="Forecast time and daylight">
             <div class="wx-time-heading">
-              <label class="wx-time-label" for="wx-lead">Forecast time <output id="wx-valid-time"></output></label>
+              <label class="wx-time-label" for="wx-lead">Forecast time</label>
+              <div class="wx-variable-options" role="group" aria-label="Forecast variable">
+                <button type="button" data-variable="temperature" aria-pressed="true">Temperature</button>
+                <button type="button" data-variable="humidity" aria-pressed="false">Humidity</button>
+                <button type="button" data-variable="wind" aria-pressed="false">Wind</button>
+              </div>
               <button type="button" class="wx-button" id="wx-play" aria-pressed="false">▶ Play</button>
             </div>
+            <output id="wx-valid-time" for="wx-lead"></output>
             <input id="wx-lead" type="range" min="0" max="35" step="1" value="5" aria-label="Forecast time in ten-minute steps">
             <div class="wx-solar" id="wx-solar" role="img" aria-label="Hong Kong daylight timeline">
               <div class="wx-solar-heading"><span>Day & night <span aria-hidden="true">✨</span></span><div class="wx-solar-events" aria-hidden="true"><span id="wx-sunrise"></span><span id="wx-sunset"></span></div></div>
@@ -330,7 +335,10 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     host.querySelector('.wx-map-footer').hidden = predicted && !ready;
     set('wx-map-help', predicted && !ready ? 'Choose Observations to explore the latest available station readings.' : 'Select any point for details. Zoom in for more labels; scroll over the map to zoom.');
     el('wx-model-credit').hidden = !predicted;
-    el('wx-variable').disabled = !ready;
+    host.querySelectorAll('[data-variable]').forEach(button => {
+      button.disabled = !ready;
+      button.setAttribute('aria-pressed', String(button.dataset.variable === variable));
+    });
     el('wx-lead').disabled = !ready;
     el('wx-lead').value = String(lead);
     if (predicted && ready) renderSolarTimeline();
@@ -427,7 +435,9 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
   el('wx-layer-observed').addEventListener('click', () => { layer = 'observations'; playbackRequested = false; renderStations(); });
   el('wx-layer-gnn').addEventListener('click', () => { layer = 'gnn'; playbackRequested = true; renderStations(); });
   el('wx-play').addEventListener('click', () => { playbackRequested = !playbackRequested; syncPlayback(); });
-  el('wx-variable').addEventListener('change', (event) => { variable = event.target.value; renderStations(); });
+  host.querySelectorAll('[data-variable]').forEach(button => {
+    button.addEventListener('click', () => { variable = button.dataset.variable; renderStations(); });
+  });
   el('wx-lead').addEventListener('input', (event) => { playbackRequested = false; lead = Number(event.target.value); renderStations(); });
   document.addEventListener("visibilitychange", () => {
     syncPlayback();

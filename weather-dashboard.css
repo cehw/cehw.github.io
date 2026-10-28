@@ -43,7 +43,17 @@
 .wx-time-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 #wx-play { min-width: 82px; min-height: 36px; padding: 4px 12px; }
 .wx-time-label { display: flex; flex-direction: column; gap: 2px; font-size: var(--wx-meta); color: var(--ink-soft); }
-.wx-time-label output { color: var(--muted); }
+#wx-valid-time { display: block; color: var(--muted); font-size: var(--wx-meta); margin-top: 2px; }
+.wx-variable-options { display: flex; flex-wrap: wrap; gap: 2px; margin-left: auto; }
+.wx-variable-options button { border: 0; border-radius: 6px; background: transparent; color: var(--ink-soft); font: inherit; font-size: var(--wx-meta); padding: 4px 8px; min-height: 32px; cursor: pointer; }
+.wx-variable-options button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.wx-variable-options button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 520px) {
+  .wx-time-heading { flex-wrap: wrap; gap: 4px 8px; }
+  .wx-time-label { flex-basis: 100%; }
+  .wx-variable-options { margin-left: 0; }
+  #wx-play { margin-left: auto; }
+}
 #wx-lead { display: block; width: 100%; margin: 2px 0 6px; accent-color: var(--accent); min-height: 26px; cursor: pointer; }
 .wx-hours { display: grid; grid-template-columns: repeat(6, minmax(72px, 1fr)); overflow-x: auto; margin-top: 16px; gap: 4px; }
 .wx-hours .wx-day { padding: 8px 4px; font-size: var(--wx-meta); }
