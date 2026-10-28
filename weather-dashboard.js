@@ -24,10 +24,10 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
   let refreshError = false;
   let renderedDate = null;
   let gnn = null;
-  let layer = 'observations';
+  let layer = 'gnn';
   let variable = 'temperature';
   let lead = 5;
-  let playbackRequested = false;
+  let playbackRequested = true;
   let playbackTimer = null;
   const variables = { temperature: ['Temperature', '°C'], humidity: ['Humidity', '%'], wind: ['Wind speed', 'm/s'] };
 
@@ -77,8 +77,9 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
           <div id="wx-station-hours" class="wx-hours" hidden></div>
           <p class="wx-note" id="wx-observed-at"></p>
           <p class="wx-note" id="wx-map-help">Select any point for details. Zoom in for more labels; scroll over the map to zoom.</p>
-          <p class="wx-note" id="wx-model-credit" hidden>Input observations: Hong Kong Observatory. This is not an official HKO forecast. Only model-supported physical stations are shown; temperature and wind sites can differ.</p>
+          <p class="wx-note" id="wx-model-credit" hidden>An experimental playground for exploring local weather predictions. Input observations: Hong Kong Observatory. Available stations vary by variable.</p>
         </div>
+        <aside class="wx-forecast-sidebar" aria-label="Hong Kong Observatory forecasts">
         <article class="wx-today">
           <h2>HKO local forecast</h2><p class="wx-note wx-period" id="wx-period"></p>
           <p id="wx-local-forecast"></p>
@@ -86,10 +87,13 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
           <p class="wx-note" id="wx-local-issued"></p>
           <a class="wx-source-link" href="https://www.hko.gov.hk/en/wxinfo/currwx/flw.htm" target="_blank" rel="noreferrer">Full Observatory forecast ↗</a>
         </article>
-      </div>
+        <section class="wx-daily" aria-label="HKO daily forecast">
       <div class="wx-daily-heading"><h2>HKO daily forecast</h2><p class="wx-note" id="wx-daily-issued"></p></div>
       <div class="wx-days" id="wx-days" aria-label="Choose a forecast date"></div>
       <article class="wx-day-detail" id="wx-day-detail" aria-live="polite"></article>
+        </section>
+        </aside>
+      </div>
       <div class="wx-attribution"><p class="wx-note" id="wx-fetched-at"></p><p class="wx-note">Observations and official forecasts: <a href="https://www.hko.gov.hk/en/abouthko/opendata_intro.htm" target="_blank" rel="noreferrer">Hong Kong Observatory open data</a>. Experimental GNN forecasts are generated independently using HKO observations. All times HKT (UTC+8).</p></div>
     </div>
     <p class="wx-note" id="wx-error-link" hidden>Weather is temporarily unavailable. <a href="https://www.hko.gov.hk/en/index.html" target="_blank" rel="noreferrer">Visit the Hong Kong Observatory ↗</a></p>`;
@@ -177,8 +181,22 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
       return;
     }
     if (!map) {
-      map = L.map("wx-map", { scrollWheelZoom: true, zoomControl: true, minZoom: 9, maxZoom: 15, attributionControl: true });
-      map.attributionControl.setPrefix(false);
+      map = L.map("wx-map", { scrollWheelZoom: true, zoomControl: true, zoomSnap: 0.25, minZoom: 9, maxZoom: 15, attributionControl: false });
+      const credits = L.control({ position: 'bottomright' });
+      credits.onAdd = () => {
+        const container = L.DomUtil.create('div', 'leaflet-control-attribution wx-map-attribution');
+        container.innerHTML = '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap</a> <div class="wx-map-credits"><button type="button" aria-label="Map sources" title="Map sources" aria-expanded="false">ⓘ</button><span hidden><a href="https://openfreemap.org/">OpenFreeMap</a> · <a href="https://openmaptiles.org/">© OpenMapTiles</a><br><a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md">Terrain sources</a></span></div>';
+        const infoButton = container.querySelector('button');
+        const infoPanel = container.querySelector('.wx-map-credits > span');
+        infoButton.addEventListener('click', () => {
+          infoPanel.hidden = !infoPanel.hidden;
+          infoButton.setAttribute('aria-expanded', String(!infoPanel.hidden));
+        });
+        L.DomEvent.disableClickPropagation(container);
+        L.DomEvent.disableScrollPropagation(container);
+        return container;
+      };
+      credits.addTo(map);
       const showMapError = () => {
         set("wx-map-notice", "Some basemap details could not load. Station readings remain available.");
         el("wx-map-notice").hidden = false;
@@ -187,7 +205,6 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
         try {
           const basemap = L.maplibreGL({
             style: './assets/weather-map-style.json?v=20261028-open1',
-            attribution: '<a href="https://openfreemap.org/">OpenFreeMap</a> · <a href="https://openmaptiles.org/">© OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap</a> · <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md">Terrain sources</a>',
           });
           basemap.on('add', () => basemap.getMaplibreMap().on('error', showMapError));
           basemap.addTo(map);
