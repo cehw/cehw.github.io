@@ -171,14 +171,20 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     if (!map) {
       map = L.map("wx-map", { scrollWheelZoom: true, zoomControl: true, minZoom: 9, maxZoom: 15, attributionControl: true });
       map.attributionControl.setPrefix(false);
-      const tiles = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
-        attribution: 'Tiles © <a href="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer">Esri & contributors</a> · <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 15,
-      });
-      tiles.on("tileerror", () => {
-        set("wx-map-notice", "The basemap is unavailable. Station markers and the station selector still show the observations.");
+      const showMapError = () => {
+        set("wx-map-notice", "Some basemap details could not load. Station readings remain available.");
         el("wx-map-notice").hidden = false;
-      });
-      tiles.addTo(map);
+      };
+      if (L.maplibreGL && window.maplibregl) {
+        try {
+          const basemap = L.maplibreGL({
+            style: './assets/weather-map-style.json?v=20261028-open1',
+            attribution: '<a href="https://openfreemap.org/">OpenFreeMap</a> · <a href="https://openmaptiles.org/">© OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap</a> · <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md">Terrain sources</a>',
+          });
+          basemap.on('add', () => basemap.getMaplibreMap().on('error', showMapError));
+          basemap.addTo(map);
+        } catch { showMapError(); }
+      } else { showMapError(); }
       markerLayer = L.layerGroup().addTo(map);
       map.on('zoomend moveend resize', updateMarkerLabels);
       if (window.ResizeObserver) new ResizeObserver(() => map.invalidateSize({ pan: false })).observe(el("wx-map"));
