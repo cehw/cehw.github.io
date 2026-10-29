@@ -4,6 +4,8 @@ Desktop is the primary design target. The site combines the original animated Ea
 
 ## Visual system
 
+Homepage-specific background refinements live in `homepage.css`, loaded only by `index.html`. Dark mode uses a cleaner slate-blue background (`#17212e`) with softer blue panels and a desaturated Earth. Light mode retains the animated Earth and adds a restrained waterfront skyline and street grid from `assets/city-outline.svg`. The skyline is decorative vector artwork, not a geographic map. These overrides do not change the weather or gallery pages. The homepage has five circular social links, including GitHub.
+
 - Source Sans 3, weights 400 and 600; four text levels of 32, 20, 16 and 14px. Map attribution is 12px.
 - Light background `#f6f3ee`, surface `#fdfcfa`, text `#243236`, accent `#35666b`. Dark background `#161c20`, surface `#1f272c`, text `#e6ebec`, accent `#9bc4c6`.
 - The original Three.js Earth and weather-reactive background are active across all three pages. Light mode keeps a subtle Earth outline; dark mode shows the illuminated globe. Panels retain translucent backgrounds.
