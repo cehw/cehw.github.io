@@ -1,7 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 300" fill="none" stroke="#000" stroke-width="1.5" stroke-linejoin="round">
-  <path d="M0 249H1440M0 266H1440M0 288H1440" opacity=".65"/>
-  <path d="M0 249V177H42V149H75V196H108V135H155V249M155 249V164H181V105H220V164H239V249M239 249V183H273V126H313V249M313 249V91H330V64H347V91H365V249M365 249V164H413V204H436V249M436 249V129H482V249M482 249V175H516V143H548V249M548 249V109L573 47L598 109V249M598 249V182H641V249M641 249V149H678V118H710V249M710 249V195H739V157H773V249M773 249V100H800V70H821V100H844V249M844 249V177H879V142H916V249M916 249V128H951V249M951 249V185H982V152H1027V249M1027 249V96L1045 72H1074L1092 96V249M1092 249V170H1128V120H1170V249M1170 249V183H1206V153H1246V249M1246 249V119H1279V81H1308V119H1341V249M1341 249V178H1392V206H1440"/>
-  <path d="M573 47V22M548 109L598 249M598 109L548 249M548 178H598M327 105H351M327 125H351M327 145H351M327 165H351M327 185H351M327 205H351M327 225H351M1050 96V249M1069 96V249M1041 117H1079M1041 137H1079M1041 157H1079M1041 177H1079M1041 197H1079M1041 217H1079M794 118H830M794 140H830M794 162H830M794 184H830M794 206H830M794 228H830" opacity=".7"/>
-  <path d="M119 152H144M119 172H144M119 192H144M119 212H144M191 125H210M191 145H210M191 165H210M191 185H210M191 205H210M283 144H303M283 164H303M283 184H303M283 204H303M447 148H471M447 169H471M447 190H471M447 211H471M689 137H700M689 159H700M689 181H700M689 203H700M926 148H940M926 170H940M926 192H940M926 214H940M1140 140H1159M1140 163H1159M1140 186H1159M1140 209H1159M1288 100H1299M1260 139H1327M1260 161H1327M1260 183H1327M1260 205H1327M1260 227H1327" opacity=".55"/>
-  <path d="M20 266L90 288M172 266L230 288M324 266L370 288M476 266L510 288M628 266L650 288M780 266L790 288M932 266L930 288M1084 266L1070 288M1236 266L1210 288M1388 266L1350 288" opacity=".4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 360" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <linearGradient id="far" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="0" y2="322">
+      <stop offset="0" stop-color="#aebcc6" stop-opacity="0"/>
+      <stop offset=".4" stop-color="#aebcc6" stop-opacity=".38"/>
+      <stop offset="1" stop-color="#a4b3be" stop-opacity=".55"/>
+    </linearGradient>
+    <linearGradient id="mid" gradientUnits="userSpaceOnUse" x1="0" y1="110" x2="0" y2="322">
+      <stop offset="0" stop-color="#8597a6" stop-opacity=".14"/>
+      <stop offset=".55" stop-color="#8597a6" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#7b8e9c" stop-opacity=".62"/>
+    </linearGradient>
+    <linearGradient id="warm" gradientUnits="userSpaceOnUse" x1="0" y1="190" x2="0" y2="322">
+      <stop offset="0" stop-color="#bda98d" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#ad9a80" stop-opacity=".6"/>
+    </linearGradient>
+    <linearGradient id="gr" gradientUnits="userSpaceOnUse" x1="0" y1="296" x2="0" y2="360">
+      <stop offset="0" stop-color="#9aa98f" stop-opacity=".52"/>
+      <stop offset=".5" stop-color="#a9b39b" stop-opacity=".3"/>
+      <stop offset="1" stop-color="#b8b7a4" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="tree" gradientUnits="userSpaceOnUse" x1="0" y1="262" x2="0" y2="330">
+      <stop offset="0" stop-color="#8ea48b" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#6f8670" stop-opacity=".6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#e8d8bb" stop-opacity=".42"/>
+      <stop offset=".6" stop-color="#e8d8bb" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#e8d8bb" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cool" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#c8d6de" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#c8d6de" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="haze" x="-4%" y="-12%" width="108%" height="124%">
+      <feGaussianBlur stdDeviation="2.4"/>
+    </filter>
+  </defs>
+
+  <!-- low-sky warmth echoing the Earth's limb -->
+  <ellipse cx="540" cy="300" rx="840" ry="150" fill="url(#glow)"/>
+  <ellipse cx="1480" cy="290" rx="520" ry="120" fill="url(#cool)"/>
+
+  <!-- far hazy masses -->
+  <path filter="url(#haze)" fill="url(#far)" stroke="url(#far)" stroke-width="14" stroke-linejoin="round"
+    d="M0 322V210H55V175H85V150H115V200H160V235H225V170H255V135H275V110H287V135H305V195H365V225H430V185H470V205H540V245H600V195H640V160H660V195H700V225H770V205H830V235H900V180H940V150H960V180H990V215H1060V245H1120V200H1170V165H1200V205H1260V235H1330V185H1370V130H1385V115H1400V185H1440V225H1510V200H1560V245H1600V322Z"/>
+
+  <!-- middle architectural masses -->
+  <g fill="url(#mid)">
+    <rect x="0" y="218" width="58" height="104" rx="5"/>
+    <rect x="66" y="118" width="36" height="204" rx="6"/>
+    <rect x="108" y="192" width="84" height="130" rx="6"/>
+    <rect x="128" y="172" width="40" height="26" rx="4"/>
+    <rect x="300" y="212" width="82" height="110" rx="6"/>
+    <rect x="326" y="184" width="32" height="34" rx="4"/>
+    <rect x="1296" y="160" width="62" height="162" rx="6"/>
+    <rect x="1366" y="222" width="84" height="100" rx="6"/>
+    <rect x="1476" y="202" width="124" height="120" rx="6"/>
+    <rect x="1536" y="168" width="64" height="40" rx="5"/>
+  </g>
+  <g fill="url(#warm)">
+    <rect x="560" y="250" width="200" height="72" rx="8"/>
+    <rect x="688" y="196" width="26" height="62" rx="4"/>
+    <rect x="683" y="191" width="36" height="7" rx="3"/>
+    <rect x="1000" y="246" width="124" height="76" rx="8"/>
+    <path d="M1024 248a38 38 0 0 1 76 0Z"/>
+    <rect x="1058" y="198" width="8" height="14" rx="2"/>
+  </g>
+
+  <!-- urban details: mast, bridge, sparse window light -->
+  <g stroke="#7f93a2" stroke-linecap="round" fill="none">
+    <path d="M84 118V96" stroke-width="2" opacity=".6"/>
+    <circle cx="84" cy="95" r="2.4" fill="#7f93a2" stroke="none" opacity=".55"/>
+    <path d="M790 288H1002" stroke-width="3" opacity=".5"/>
+    <path d="M800 302q24-28 48 0q24-28 48 0q24-28 48 0q24-28 48 0" stroke-width="2" opacity=".48"/>
+    <path d="M78 150v7M90 164v7M82 188v7M92 212v7M80 240v7M90 266v7M130 220v6M166 236v6M150 262v6M340 232v6M362 250v6M1316 190v7M1336 210v7M1322 236v7M1340 262v7M1398 246v6M1424 268v6M1510 230v6M1560 250v6M1580 224v6" stroke-width="2" opacity=".3"/>
+  </g>
+
+  <!-- rolling parkland fading into the page -->
+  <path fill="url(#gr)" d="M0 360V308C120 296 220 318 340 306C470 294 560 316 700 308C830 301 900 320 1010 310C1130 300 1210 320 1330 308C1440 297 1520 314 1600 304V360Z"/>
+
+  <!-- greenery: soft canopies, mostly in the margins -->
+  <g fill="url(#tree)">
+    <ellipse cx="42" cy="302" rx="22" ry="20"/>
+    <ellipse cx="82" cy="290" rx="30" ry="27"/>
+    <ellipse cx="128" cy="300" rx="20" ry="18"/>
+    <ellipse cx="176" cy="294" rx="26" ry="23"/>
+    <ellipse cx="222" cy="306" rx="16" ry="15"/>
+    <ellipse cx="470" cy="306" rx="15" ry="14"/>
+    <ellipse cx="512" cy="300" rx="21" ry="19"/>
+    <ellipse cx="586" cy="308" rx="13" ry="12"/>
+    <ellipse cx="850" cy="310" rx="16" ry="15"/>
+    <ellipse cx="896" cy="302" rx="23" ry="21"/>
+    <ellipse cx="1236" cy="304" rx="19" ry="18"/>
+    <ellipse cx="1398" cy="296" rx="27" ry="25"/>
+    <ellipse cx="1446" cy="306" rx="17" ry="16"/>
+    <ellipse cx="1524" cy="292" rx="31" ry="28"/>
+    <ellipse cx="1574" cy="302" rx="20" ry="19"/>
+  </g>
+  <path d="M82 316v10M176 316v10M512 318v8M896 322v6M1398 320v8M1524 318v10" stroke="#6e7f6b" stroke-width="2" stroke-linecap="round" opacity=".45"/>
 </svg>

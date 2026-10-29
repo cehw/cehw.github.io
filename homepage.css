@@ -18,29 +18,37 @@ html[data-theme="dark"].has-cinematic-earth-bg .space-earth-canvas {
   opacity: 1;
   filter: none;
 }
-.bg-city { display: none; }
 html[data-theme="light"].has-cinematic-earth-bg .space-earth-canvas {
   opacity: .17;
   filter: saturate(.32) brightness(1.5) contrast(.68);
 }
+
+/* Light-mode city background: layered atmospheric cityscape (replaces mask-based skyline). */
+.bg-city { display: none; }
+
 html[data-theme="light"] .bg-city {
   display: block;
   position: fixed;
   inset: auto 0 0;
-  height: clamp(180px, 30vh, 320px);
+  height: clamp(240px, 40vh, 440px);
   z-index: -2;
   pointer-events: none;
-  color: #5f7c8e;
-  background: currentColor;
-  -webkit-mask: url('./assets/city-outline.svg') center bottom / contain no-repeat;
-  mask: url('./assets/city-outline.svg') center bottom / contain no-repeat;
-  opacity: .22;
+  background: url('./assets/city-outline.svg?v=20261029-fable1') center bottom / cover no-repeat;
+  opacity: .62;
+  mix-blend-mode: multiply;
 }
-html[data-theme="light"] .bg-grid {
-  background-size: 72px 72px;
-  opacity: .75;
-}
+
+/* Keep the Earth exactly as before; the city only reads in margins, the gap between cards, and faintly under translucent panels. */
+html[data-theme="light"][data-weather="storm"] .bg-city,
+html[data-theme="light"][data-weather="rain"] .bg-city,
+html[data-theme="light"][data-weather="overcast"] .bg-city { opacity: .5; }
+
 @media (max-width: 760px) {
-  html[data-theme="light"] .bg-city { height: 180px; opacity: .1; }
+  html[data-theme="light"] .bg-city { height: 200px; opacity: .34; }
 }
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme="light"] .bg-city { opacity: .4; }
+}
+
 @media print { .bg-city { display: none !important; } }
