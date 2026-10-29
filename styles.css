@@ -1,9 +1,9 @@
 /* Shared type scale and desktop-first layout. Background lives in background.css. */
 :root {
   color-scheme: light;
-  --bg: #f6f3ee; --panel: rgba(255, 255, 255, .78); --ink: #243236; --ink-soft: #3a4a4f;
-  --muted: #5c6c71; --line: rgba(36,50,54,.16); --accent: #35666b;
-  --accent-tint: #e8efed; --warm: #806045; --on-accent: #fff;
+  --bg: #f6f3ee; --panel: rgba(255, 255, 255, .64); --ink: #243236; --ink-soft: #3a4a4f;
+  --muted: #5c6c71; --line: rgba(36,50,54,.16); --accent: #496779;
+  --accent-tint: rgba(220, 229, 237, .60); --warm: #806045; --on-accent: #fff;
   --shadow: 0 1px 2px #24323605, 0 8px 24px #24323608;
   --title: 2rem; --section: 1.25rem; --body: 1rem; --meta: .875rem;
   --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 40px; --s6: 48px;
@@ -11,9 +11,9 @@
 }
 html[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #161c20; --panel: rgba(16, 30, 39, .82); --ink: #e6ebec; --ink-soft: #cbd5d7;
-  --muted: #a3b0b4; --line: rgba(230,235,236,.16); --accent: #9bc4c6;
-  --accent-tint: #2b3b40; --warm: #c9a98a; --on-accent: #16292d;
+  --bg: #17212e; --panel: rgba(32, 45, 60, .70); --ink: #eaf0f5; --ink-soft: #d0dbe5;
+  --muted: #aebdcb; --line: rgba(193,212,230,.17); --accent: #b3cee5;
+  --accent-tint: rgba(48, 69, 89, .60); --warm: #c9a98a; --on-accent: #17212e;
   --shadow: 0 1px 2px #0002, 0 8px 24px #0002;
 }
 * { box-sizing: border-box; }
@@ -72,6 +72,7 @@ footer { margin-bottom: 32px; font-size: var(--meta); color: var(--muted); }
 .portrait-card { margin: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--panel); align-self: center; }
 .portrait-card img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 32px; margin-top: 24px; }
+.hero-main, .panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .panel p, .card p { color: var(--ink-soft); }
 .panel > p:last-child, .card p:last-child { margin-bottom: 0; }
 .profile-fields { margin: 8px 0 0; color: var(--muted); font-size: var(--meta); }

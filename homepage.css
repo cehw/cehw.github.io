@@ -1,23 +1,4 @@
-/* Homepage-only colour refinements; retain the shared Earth animation. */
-html[data-theme="dark"] {
-  --bg: #17212e;
-  --bg-2: #202d3b;
-  --panel: rgba(32, 45, 60, .84);
-  --ink: #eaf0f5;
-  --ink-soft: #d0dbe5;
-  --muted: #aebdcb;
-  --line: rgba(193, 212, 230, .17);
-  --accent: #b3cee5;
-  --accent-tint: #304559;
-}
-html[data-theme="dark"] body,
-html[data-theme="dark"].has-cinematic-earth-bg body {
-  background: #000 !important;
-}
-html[data-theme="dark"].has-cinematic-earth-bg .space-earth-canvas {
-  opacity: 1;
-  filter: none;
-}
+/* Homepage-only Earth and city artwork; shared surface colours live in styles.css. */
 html[data-theme="light"].has-cinematic-earth-bg .space-earth-canvas {
   opacity: .17;
   filter: saturate(.32) brightness(1.5) contrast(.68);
