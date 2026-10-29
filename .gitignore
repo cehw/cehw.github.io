@@ -3,3 +3,4 @@ _tmp/
 __pycache__/
 *.pyc
 data/weather-archive/
+data/weather-model/

@@ -78,6 +78,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
           <p class="wx-note" id="wx-observed-at"></p>
           <p class="wx-note" id="wx-map-help">Select any point for details. Zoom in for more labels; scroll over the map to zoom.</p>
           <p class="wx-note" id="wx-model-credit" hidden>An experimental playground for exploring local weather predictions. Input observations: Hong Kong Observatory. Available stations vary by variable.</p>
+          <details class="wx-note" id="wx-model-evaluation" hidden><summary>Model &amp; backtest</summary><p id="wx-model-method"></p><p id="wx-model-metrics"></p></details>
         </div>
         <aside class="wx-forecast-sidebar" aria-label="Hong Kong Observatory forecasts">
         <article class="wx-today">
@@ -353,6 +354,16 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     host.querySelector('.wx-map-footer').hidden = predicted && !ready;
     set('wx-map-help', predicted && !ready ? 'Choose Observations to explore the latest available station readings.' : 'Select any point for details. Zoom in for more labels; scroll over the map to zoom.');
     el('wx-model-credit').hidden = !predicted;
+    const evaluation = gnn?.model?.evaluation;
+    el('wx-model-evaluation').hidden = !predicted || !evaluation;
+    if (evaluation) {
+      set('wx-model-method', 'The original 12-node GNN is retained at its existing sites; a 53-node GNN adds other stations. New-site temperature trajectories are anchored to the latest observation. Inputs: HKO, including Hong Kong Sea School / Co-WIN wind observations. Missing station inputs are not filled with another station’s values.');
+      const scores = Object.entries(variables).map(([key, [name, unit]]) => {
+        const score = evaluation.variables[key];
+        return `${name}: ${score.mae.toFixed(2)} vs ${score.persistenceMae.toFixed(2)} ${unit}`;
+      }).join(' · ');
+      set('wx-model-metrics', `Exploratory May–Aug 2026 backtest (${evaluation.origins} forecast origins), mean absolute error against holding the latest observation constant: ${scores}. Temperature has not yet outperformed this persistence baseline. This development comparison is not a blind operational validation.`);
+    }
     host.querySelectorAll('[data-variable]').forEach(button => {
       button.disabled = !ready;
       button.setAttribute('aria-pressed', String(button.dataset.variable === variable));

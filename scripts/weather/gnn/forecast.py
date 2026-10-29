@@ -54,8 +54,8 @@ def load_history(origin, n_hist, nodes, archive_root, *, backfill=True):
     data = np.full((n_hist, len(nodes), len(VARIABLES)), np.nan, dtype=np.float32)
     mappings = {(r['feed'], canonical_station_name(r['api_station_name'])): r['hko2025_station_code']
                 for r in read_csv(CLP / 'config/hko_station_map.csv') if r['mapping_status'] == 'mapped'}
-    allowed = {(r['feed'], r['source_station_code']) for r in read_csv(CLP / 'config/projection_targets.csv')
-               if r['status'] == 'available'}
+    # This Co-WIN station is present in the HKO feed but has no HKO2025 counterpart.
+    mappings[('wind', canonical_station_name('Hong Kong Sea School'))] = 'HSS'
     indexes = {code: i for i, code in enumerate(nodes)}
     errors = []
 
@@ -63,7 +63,7 @@ def load_history(origin, n_hist, nodes, archive_root, *, backfill=True):
         for r in rows:
             feed = r['feed']
             code = mappings.get((feed, canonical_station_name(r['station_name'])))
-            if code not in indexes or (feed, code) not in allowed:
+            if code not in indexes:
                 continue
             variable = r['variable']
             if variable in ('wind_direction', 'wind_direction_compass'):
@@ -148,7 +148,7 @@ def run(args):
     output = {
         'schemaVersion': 1, 'status': 'warming_up', 'generatedAt': now.isoformat(),
         'originTime': origin.isoformat(), 'lastObservationTime': latest_time.isoformat(),
-        'updateIntervalHours': 3, 'stepMinutes': 10, 'horizonHours': 6,
+        'updateIntervalHours': 1, 'stepMinutes': 10, 'horizonHours': 6,
         'model': {'name': 'CLP observation-only GNN', 'version': 'pilot3y_joint4_e10e5_cal20260826',
                   'architecture': 'Temporal GRU · GraphSAGE-style aggregation · autoregressive GRU',
                   'historyHours': n_hist / 6, 'experimental': True, 'usesAurora': False},

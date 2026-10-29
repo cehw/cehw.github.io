@@ -2,6 +2,7 @@
 
 - [Maintenance](maintenance.md) — directory ownership, management commands, gallery workflow, publishing and analytics.
 - [Weather](weather.md) — HKO forecasts, station observations, observation-only GNN and server updates.
+- [Weather model](weather-model.md) — expanded station networks, training, backtests and current limitations.
 - [Illustration](illustration.md) — current homepage artwork and editing requirements.
 - [Design](design.md) — shared visual system, responsive navigation and the implemented Fable recommendations.
 
