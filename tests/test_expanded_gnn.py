@@ -3,6 +3,9 @@ import sys
 import unittest
 from pathlib import Path
 
+if not Path('/workspace/wanghan/Stellerus_CLP').is_dir():
+    raise unittest.SkipTest('Model integration checks run on climet3 with the private CLP checkpoint')
+
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/weather/gnn'))
 import numpy as np
 import torch
