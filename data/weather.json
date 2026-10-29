@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "fetchedAt": "2026-10-29T05:43:01.883Z",
+  "fetchedAt": "2026-10-29T05:53:02.005Z",
   "updateIntervalMinutes": 10,
   "current": {
     "rainfall": {
@@ -296,7 +296,7 @@
     "forecastPeriod": "Weather forecast for this afternoon and tonight",
     "forecastDesc": "Mainly fine. Dry in the afternoon. Moderate to fresh easterly winds.",
     "outlook": "Mainly fine and dry during the day in the next couple of days. Cloudier on Sunday.",
-    "updateTime": "2026-10-29T12:45:00+08:00"
+    "updateTime": "2026-10-29T13:45:00+08:00"
   },
   "dailyForecast": {
     "generalSituation": "An anticyclone aloft will bring generally fine weather to Guangdong tomorrow. An easterly airstream will affect the coast of Guangdong over the weekend. It will become cloudier gradually over the region. The northeast monsoon is expected to affect southern China early to midweek next week.",
@@ -553,240 +553,240 @@
       "data": [
         {
           "place": "Chek Lap Kok",
-          "value": 29.5,
+          "value": 29.1,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Cheung Chau",
-          "value": 27.9,
+          "value": 27.5,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Clear Water Bay",
           "value": 26.5,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Hong Kong Park",
           "value": 27.5,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Happy Valley",
-          "value": 28.9,
+          "value": 29.4,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Hong Kong Observatory",
-          "value": 28.4,
+          "value": 28.6,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Kai Tak Runway Park",
           "value": 27.6,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Kau Sai Chau",
-          "value": 27.9,
+          "value": 27.7,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "King's Park",
-          "value": 28,
+          "value": 27.9,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Kowloon City",
-          "value": 30,
+          "value": 29.5,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Kwun Tong",
-          "value": 27.4,
+          "value": 27.2,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Lau Fau Shan",
-          "value": 29.8,
+          "value": 30,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Ngong Ping",
-          "value": 23.6,
+          "value": 24.8,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Pak Tam Chung",
-          "value": 28.3,
+          "value": 28.4,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Peng Chau",
-          "value": 31.2,
+          "value": 30.7,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Sai Kung",
-          "value": 27.2,
+          "value": 27.3,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Sha Tin",
-          "value": 29.2,
+          "value": 29.3,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Sham Shui Po",
-          "value": 30.9,
+          "value": 31,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Shau Kei Wan",
-          "value": 26.3,
+          "value": 26.4,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Shek Kong",
-          "value": 30.7,
+          "value": 30.3,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Sheung Shui",
-          "value": 30.9,
+          "value": 31.5,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Stanley",
-          "value": 27.5,
+          "value": 27.4,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Ta Kwu Ling",
-          "value": 28.9,
+          "value": 29.3,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tai Lung",
-          "value": 29.8,
+          "value": 30,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tai Mei Tuk",
           "value": 28,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tai Mo Shan",
           "value": 22.4,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tai Po",
-          "value": 28.9,
+          "value": 29.1,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tate's Cairn",
-          "value": 23.1,
+          "value": 22.9,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "The Peak",
-          "value": 26.1,
+          "value": 26,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tseung Kwan O",
-          "value": 28.5,
+          "value": 28.8,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tsing Yi",
-          "value": 29.7,
+          "value": 29.9,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tsuen Wan Ho Koon",
           "value": 28,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tsuen Wan Shing Mun Valley",
-          "value": 29.2,
+          "value": 29.4,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Tuen Mun",
-          "value": 29,
+          "value": 29.3,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Waglan Island",
           "value": 27,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Wetland Park",
-          "value": 30.7,
+          "value": 30.6,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Wong Chuk Hang",
           "value": 29,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Wong Tai Sin",
-          "value": 29.2,
+          "value": 29,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         },
         {
           "place": "Yuen Long Park",
-          "value": 31.5,
+          "value": 31.7,
           "unit": "C",
-          "recordTime": "2026-10-29T13:30:00+08:00"
+          "recordTime": "2026-10-29T13:40:00+08:00"
         }
       ],
-      "recordTime": "2026-10-29T13:30:00+08:00"
+      "recordTime": "2026-10-29T13:40:00+08:00"
     },
     "source": "https://data.weather.gov.hk/weatherAPI/hko_data/regional-weather/latest_1min_temperature.csv"
   }
