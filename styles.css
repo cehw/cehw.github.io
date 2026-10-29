@@ -68,6 +68,7 @@ footer { margin-bottom: 32px; font-size: var(--meta); color: var(--muted); }
 .social-icon--orcid { --icon: url("./assets/icons/orcid.svg"); }
 .social-icon--researchgate { --icon: url("./assets/icons/researchgate.svg"); }
 .social-icon--mail { --icon: url("./assets/icons/mail.svg"); }
+.social-icon--github { --icon: url("./assets/icons/github.svg"); }
 .portrait-card { margin: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--panel); align-self: center; }
 .portrait-card img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 32px; margin-top: 24px; }
