@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "fetchedAt": "2026-10-28T20:18:46.263Z",
+  "fetchedAt": "2026-10-29T01:00:24.163Z",
   "updateIntervalHours": 3,
   "current": {
     "rainfall": {
@@ -114,15 +114,24 @@
           "main": "FALSE"
         }
       ],
-      "startTime": "2026-10-29T02:45:00+08:00",
-      "endTime": "2026-10-29T03:45:00+08:00"
+      "startTime": "2026-10-29T06:45:00+08:00",
+      "endTime": "2026-10-29T07:45:00+08:00"
     },
     "icon": [
-      62
+      60
     ],
-    "iconUpdateTime": "2026-10-29T01:25:00+08:00",
-    "uvindex": "",
-    "updateTime": "2026-10-29T04:02:00+08:00",
+    "iconUpdateTime": "2026-10-29T06:00:00+08:00",
+    "uvindex": {
+      "data": [
+        {
+          "place": "King's Park",
+          "value": 0.3,
+          "desc": "low"
+        }
+      ],
+      "recordDesc": "During the past hour"
+    },
+    "updateTime": "2026-10-29T08:02:00+08:00",
     "temperature": {
       "data": [
         {
@@ -132,12 +141,12 @@
         },
         {
           "place": "Hong Kong Observatory",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
           "place": "Wong Chuk Hang",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -162,7 +171,7 @@
         },
         {
           "place": "Tuen Mun",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -197,7 +206,7 @@
         },
         {
           "place": "Tsuen Wan Ho Koon",
-          "value": 24,
+          "value": 23,
           "unit": "C"
         },
         {
@@ -237,7 +246,7 @@
         },
         {
           "place": "Kwun Tong",
-          "value": 24,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -252,7 +261,7 @@
         },
         {
           "place": "Yuen Long Park",
-          "value": 26,
+          "value": 25,
           "unit": "C"
         },
         {
@@ -261,7 +270,7 @@
           "unit": "C"
         }
       ],
-      "recordTime": "2026-10-29T04:00:00+08:00"
+      "recordTime": "2026-10-29T08:00:00+08:00"
     },
     "warningMessage": "",
     "mintempFrom00To09": "",
@@ -270,11 +279,11 @@
     "rainfallJanuaryToLastMonth": "",
     "tcmessage": "",
     "humidity": {
-      "recordTime": "2026-10-29T04:00:00+08:00",
+      "recordTime": "2026-10-29T08:00:00+08:00",
       "data": [
         {
           "unit": "percent",
-          "value": 75,
+          "value": 70,
           "place": "Hong Kong Observatory"
         }
       ]
@@ -285,9 +294,9 @@
     "tcInfo": "",
     "fireDangerWarning": "",
     "forecastPeriod": "Weather forecast for today",
-    "forecastDesc": "Mainly cloudy. One or two light rain patches at first. The minimum temperature will be about 25 degrees in the morning. Becoming fine and dry with a maximum temperature of around 29 degrees during the day. Moderate to fresh easterly winds, occasionally strong offshore and on high ground at first.",
-    "outlook": "Mainly fine and dry during the day in the following couple of days. Cloudier on Sunday.",
-    "updateTime": "2026-10-29T03:45:00+08:00"
+    "forecastDesc": "Mainly cloudy. Becoming fine and dry with a maximum temperature of around 29 degrees during the day. Moderate to fresh easterly winds, occasionally strong offshore and on high ground at first.",
+    "outlook": "Mainly fine and dry during the day in the next couple of days. Cloudier on Sunday.",
+    "updateTime": "2026-10-29T08:45:00+08:00"
   },
   "dailyForecast": {
     "generalSituation": "With the northeast monsoon moderating gradually and an anticyclone aloft strengthening, the weather will be generally fine over Guangdong today and tomorrow. An easterly airstream is expected to affect the coast of southern China over the weekend. It will become cloudier gradually over the region. Another surge of the northeast monsoon will affect southern China early to midweek next week.",
@@ -296,7 +305,7 @@
         "forecastDate": "20261029",
         "week": "Thursday",
         "forecastWind": "East force 4 to 5, occasionally force 6 offshore and on high ground at first.",
-        "forecastWeather": "Mainly cloudy. One or two light rain patches at first. Becoming fine and dry during the day.",
+        "forecastWeather": "Mainly cloudy. Becoming fine and dry during the day.",
         "forecastMaxtemp": {
           "value": 29,
           "unit": "C"
@@ -509,19 +518,19 @@
         "PSR": "Low"
       }
     ],
-    "updateTime": "2026-10-29T00:00:00+08:00",
+    "updateTime": "2026-10-29T07:50:00+08:00",
     "seaTemp": {
       "place": "North Point",
       "value": 29,
       "unit": "C",
-      "recordTime": "2026-10-28T14:00:00+08:00"
+      "recordTime": "2026-10-29T07:00:00+08:00"
     },
     "soilTemp": [
       {
         "place": "Hong Kong Observatory",
-        "value": 29.3,
+        "value": 28.8,
         "unit": "C",
-        "recordTime": "2026-10-28T07:00:00+08:00",
+        "recordTime": "2026-10-29T07:00:00+08:00",
         "depth": {
           "unit": "metre",
           "value": 0.5
@@ -529,9 +538,9 @@
       },
       {
         "place": "Hong Kong Observatory",
-        "value": 29.7,
+        "value": 29.6,
         "unit": "C",
-        "recordTime": "2026-10-28T07:00:00+08:00",
+        "recordTime": "2026-10-29T07:00:00+08:00",
         "depth": {
           "unit": "metre",
           "value": 1
