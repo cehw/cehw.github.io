@@ -182,7 +182,8 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
       return;
     }
     if (!map) {
-      map = L.map("wx-map", { scrollWheelZoom: true, zoomControl: true, zoomSnap: 0.25, minZoom: 9, maxZoom: 15, attributionControl: false });
+      // Observations can arrive before GNN data; layers need a view even with no points yet.
+      map = L.map("wx-map", { center: [22.35, 114.15], zoom: 10, scrollWheelZoom: true, zoomControl: true, zoomSnap: 0.25, minZoom: 9, maxZoom: 15, attributionControl: false });
       const credits = L.control({ position: 'bottomright' });
       credits.onAdd = () => {
         const container = L.DomUtil.create('div', 'leaflet-control-attribution wx-map-attribution');
