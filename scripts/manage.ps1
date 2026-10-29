@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('help', 'preview', 'test', 'gallery-check', 'gallery-build', 'weather-fetch', 'gnn-status')]
+    [ValidateSet('help', 'preview', 'test', 'gallery-check', 'gallery-build', 'weather-fetch', 'weather-sync', 'gnn-status')]
     [string]$Task = 'help',
     [int]$Port = 8765
 )
@@ -9,7 +9,7 @@ Push-Location -LiteralPath $siteRoot
 try {
     switch ($Task) {
         'help' {
-            Write-Output 'Tasks: preview, test, gallery-check, gallery-build, weather-fetch, gnn-status'
+            Write-Output 'Tasks: preview, test, gallery-check, gallery-build, weather-fetch, weather-sync, gnn-status'
             Write-Output 'Guide: docs/README.md. Preview binds to localhost; Ctrl+C stops it.'
         }
         'preview' { & python -X utf8 -m http.server $Port --bind 127.0.0.1 }
@@ -32,6 +32,7 @@ try {
         'gnn-status' {
             & ssh climet3 'cd /workspace/wanghan/personal/weather && cat output/gnn.json && tail -n 15 logs/run.log'
         }
+        'weather-sync' { & python -X utf8 -B scripts/weather/sync-archive.py }
     }
     if ($Task -ne 'help' -and $LASTEXITCODE -ne 0) { throw "Task failed: $Task (exit $LASTEXITCODE)" }
 } finally {

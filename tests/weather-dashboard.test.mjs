@@ -25,7 +25,7 @@ test("station matching preserves valid unlocated observations and skips missing 
   ] } } };
   const items = core.stations(data, { "Hong Kong Observatory": { id: "HKO", lat: 22.3, lon: 114.17 } });
   assert.equal(items.length, 2);
-  assert.deepEqual(items[0], { name: "Hong Kong Observatory", temperature: 27, id: "HKO", lat: 22.3, lon: 114.17 });
+  assert.deepEqual(items[0], { name: "Hong Kong Observatory", temperature: 27, observedAt: undefined, id: "HKO", lat: 22.3, lon: 114.17 });
   assert.equal(items[1].lat, undefined);
 });
 
@@ -38,6 +38,15 @@ test("staleness considers both website fetch and source observation times", () =
   data.current.temperature.recordTime = "2026-10-26T11:00:00Z";
   data.fetchedAt = "2026-10-26T05:00:00Z";
   assert.equal(core.isStale(data, now), true);
+});
+
+test('ten-minute observations override hourly report and retain per-station times', () => {
+  const data = {fetchedAt: '2026-10-29T04:23:00Z', current: {temperature: {recordTime: '2026-10-28T22:00:00Z', data: [{place: 'Hong Kong Observatory', value: 20}]}},
+    stationObservations: {temperature: {recordTime: '2026-10-29T12:10:00+08:00', data: [{place: 'Hong Kong Observatory', value: 28.3, recordTime: '2026-10-29T12:10:00+08:00'}]}}};
+  const items = core.stations(data, {});
+  assert.equal(items[0].temperature, 28.3);
+  assert.equal(items[0].observedAt, '2026-10-29T12:10:00+08:00');
+  assert.equal(core.isStale(data, Date.parse('2026-10-29T04:24:00Z')), false);
 });
 
 test("constant-temperature observations still have a usable legend", () => {

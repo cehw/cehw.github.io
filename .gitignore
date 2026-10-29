@@ -2,3 +2,4 @@ _trash/
 _tmp/
 __pycache__/
 *.pyc
+data/weather-archive/

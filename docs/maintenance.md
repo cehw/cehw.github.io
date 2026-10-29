@@ -9,7 +9,7 @@ Start with [the documentation index](README.md). Commands below run from this re
 | `index.html`, `gallery.html`, `weather.html` | Public pages; keep URLs stable |
 | Root CSS and JavaScript | Browser runtime and shared appearance |
 | `assets/` | Current portrait, CV, icons, textures, analytics config and gallery |
-| `data/` | Fallback weather snapshots; live data is on `weather-data` |
+| `data/` | Fallback weather snapshots; gitignored `weather-archive/` stores the local HKO archive |
 | `scripts/gallery/` | Metadata, thumbnails and validation |
 | `scripts/weather/update-weather.mjs` | Official HKO updater used by GitHub Actions |
 | `scripts/weather/gnn/` | Authoritative deployment sources for the climet3 runtime |
@@ -28,6 +28,7 @@ Start with [the documentation index](README.md). Commands below run from this re
 ./scripts/manage.ps1 gallery-check
 ./scripts/manage.ps1 gallery-build
 ./scripts/manage.ps1 weather-fetch           # scratch snapshot: _tmp/weather.json
+./scripts/manage.ps1 weather-sync            # pull new climet3 observations into data/weather-archive
 ./scripts/manage.ps1 gnn-status              # read-only via ssh climet3
 ```
 
@@ -47,7 +48,7 @@ Gallery media is present in this checkout. In a sparse checkout that excludes it
 
 Review `git status --short` and `git diff`, run `./scripts/manage.ps1 test` for script or browser logic changes, then stage intended paths and commit. This checkout uses `add-hong-kong-weather`; `git push origin HEAD:main` publishes the reviewed commit. Confirm the matching Pages run succeeds and inspect the changed page. Do not force-push; rollback uses a new revert commit.
 
-Do not replace the `weather-data` branch with the website branch. Weather schedules and server operation are documented only in [weather.md](weather.md). Local source reorganization does not change `/workspace/wanghan/personal/weather/` or its cron entry. To deploy a deliberate GNN code change, copy the three files in `scripts/weather/gnn/` to that runtime directory with `scp` using `climet3`. Do not copy weights, observation archives, `publish/` or credentials. Keep `run.sh` in LF format and invoke it with Bash.
+Do not replace the `weather-data` branch with the website branch. Weather schedules and server operation are documented only in [weather.md](weather.md). Local source reorganization does not change `/workspace/wanghan/personal/weather/` or its cron entry. To deploy a deliberate GNN code change, copy the runtime files in `scripts/weather/gnn/` plus `scripts/weather/update-weather.mjs` to that runtime directory with `scp` using `climet3`. Do not copy weights, observation archives, `publish/` or credentials. Keep `run.sh` in LF format and invoke it with Bash.
 
 ## Analytics
 

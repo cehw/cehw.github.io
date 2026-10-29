@@ -1,6 +1,6 @@
 /*
- * Canonical coordinates for HKO rhrread English temperature station names.
- * Source: https://www.hko.gov.hk/en/cis/stn.htm (accessed 2026-10-26).
+ * Canonical coordinates for HKO report and ten-minute temperature station names.
+ * Source: https://www.hko.gov.hk/en/cis/stn.htm (accessed 2026-10-29).
  * Converted from the source's latitude N / longitude E in degrees, minutes,
  * seconds to decimal degrees. Eight decimal places preserve the conversion;
  * the source positions themselves are specified to the nearest arcsecond.
@@ -20,6 +20,18 @@
   if (root && typeof root === "object") root.WeatherStations = STATION_COORDS;
 })(typeof window !== "undefined" ? window : null, function () {
   return {
+    "Clear Water Bay": { id: "CWB", lat: 22.26333333, lon: 114.29972222 },
+    "Kau Sai Chau": { id: "KSC", lat: 22.37027778, lon: 114.31250000 },
+    "Ngong Ping": { id: "NGP", lat: 22.25861111, lon: 113.91277778 },
+    "Pak Tam Chung": { id: "TYW", lat: 22.40277778, lon: 114.32305556 },
+    "Peng Chau": { id: "PEN", lat: 22.29111111, lon: 114.04333333 },
+    "Sheung Shui": { id: "SSH", lat: 22.50194444, lon: 114.11111111 },
+    "Tai Lung": { id: "TLS", lat: 22.48472222, lon: 114.11750000 },
+    "Tai Mo Shan": { id: "TMS", lat: 22.41055556, lon: 114.12444444 },
+    "Tate's Cairn": { id: "TC", lat: 22.35777778, lon: 114.21777778 },
+    "The Peak": { id: "VP1", lat: 22.26416667, lon: 114.15500000 },
+    "Waglan Island": { id: "WGL", lat: 22.18222222, lon: 114.30333333 },
+    "Wetland Park": { id: "WLP", lat: 22.46666667, lon: 114.00888889 },
     "King's Park": { id: "KP", lat: 22.31194444, lon: 114.17277778 },
     "Hong Kong Observatory": { id: "HKO", lat: 22.30194444, lon: 114.17416667 },
     "Wong Chuk Hang": { id: "HKS", lat: 22.24777778, lon: 114.17361111 },

@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, rename, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -59,30 +59,43 @@ export async function getSnapshot({ fetchImpl = globalThis.fetch, now = () => ne
   return {
     schemaVersion: 1,
     fetchedAt: now().toISOString(),
-    updateIntervalHours: 3,
+    updateIntervalMinutes: 10,
     current,
     localForecast,
     dailyForecast,
   };
 }
 
-export async function updateWeather(output = DEFAULT_OUTPUT, options) {
+export async function updateWeather(output = DEFAULT_OUTPUT, options = {}) {
   // Fetch and validate every product before replacing a previously good snapshot.
   const snapshot = await getSnapshot(options);
+  if (options.stationObservations) {
+    const stations = JSON.parse(await readFile(options.stationObservations, 'utf8'));
+    validate('rhrread', {updateTime: stations.temperature?.recordTime, temperature: stations.temperature});
+    snapshot.stationObservations = stations;
+  }
   const destination = resolve(output);
+  if (options.archiveDir) {
+    const stamp = snapshot.fetchedAt.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
+    const archive = resolve(options.archiveDir, snapshot.fetchedAt.slice(0, 10), `${stamp}.json`);
+    await mkdir(dirname(archive), { recursive: true });
+    await writeFile(archive, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
+  }
   await mkdir(dirname(destination), { recursive: true });
-  await writeFile(destination, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
+  await writeFile(`${destination}.tmp`, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
+  await rename(`${destination}.tmp`, destination);
   return snapshot;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const args = process.argv.slice(2);
-  if (args.length && (args.length !== 2 || args[0] !== "--output")) {
-    console.error("Usage: node scripts/weather/update-weather.mjs [--output /absolute/path/weather.json]");
+  if (args.length % 2 || args.some((arg, index) => index % 2 === 0 && !['--output', '--archive-dir', '--station-observations'].includes(arg))) {
+    console.error("Usage: node scripts/weather/update-weather.mjs [--output PATH] [--archive-dir PATH] [--station-observations PATH]");
     process.exitCode = 1;
   } else {
     try {
-      const snapshot = await updateWeather(args[1]);
+      const flags = Object.fromEntries(Array.from({length: args.length / 2}, (_, i) => [args[i * 2], args[i * 2 + 1]]));
+      const snapshot = await updateWeather(flags['--output'] || DEFAULT_OUTPUT, {archiveDir: flags['--archive-dir'], stationObservations: flags['--station-observations']});
       console.log(`Weather snapshot saved: ${snapshot.fetchedAt}`);
     } catch (error) {
       console.error(`Weather update failed: ${error.message}`);

@@ -5,7 +5,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
   const host = document.getElementById("weather-dashboard");
   const core = window.WeatherDashboardCore;
   if (!host || !core) return;
-  const THREE_HOURS = 3 * 60 * 60 * 1000;
+  const TEN_MINUTES = 10 * 60 * 1000;
   const REMOTE = "https://raw.githubusercontent.com/cehw/cehw.github.io/weather-data/data/weather.json";
   const LOCAL = "./data/weather.json";
   const isLocal = ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
@@ -100,10 +100,10 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
 
   const el = (id) => document.getElementById(id);
   const set = (id, text) => { el(id).textContent = text; };
-  const observationTime = () => snapshot.current.temperature.recordTime || snapshot.current.updateTime;
+  const observationTime = () => snapshot.stationObservations?.temperature?.recordTime || snapshot.current.temperature.recordTime || snapshot.current.updateTime;
   const temperature = (value) => core.number(value) === null ? "—" : `${core.number(value)}°C`;
   const mapReading = (value) => core.number(value) === null ? '—' : `${core.number(value)}${layer === 'observations' ? '°C' : variables[variable][1]}`;
-  const mapTime = () => layer === 'observations' ? observationTime() : gnn?.validTimes?.[lead];
+  const mapTime = (station) => layer === 'observations' ? (station?.observedAt || observationTime()) : gnn?.validTimes?.[lead];
   const mapKind = () => layer === 'observations' ? 'Observed temperature' : `GNN ${variables[variable][0].toLowerCase()}`;
 
   function renderStatus() {
@@ -114,7 +114,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     if (refreshError) set("wx-status", `Refresh unavailable — showing the last successful snapshot.${oldData}`);
     else if (fallback) set("wx-status", `Scheduled feed unavailable — showing the saved site snapshot.${oldData}`);
     else if (stale) set("wx-status", "Update delayed — this snapshot or its observations are more than six hours old.");
-    else set("wx-status", "Updates every three hours.");
+    else set("wx-status", "Observations every 10 minutes · GNN forecasts hourly.");
   }
 
   function selectStation(name, focusMap = false) {
@@ -123,7 +123,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
     selectedStation = name;
     el("wx-station").value = name;
     set("wx-station-value", mapReading(station.temperature));
-    set("wx-observed-at", `${name} · ${layer === 'observations' ? 'Observed' : 'Valid'} ${core.timestamp(mapTime())}`);
+    set("wx-observed-at", `${name} · ${layer === 'observations' ? 'Observed' : 'Valid'} ${core.timestamp(mapTime(station))}`);
     const hours = el('wx-station-hours'); hours.replaceChildren();
     hours.hidden = layer !== 'gnn';
     if (layer === 'gnn') {
@@ -226,7 +226,7 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
       popup.className = "wx-popup";
       const name = document.createElement("strong"); name.textContent = station.name;
       const reading = document.createElement("p"); reading.textContent = `${mapReading(station.temperature)} · ${mapKind()}`;
-      const time = document.createElement("small"); time.textContent = core.timestamp(mapTime());
+      const time = document.createElement("small"); time.textContent = core.timestamp(mapTime(station));
       popup.append(name, reading, time);
       const marker = L.marker([station.lat, station.lon], { icon, title: `${station.name}: ${mapReading(station.temperature)}`, alt: `${station.name}: ${mapReading(station.temperature)}`, keyboard: true, riseOnHover: true })
         .bindPopup(popup).on("click", () => { playbackRequested = false; syncPlayback(); selectStation(station.name); }).addTo(markerLayer);
@@ -460,12 +460,12 @@ import { solarTimeline } from './weather-solar.mjs?v=20261028-sun1';
   el('wx-lead').addEventListener('input', (event) => { playbackRequested = false; lead = Number(event.target.value); renderStations(); });
   document.addEventListener("visibilitychange", () => {
     syncPlayback();
-    if (!document.hidden && Date.now() - lastAttempt >= THREE_HOURS) refresh();
+    if (!document.hidden && Date.now() - lastAttempt >= TEN_MINUTES) refresh();
     else if (!document.hidden && snapshot) { renderStatus(); renderDays(); }
   });
   setInterval(() => {
     if (document.hidden) return;
-    if (Date.now() - lastAttempt >= THREE_HOURS) refresh();
+    if (Date.now() - lastAttempt >= TEN_MINUTES) refresh();
     else if (snapshot) {
       renderStatus();
       if (layer === 'gnn' && core.gnnExpired(gnn)) renderStations();

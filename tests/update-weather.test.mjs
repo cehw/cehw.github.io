@@ -47,7 +47,7 @@ test("snapshot preserves source times and actual daily dates", async () => {
     fetchImpl: fetchFixture(data), now: () => new Date("2026-10-26T04:17:00Z"),
   });
   assert.equal(result.fetchedAt, "2026-10-26T04:17:00.000Z");
-  assert.equal(result.updateIntervalHours, 3);
+  assert.equal(result.updateIntervalMinutes, 10);
   assert.equal(result.current.temperature.recordTime, "2026-10-26T11:00:00+08:00");
   assert.equal(result.localForecast.updateTime, "2026-10-26T11:45:00+08:00");
   assert.equal(result.dailyForecast.weatherForecast[0].forecastDate, "20261027");
@@ -59,6 +59,20 @@ test("missing station values remain missing while other stations are available",
   data.rhrread.temperature.data.push({ place: "Sha Tin", value: null, unit: "C" });
   const result = await getSnapshot({ fetchImpl: fetchFixture(data) });
   assert.equal(result.current.temperature.data[1].value, null);
+});
+
+test('archive retains separate full snapshots before replacing latest', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'weather-archive-'));
+  const output = join(root, 'weather.json');
+  const archiveDir = join(root, 'archive');
+  for (const minute of ['03', '13']) {
+    const now = () => new Date(`2026-10-29T04:${minute}:00Z`);
+    await updateWeather(output, {archiveDir, now, fetchImpl: fetchFixture(fixtures())});
+    const saved = JSON.parse(await readFile(join(archiveDir, '2026-10-29', `20261029T04${minute}00Z.json`)));
+    assert.equal(saved.fetchedAt, now().toISOString());
+    assert.deepEqual(saved.current, fixtures().rhrread);
+  }
+  assert.equal(JSON.parse(await readFile(output)).fetchedAt, '2026-10-29T04:13:00.000Z');
 });
 
 test("all-missing observations and empty forecasts are rejected", async () => {

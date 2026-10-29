@@ -46,14 +46,14 @@
   }
 
   function stations(data, coordinates) {
-    return (data?.current?.temperature?.data || [])
+    return (data?.stationObservations?.temperature?.data || data?.current?.temperature?.data || [])
       .filter((item) => item.place && number(item.value) !== null)
-      .map((item) => ({ name: item.place, temperature: number(item.value), ...(coordinates[item.place] || {}) }))
+      .map((item) => ({ name: item.place, temperature: number(item.value), observedAt: item.recordTime, ...(coordinates[item.place] || {}) }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   function isStale(data, now = Date.now()) {
-    return [data?.fetchedAt, data?.current?.temperature?.recordTime || data?.current?.updateTime]
+    return [data?.fetchedAt, data?.stationObservations?.temperature?.recordTime || data?.current?.temperature?.recordTime || data?.current?.updateTime]
       .some((time) => !time || !Number.isFinite(Date.parse(time)) || now - Date.parse(time) > 6 * 60 * 60 * 1000);
   }
 

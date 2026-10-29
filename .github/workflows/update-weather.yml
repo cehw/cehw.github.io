@@ -1,14 +1,8 @@
 name: Update Hong Kong weather
 
 on:
-  schedule:
-    - cron: '17 */3 * * *'
+  # Automatic ten-minute publishing is owned by climet3; this is a manual fallback.
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - scripts/weather/update-weather.mjs
-      - .github/workflows/update-weather.yml
 
 permissions:
   contents: write

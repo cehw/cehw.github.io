@@ -36,7 +36,10 @@ const observedPlaces = [
   "Sham Shui Po",
   "Kai Tak Runway Park",
   "Yuen Long Park",
-  "Tai Mei Tuk"
+  "Tai Mei Tuk",
+  // Additional stations in latest_1min_temperature.csv (2026-10-29).
+  "Clear Water Bay", "Kau Sai Chau", "Ngong Ping", "Pak Tam Chung", "Peng Chau",
+  "Sheung Shui", "Tai Lung", "Tai Mo Shan", "Tate's Cairn", "The Peak", "Waglan Island", "Wetland Park"
 ];
 
 test("every temperature station returned by HKO has a map location", () => {
