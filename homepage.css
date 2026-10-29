@@ -10,14 +10,13 @@ html[data-theme="dark"] {
   --accent: #b3cee5;
   --accent-tint: #304559;
 }
+html[data-theme="dark"] body,
 html[data-theme="dark"].has-cinematic-earth-bg body {
-  background:
-    radial-gradient(ellipse at 14% 0%, rgba(110, 143, 173, .15), transparent 52%),
-    linear-gradient(155deg, #182330 0%, #202d3b 58%, #16202d 100%) !important;
+  background: #000 !important;
 }
 html[data-theme="dark"].has-cinematic-earth-bg .space-earth-canvas {
-  opacity: .5;
-  filter: saturate(.55) brightness(1.2);
+  opacity: 1;
+  filter: none;
 }
 .bg-city { display: none; }
 html[data-theme="light"].has-cinematic-earth-bg .space-earth-canvas {
@@ -33,9 +32,9 @@ html[data-theme="light"] .bg-city {
   pointer-events: none;
   color: #5f7c8e;
   background: currentColor;
-  -webkit-mask: url('./assets/city-outline.svg') center bottom / cover no-repeat;
-  mask: url('./assets/city-outline.svg') center bottom / cover no-repeat;
-  opacity: .14;
+  -webkit-mask: url('./assets/city-outline.svg') center bottom / contain no-repeat;
+  mask: url('./assets/city-outline.svg') center bottom / contain no-repeat;
+  opacity: .22;
 }
 html[data-theme="light"] .bg-grid {
   background-size: 72px 72px;
